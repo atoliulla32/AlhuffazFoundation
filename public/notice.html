@@ -9,35 +9,80 @@
     <link rel="stylesheet" href="style.css">
     
     <style>
-        .loader-container { text-align: center; padding: 60px 0; color: #f59e0b; }
-        .spinner { border: 4px solid rgba(245, 158, 11, 0.2); border-left-color: #f59e0b; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 15px; }
+        /* লোডার ডিজাইন */
+        .loader-container { text-align: center; padding: 40px 0; color: #15803d; }
+        .spinner { border: 4px solid rgba(21, 128, 61, 0.2); border-left-color: #15803d; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 15px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
-        /* আপনার পছন্দের নোটিশ বোর্ড ডিজাইন */
-        .marquee-board {
-            background: #000000;
-            padding: 15px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            border: 2px solid #166534; /* চারপাশের বর্ডার */
-            margin-top: 30px;
+        /* প্রিমিয়াম ডিজিটাল কালো বোর্ড */
+        .digital-board {
+            background: linear-gradient(to right, #0f172a, #1e293b);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            border: 1px solid #334155;
+            margin-top: 20px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+        .board-badge {
+            background: #b91c1c; /* গাঢ় লাল */
+            color: white;
+            padding: 15px 20px;
+            font-weight: 700;
+            font-size: 15px;
+            white-space: nowrap;
+            z-index: 2;
+            box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .marquee-wrapper {
+            flex-grow: 1;
+            padding: 0 15px;
             overflow: hidden;
         }
-        .marquee-header {
-            background: #111111;
-            padding: 12px;
-            border-radius: 10px;
-            font-size: 15px;
-            text-align: center;
-            border-bottom: 2px solid #222222;
-            margin-bottom: 15px;
+        .marquee-text {
+            color: #f8fafc;
+            font-size: 16px;
+            font-weight: 500;
         }
-        .dynamic-notice {
-            margin-bottom: 40px;
+        .marquee-text span.date { color: #facc15; font-weight: 600; margin-right: 10px; }
+        .marquee-text span.divider { color: #64748b; margin: 0 15px; }
+
+        /* আর্কাইভ নোটিশ লিস্ট */
+        .archive-section { margin-top: 50px; }
+        .archive-title { font-size: 22px; color: #166534; border-bottom: 2px solid #166534; padding-bottom: 10px; margin-bottom: 25px; }
+        
+        .notice-card { background: white; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; border-left: 5px solid #15803d; box-shadow: 0 4px 10px rgba(0,0,0,0.02); margin-bottom: 15px; display: flex; flex-direction: column; gap: 15px; transition: 0.3s; }
+        .notice-card:hover { transform: translateX(5px); box-shadow: 0 10px 20px rgba(21, 128, 61, 0.08); }
+        
+        .n-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 15px; }
+        .n-head h3 { margin: 0; font-size: 18px; color: #1e293b; line-height: 1.4; }
+        .n-date { background: #f0fdf4; color: #166534; padding: 5px 12px; border-radius: 6px; font-size: 13px; font-weight: bold; white-space: nowrap; border: 1px solid #bbf7d0;}
+        .n-snippet { color: #64748b; font-size: 14px; margin: 0; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        
+        .pdf-btn { background: #f8fafc; color: #166534; border: 1px solid #cbd5e1; padding: 8px 15px; border-radius: 6px; font-weight: bold; font-size: 13px; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; width: max-content;}
+        .pdf-btn:hover { background: #166534; color: white; border-color: #166534; }
+
+        /* PDF View Modal */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(5px); z-index: 2000; display: none; justify-content: center; align-items: center; opacity: 0; transition: 0.3s; padding: 20px; box-sizing: border-box; }
+        .modal-overlay.show { opacity: 1; }
+        .pdf-box { background: white; border-radius: 10px; width: 100%; max-width: 700px; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; transform: translateY(20px); transition: 0.3s; box-shadow: 0 25px 50px rgba(0,0,0,0.25); }
+        .modal-overlay.show .pdf-box { transform: translateY(0); }
+        
+        .pdf-actions { padding: 15px 20px; background: #f1f5f9; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; }
+        .pdf-content { padding: 40px; overflow-y: auto; background: white; }
+        
+        /* প্রিন্ট করার জন্য CSS ম্যাজিক */
+        @media print {
+            body * { visibility: hidden; }
+            #pdf-print-area, #pdf-print-area * { visibility: visible; }
+            #pdf-print-area { position: absolute; left: 0; top: 0; width: 100%; padding: 0; }
+            .pdf-actions { display: none; }
+            .pdf-content { padding: 20px; border: none; box-shadow: none; }
         }
-        .dynamic-notice h2 { font-size: 22px; color: gold; margin-bottom: 5px; }
-        .dynamic-notice h3 { font-size: 16px; color: red; margin-top: 0; margin-bottom: 15px; }
-        .dynamic-notice p { color: white; font-size: 16px; white-space: pre-wrap; line-height: 1.6; }
     </style>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -47,24 +92,54 @@
     <div id="header-placeholder"></div>
     <div class="page-header"><h2>বিজ্ঞপ্তি ও সংবাদ</h2></div>
 
-    <div class="container" style="margin-bottom: 80px; max-width: 800px;">
+    <div class="container" style="margin-bottom: 80px; max-width: 900px;">
         
-        <div class="marquee-board">
-            <div class="marquee-header">
-                <font color="white">📢 আল হুফফাজ ফাউন্ডেশনের সর্বশেষ বিজ্ঞপ্তি সমূহ 📝</font>
+        <div class="digital-board" id="liveBoard" style="display: none;">
+            <div class="board-badge">
+                <i class="fas fa-bell" style="animation: ring 2s infinite;"></i> সর্বশেষ
             </div>
-            
-            <div id="loader" class="loader-container">
-                <div class="spinner"></div>
-                <p style="color: gold; font-weight: bold;">বিজ্ঞপ্তি লোড হচ্ছে...</p>
+            <div class="marquee-wrapper">
+                <marquee behavior="scroll" direction="left" scrollamount="4" onmouseover="this.stop();" onmouseout="this.start();">
+                    <div class="marquee-text" id="marquee-content">
+                        </div>
+                </marquee>
             </div>
-
-            <marquee id="notice-marquee" behavior="scroll" direction="up" scrollamount="2" height="400px" onmouseover="this.stop();" onmouseout="this.start();" style="display: none;">
-                <center id="notice-list">
-                    </center>
-            </marquee>
         </div>
 
+        <div id="loader" class="loader-container">
+            <div class="spinner"></div>
+            <p style="font-weight: bold;">বিজ্ঞপ্তি লোড হচ্ছে...</p>
+        </div>
+
+        <div class="archive-section" id="archiveSection" style="display: none;">
+            <h3 class="archive-title">সকল বিজ্ঞপ্তি (আর্কাইভ)</h3>
+            <div id="archive-list">
+                </div>
+        </div>
+
+    </div>
+
+    <div class="modal-overlay" id="pdfModal">
+        <div class="pdf-box">
+            <div class="pdf-actions">
+                <button onclick="closePdf()" style="background:#e2e8f0; color:#475569; border:none; padding:8px 15px; border-radius:6px; font-weight:bold; cursor:pointer;">❌ বন্ধ করুন</button>
+                <button onclick="window.print()" style="background:#166534; color:white; border:none; padding:8px 15px; border-radius:6px; font-weight:bold; cursor:pointer;"><i class="fas fa-file-pdf"></i> সেভ / প্রিন্ট (PDF)</button>
+            </div>
+            
+            <div class="pdf-content" id="pdf-print-area">
+                <div style="text-align: center; border-bottom: 2px solid #166534; padding-bottom: 15px; margin-bottom: 20px;">
+                    <h2 style="color: #166534; margin: 0 0 5px 0; font-size: 24px;">আল হুফফাজ ফাউন্ডেশন বাংলাদেশ</h2>
+                    <p style="margin: 0; color: #475569; font-size: 14px;">অফিসিয়াল বিজ্ঞপ্তি</p>
+                </div>
+                <p style="text-align: right; color: #1e293b; font-weight: bold; margin-bottom: 20px;">তারিখ: <span id="mDate"></span></p>
+                <h3 id="mTitle" style="color: #1e293b; font-size: 20px; margin-bottom: 20px; line-height: 1.4;"></h3>
+                <p id="mDesc" style="color: #334155; font-size: 15px; line-height: 1.8; white-space: pre-wrap; text-align: justify;"></p>
+                <div style="margin-top: 50px; text-align: right;">
+                    <p style="margin: 0; font-weight: bold; color: #1e293b;">কর্তৃপক্ষ</p>
+                    <p style="margin: 0; color: #64748b; font-size: 14px;">আল হুফফাজ ফাউন্ডেশন</p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div id="footer-placeholder"></div>
@@ -82,36 +157,82 @@
         if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         const db = firebase.firestore();
 
-        const noticeList = document.getElementById('notice-list');
+        const marqueeContent = document.getElementById('marquee-content');
+        const archiveList = document.getElementById('archive-list');
         const loader = document.getElementById('loader');
-        const marquee = document.getElementById('notice-marquee');
 
-        // ডাটাবেজ থেকে লাইভ নোটিশ টানা হচ্ছে
+        let allNotices = []; // ডাটা জমানোর জন্য
+
+        // লাইভ ডাটাবেজ কানেকশন
         db.collection("notices").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
             loader.style.display = 'none';
-            marquee.style.display = 'block';
-            noticeList.innerHTML = '';
+            document.getElementById('liveBoard').style.display = 'flex';
+            document.getElementById('archiveSection').style.display = 'block';
+            
+            marqueeContent.innerHTML = '';
+            archiveList.innerHTML = '';
+            allNotices = [];
             
             if (snapshot.empty) {
-                noticeList.innerHTML = '<h3 style="color:red; margin-top: 50px;">বর্তমানে কোনো নতুন বিজ্ঞপ্তি নেই।</h3>';
+                marqueeContent.innerHTML = 'বর্তমানে কোনো নতুন বিজ্ঞপ্তি নেই।';
+                archiveList.innerHTML = '<p style="color:red;">কোনো বিজ্ঞপ্তি পাওয়া যায়নি।</p>';
                 return;
             }
 
+            let isFirst = true;
+
             snapshot.forEach((doc) => {
                 const notice = doc.data();
-                
-                noticeList.innerHTML += `
-                    <div class="dynamic-notice">
-                        <h2>💓 ${notice.title} ✍️</h2>
-                        <h3>(${notice.date})</h3>
-                        <p>👉 ${notice.description}</p>
-                        <hr style="border: 1px dashed #333333; width: 60%; margin: 25px auto;">
+                notice.id = doc.id;
+                allNotices.push(notice);
+
+                // ১. কালো বোর্ডে শুধুমাত্র লেটেস্ট নোটিশটি (বা প্রথম ২টি) যাবে
+                if(isFirst) {
+                    marqueeContent.innerHTML += `<span class="date">[${notice.date}]</span> ${notice.title} <span class="divider">•</span> `;
+                    isFirst = false; // আপনি চাইলে এখানে কাউন্টার বসিয়ে প্রথম ৩টা দেখাতে পারেন
+                }
+
+                // ২. নিচে আর্কাইভ লিস্টে সবগুলো নোটিশ সিরিয়াল অনুযায়ী দেখাবে
+                archiveList.innerHTML += `
+                    <div class="notice-card">
+                        <div class="n-head">
+                            <h3>${notice.title}</h3>
+                            <span class="n-date">${notice.date}</span>
+                        </div>
+                        <p class="n-snippet">${notice.description}</p>
+                        <button class="pdf-btn" onclick="openPdf('${notice.id}')"><i class="fas fa-file-alt"></i> বিস্তারিত ও পিডিএফ</button>
                     </div>
                 `;
             });
         }, (error) => {
             loader.innerHTML = '<p style="color:red; text-align:center;">ইন্টারনেট সংযোগ চেক করুন!</p>';
         });
+
+        // PDF পপ-আপ ওপেন করার ফাংশন
+        function openPdf(id) {
+            const notice = allNotices.find(n => n.id === id);
+            if(notice) {
+                document.getElementById('mTitle').innerText = notice.title;
+                document.getElementById('mDate').innerText = notice.date;
+                document.getElementById('mDesc').innerText = notice.description;
+                
+                const modal = document.getElementById('pdfModal');
+                modal.style.display = 'flex';
+                setTimeout(() => modal.classList.add('show'), 10);
+            }
+        }
+
+        // PDF পপ-আপ বন্ধ করার ফাংশন
+        function closePdf() {
+            const modal = document.getElementById('pdfModal');
+            modal.classList.remove('show');
+            setTimeout(() => modal.style.display = 'none', 300);
+        }
+
+        // বেল আইকনের অ্যানিমেশন
+        const style = document.createElement('style');
+        style.innerHTML = `@keyframes ring { 0% { transform: rotate(0); } 10% { transform: rotate(15deg); } 20% { transform: rotate(-15deg); } 30% { transform: rotate(10deg); } 40% { transform: rotate(-10deg); } 50% { transform: rotate(0); } 100% { transform: rotate(0); } }`;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>
