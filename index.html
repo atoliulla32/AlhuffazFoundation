@@ -1,535 +1,75 @@
-<!DOCTYPE html>
+           <!DOCTYPE html>
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>আল হুফফাজ ফাউন্ডেশন বাংলাদেশ</title>
+    <title>আল হুফফাজ ফাউন্ডেশন বাংলাদেশ | কুরআনের আলোয় আলোকিত বিশ্বময়</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <style>
-        :root {
-            /* Premium Royal Islamic Color Palette */
-            --primary: #004d00; /* Deep Islamic Green */
-            --secondary: #006400; /* Rich Green */
-            --accent: #d4af37; /* Royal Gold */
-            --bg-light: #f8fafc;
-            --text-main: #1e293b;
-            --text-muted: #475569;
-            --white: #ffffff;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body { 
-            font-family: 'Noto Sans Bengali', sans-serif; 
-            background-color: var(--bg-light); 
-            color: var(--text-main); 
-            display: flex; 
-            flex-direction: column; 
-            min-height: 100vh; 
-            line-height: 1.7; 
-        }
-        
-        /* ================= HEADER & NAV ================= */
-        header { 
-            background: var(--primary); 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
-            position: sticky; 
-            top: 0; 
-            z-index: 1000; 
-        }
-
-        .nav-container { 
-            max-width: 1250px; 
-            margin: 0 auto; 
-            padding: 10px 20px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-        }
-        
-        .logo { 
-            display: flex; 
-            align-items: center; 
-            gap: 15px; 
-            text-decoration: none; 
-        }
-        
-        .logo img { 
-            width: 60px; 
-            height: 60px; 
-            border-radius: 50%; 
-            border: 2px solid var(--accent); 
-            background: var(--white);
-            padding: 2px;
-            object-fit: cover; 
-        }
-
-        .logo-text h1 { 
-            margin: 0; 
-            font-size: 24px; 
-            font-weight: 800; 
-            color: var(--white); 
-            line-height: 1.2; 
-        }
-        
-        .logo-text span { 
-            font-size: 13px; 
-            color: var(--accent); 
-            font-weight: 600; 
-        }
-        
-        nav ul { 
-            list-style: none; 
-            display: flex; 
-            gap: 5px; 
-            align-items: center; 
-        }
-        
-        nav ul li a { 
-            text-decoration: none; 
-            color: var(--white); 
-            font-weight: 600; 
-            font-size: 15px; 
-            padding: 10px 15px;
-            border-radius: 5px;
-            transition: all 0.3s ease; 
-        }
-
-        nav ul li a:hover, nav ul li a.active { 
-            background: rgba(255,255,255,0.1);
-            color: var(--accent); 
-        }
-        
-        .btn-premium { 
-            background: var(--accent); 
-            color: var(--primary) !important; 
-            padding: 10px 25px !important; 
-            border-radius: 30px; 
-            font-weight: 800 !important; 
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
-            margin-left: 10px;
-        }
-
-        .btn-premium:hover { 
-            background: #b5952f;
-            transform: translateY(-2px);
-        }
-
-        /* ================= MAIN CONTENT & HERO ================= */
-        main { flex: 1; width: 100%; }
-
-        .hero { 
-            position: relative;
-            background: linear-gradient(to right, rgba(0, 77, 0, 0.9), rgba(0, 100, 0, 0.8)), url('https://images.unsplash.com/photo-1604871000636-074fa5117945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover fixed; 
-            color: var(--white); 
-            padding: 120px 20px; 
-            text-align: center;
-        }
-
-        .hero h3 { font-family: 'Arial', serif; color: var(--accent); font-size: 26px; margin-bottom: 20px; }
-        .hero h2 { font-size: 45px; margin-bottom: 20px; font-weight: 800; line-height: 1.3; }
-        .hero p { font-size: 18px; margin: 0 auto 40px auto; opacity: 0.9; max-width: 800px; }
-
-        .section-container { max-width: 1200px; margin: 0 auto; padding: 60px 20px; }
-        .section-title { text-align: center; font-size: 32px; color: var(--primary); margin-bottom: 50px; font-weight: 800; }
-        .section-title span { color: var(--accent); }
-        .section-title::after { content: ''; display: block; width: 80px; height: 4px; background: var(--accent); margin: 15px auto 0; border-radius: 2px; }
-
-        .content-card { 
-            background: var(--white); 
-            padding: 40px; 
-            border-radius: 12px; 
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05); 
-            border-top: 4px solid var(--primary);
-            text-align: justify;
-            font-size: 16px;
-        }
-
-        /* ================= GRID LAYOUTS (ACTIVITIES & GALLERY) ================= */
-        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
-        
-        .activity-card { 
-            background: var(--white); border-radius: 12px; padding: 40px 30px; text-align: center; 
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05); transition: 0.4s; border-bottom: 4px solid transparent;
-        }
-        .activity-card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); border-color: var(--accent); }
-        .activity-card i { font-size: 45px; color: var(--primary); margin-bottom: 20px; transition: 0.4s; }
-        .activity-card:hover i { color: var(--accent); transform: scale(1.1); }
-        .activity-card h3 { font-size: 22px; color: var(--primary); margin-bottom: 15px; }
-
-        /* Gallery CSS */
-        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        .gallery-item { position: relative; overflow: hidden; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); height: 250px; cursor: pointer; }
-        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
-        .gallery-item:hover img { transform: scale(1.1); }
-        .gallery-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.8)); padding: 20px; color: white; transform: translateY(100%); transition: 0.4s; }
-        .gallery-item:hover .gallery-overlay { transform: translateY(0); }
-
-        /* Data Lists (Notice/Result) */
-        .data-list { list-style: none; }
-        .data-list li { background: var(--white); padding: 25px; margin-bottom: 15px; border-radius: 8px; border-left: 5px solid var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.03); transition: 0.3s; }
-        .data-list li:hover { transform: translateX(5px); box-shadow: 0 6px 15px rgba(0,0,0,0.08); }
-        .data-list h4 { color: var(--primary); font-size: 18px; margin-bottom: 8px; }
-
-        /* ================= FOOTER ================= */
-        footer { background: #111; color: #ccc; padding: 60px 20px 20px 20px; border-top: 5px solid var(--accent); }
-        .footer-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-bottom: 40px; }
-        .footer-col h4 { color: var(--accent); font-size: 20px; margin-bottom: 25px; border-bottom: 1px solid #333; padding-bottom: 10px; }
-        .footer-links { list-style: none; }
-        .footer-links li { margin-bottom: 12px; }
-        .footer-links a { color: #ccc; text-decoration: none; transition: 0.3s; display: flex; align-items: center; gap: 10px; }
-        .footer-links a:hover { color: var(--accent); padding-left: 5px; }
-        .social-icons a { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: #333; color: white; border-radius: 50%; margin-right: 10px; transition: 0.3s; }
-        .social-icons a:hover { background: var(--accent); color: var(--primary); transform: translateY(-3px); }
-        .footer-bottom { text-align: center; padding-top: 20px; border-top: 1px solid #333; font-size: 14px; }
-
-        /* Mobile Menu */
-        .menu-toggle { display: none; font-size: 26px; cursor: pointer; color: var(--white); }
-        @media (max-width: 950px) {
-            .hero h2 { font-size: 32px; }
-            nav ul { display: none; flex-direction: column; position: absolute; top: 100%; left: 0; width: 100%; background: var(--primary); padding: 20px 0; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-            nav ul.active { display: flex; }
-            nav ul li { text-align: center; width: 100%; }
-            nav ul li a { display: block; padding: 12px; }
-            .btn-premium { margin: 10px auto; width: 80%; display: block; }
-            .menu-toggle { display: block; }
-        }
-    </style>
+    
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <header>
-        <div class="nav-container">
-            <a href="/" class="logo" data-link>
-                <img src="https://res.cloudinary.com/ddvprmv9g/image/upload/v1777644601/gu7xxpbkokyrx9wgifsn.jpg" alt="Logo">
-                <div class="logo-text">
-                    <h1>আল হুফফাজ</h1>
-                    <span>ফাউন্ডেশন বাংলাদেশ</span>
-                </div>
-            </a>
-            
-            <div class="menu-toggle" onclick="document.getElementById('nav-menu').classList.toggle('active')">
-                <i class="fas fa-bars"></i>
-            </div>
+    <div id="header-placeholder"></div>
 
-            <nav>
-                <ul id="nav-menu">
-                    <li><a href="/" data-link>হোম</a></li>
-                    <li><a href="/about" data-link>আমাদের সম্পর্কে</a></li>
-                    <li><a href="/activities" data-link>কার্যক্রম</a></li>
-                    <li><a href="/gallery" data-link>গ্যালারি</a></li>
-                    <li><a href="/notice" data-link>নোটিশ</a></li>
-                    <li><a href="/result" data-link>ফলাফল</a></li>
-                    <li><a href="/contact" data-link>যোগাযোগ</a></li>
-                    <li><a href="form.html" class="btn-premium">অনলাইন আবেদন</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+    <section class="hero" style="height: 35vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: white; background: linear-gradient(rgba(21, 128, 61, 0.8), rgba(15, 23, 42, 0.9)), url('https://images.unsplash.com/photo-1584281723351-95ad9970422c?auto=format&fit=crop&w=1600&q=80') center/cover;">
+        <div style="font-size: 22px; margin-bottom: 10px; font-family: serif;">بِسْمِ اللّٰهِ الرَّحْمٰনِ الرَّحِيْمِ</div>
+        <h2 style="font-size: 2.2rem; margin-bottom: 15px; font-weight: 700;">কুরআনের আলোয় আলোকিত হোক বিশ্বময়</h2>
+        <p style="max-width: 700px; opacity: 0.9;">কুরআনের শিক্ষা ও হাফেজদের মানোন্নয়নে আল হুফফাজ ফাউন্ডেশন একটি নিবেদিত নাম।</p>
+    </section>
 
-    <main id="app-content">
-        </main>
-
-    <footer>
-        <div class="footer-grid">
-            <div class="footer-col">
-                <a href="/" style="display:flex; align-items:center; gap:10px; margin-bottom:20px; text-decoration:none;">
-                    <img src="https://res.cloudinary.com/ddvprmv9g/image/upload/v1777644601/gu7xxpbkokyrx9wgifsn.jpg" style="width:50px; border-radius:50%; border:2px solid var(--accent);">
-                    <div>
-                        <h3 style="color:#fff; margin:0; font-size:20px;">আল হুফফাজ</h3>
-                        <span style="color:var(--accent); font-size:12px;">ফাউন্ডেশন বাংলাদেশ</span>
-                    </div>
-                </a>
-                <p>কুরআনের আলোয় আলোকিত একটি আদর্শ সমাজ বিনির্মাণ, যেখানে প্রতিটি হাফেজে কুরআন হবেন দ্বীনের একনিষ্ঠ সেবক এবং সমাজের পথপ্রদর্শক।</p>
+    <div class="container">
+        
+        <section id="about">
+            <div class="section-title">
+                <h2>আমাদের সম্পর্কে</h2>
+                <div class="line"></div>
             </div>
-            
-            <div class="footer-col">
-                <h4>যোগাযোগের ঠিকানা</h4>
-                <p><i class="fas fa-map-marker-alt" style="color:var(--accent); width:25px;"></i> কেন্দ্রীয় কার্যালয়, গাজীপুর, ঢাকা</p>
-                <p><i class="fas fa-phone-alt" style="color:var(--accent); width:25px;"></i> ০১৯০০-০০০০০০</p>
-                <p><i class="fas fa-envelope" style="color:var(--accent); width:25px;"></i> info@alhuffaz.org</p>
-            </div>
-
-            <div class="footer-col">
-                <h4>প্রয়োজনীয় লিংক</h4>
-                <ul class="footer-links">
-                    <li><a href="/about" data-link><i class="fas fa-chevron-right"></i> আমাদের সম্পর্কে</a></li>
-                    <li><a href="/activities" data-link><i class="fas fa-chevron-right"></i> কার্যক্রম ও প্রকল্প</a></li>
-                    <li><a href="/gallery" data-link><i class="fas fa-chevron-right"></i> ছবির গ্যালারি</a></li>
-                    <li><a href="admin.html"><i class="fas fa-chevron-right"></i> অ্যাডমিন লগইন</a></li>
-                </ul>
-            </div>
-            
-            <div class="footer-col">
-                <h4>সামাজিক যোগাযোগ</h4>
-                <div class="social-icons">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
-                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+            <div class="content-card">
+                <p style="text-align: center; color: var(--primary); font-weight: 600; margin-bottom: 20px; font-size: 18px;">
+                    সকল প্রশংসা মহান আল্লাহর। দরূদ ও সালাম সর্বশেষ নবী হযরত মুহাম্মাদ (সঃ) এর উপর।
+                </p>
+                <p style="text-align: justify; font-size: 16px;">
+                    দেশের হিফজ মাদরাসাগুলোর শিক্ষা কার্যক্রম সুসংহত এবং হাফেজদের মানোন্নয়নের লক্ষ্যে শীর্ষস্থানীয় উলামায়ে কিরাম ও উদ্যোমী হাফেজদের সমন্বয়ে <strong>"আল হুফফাজ ফাউন্ডেশন বাংলাদেশ"</strong> প্রতিষ্ঠিত। আমাদের মূল লক্ষ্য ছাত্রদের পড়ার মান উন্নত করা, শিক্ষকদের প্রশিক্ষণ দেওয়া এবং কুরআনের বিশুদ্ধ শিক্ষাকে সারা দেশে ব্যাপকভাবে ছড়িয়ে দেওয়া।
+                </p>
+                <div style="text-align: center; margin-top: 20px;">
+                    <a href="about.html" style="color: var(--primary); font-weight: bold; text-decoration: none;">বিস্তারিত পড়ুন <i class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
-        </div>
-        <div class="footer-bottom">
-            &copy; ২০২৪ - ২০২৬ আল হুফফাজ ফাউন্ডেশন বাংলাদেশ। সর্বস্বত্ব সংরক্ষিত।
-        </div>
-    </footer>
+        </section>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        <section id="activities" style="margin-top: 80px;">
+            <div class="section-title">
+                <h2>আমাদের কার্যক্রম</h2>
+                <div class="line"></div>
+            </div>
+            <div class="activities-grid">
+                <div class="card">
+                    <i class="fas fa-book-open"></i>
+                    <h3>হিফজ শিক্ষাবোর্ড</h3>
+                    <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 15px;">নিবন্ধিত মাদরাসাগুলোর মানোন্নয়ন এবং বার্ষিক কেন্দ্রীয় পরীক্ষা তদারকি করা।</p>
+                    <a href="board.html" style="color: var(--primary); font-size: 14px; text-decoration: none; font-weight: bold;">বিস্তারিত <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="card">
+                    <i class="fas fa-trophy"></i>
+                    <h3>জাতীয় প্রতিযোগিতা</h3>
+                    <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 15px;">কুরআনের হাফেজদের উৎসাহিত করতে দেশব্যাপী কুরআন প্রতিযোগিতার আয়োজন।</p>
+                    <a href="competition.html" style="color: var(--primary); font-size: 14px; text-decoration: none; font-weight: bold;">বিস্তারিত <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="card">
+                    <i class="fas fa-users-gear"></i>
+                    <h3>শিক্ষক প্রশিক্ষণ</h3>
+                    <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 15px;">হিফজ শিক্ষকদের তিলাওয়াত ও পাঠদান পদ্ধতির মান বৃদ্ধির জন্য বিশেষ কোর্স।</p>
+                    <a href="training.html" style="color: var(--primary); font-size: 14px; text-decoration: none; font-weight: bold;">বিস্তারিত <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </section>
+    </div>
 
-        // আপনার ফায়ারবেস কনফিগারেশন
-        const firebaseConfig = {
-            apiKey: "AIzaSyAjv9u2Qn3EdVxNKBMcT1ezHp-5NitucT0",
-            authDomain: "foundation-ntc.firebaseapp.com",
-            projectId: "foundation-ntc",
-            storageBucket: "foundation-ntc.firebasestorage.app",
-            messagingSenderId: "940836724866",
-            appId: "1:940836724866:web:b93b489374f410be02949b"
-        };
+    <div id="footer-placeholder"></div>
 
-        const app = initializeApp(firebaseConfig);
-        const rtdb = getDatabase(app);
-        const appContent = document.getElementById('app-content');
-        const navLinks = document.querySelectorAll('[data-link]');
-
-        // SPA Router
-        const navigateTo = url => {
-            history.pushState(null, null, url);
-            router();
-            document.getElementById('nav-menu').classList.remove('active');
-        };
-
-        const router = async () => {
-            const path = window.location.pathname;
-            
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if(link.getAttribute('href') === path) link.classList.add('active');
-            });
-
-            appContent.innerHTML = `<div style="text-align:center; padding:100px; color:var(--primary);"><i class="fas fa-circle-notch fa-spin fa-3x"></i></div>`;
-
-            switch(path) {
-                case '/': renderHome(); break;
-                case '/about': renderAbout(); break;
-                case '/activities': renderActivities(); break;
-                case '/gallery': renderGallery(); break;
-                case '/notice': renderNotice(); break;
-                case '/result': renderResult(); break;
-                case '/contact': renderContact(); break;
-                default: renderHome();
-            }
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        };
-
-        // --- VIEWS / PAGES --- //
-
-        function renderHome() {
-            appContent.innerHTML = `
-                <section class="hero">
-                    <h3>بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ</h3>
-                    <h2>কুরআনের আলোয় আলোকিত হোক বিশ্বময়</h2>
-                    <p>দেশব্যাপী হিফজ শিক্ষা সম্প্রসারণ, হাফেজদের মানোন্নয়ন এবং একটি সুশৃঙ্খল নীতিমালার মাধ্যমে আদর্শ সমাজ গঠনে আমরা বদ্ধপরিকর।</p>
-                    <a href="form.html" class="btn-premium" style="display:inline-block; text-decoration:none; padding: 15px 35px !important; font-size: 18px;">সদস্যপদের জন্য আবেদন <i class="fas fa-arrow-right" style="margin-left:8px;"></i></a>
-                </section>
-                
-                <section class="section-container">
-                    <h2 class="section-title">আমাদের <span>লক্ষ্য ও উদ্দেশ্য</span></h2>
-                    <div class="content-card" style="text-align:center; font-size: 18px; line-height: 2;">
-                        <p style="color:var(--primary); font-weight:bold; font-size:20px; margin-bottom:20px;">“তোমাদের মধ্যে সর্বোত্তম সে, যে নিজে কুরআন শেখে এবং অন্যকে শেখায়।”</p>
-                        <p>বাংলাদেশ একটি বৃহৎ মুসলিম রাষ্ট্র। এ দেশের প্রতিটি প্রান্তে ছড়িয়ে আছে হাজারো হিফজ মাদরাসা। এই অগণিত মাদরাসার শিক্ষা কার্যক্রমকে একটি সুশৃঙ্খল ও আধুনিক নীতিমালার আওতায় নিয়ে আসা, মেধাবী হাফেজদের খুঁজে বের করা এবং তাদের যথাযথ সম্মান ও কর্মসংস্থানের ব্যবস্থা করাই আমাদের মূল লক্ষ্য। আমরা চাই প্রতিটি হাফেজে কুরআন যেনো সমাজের বুকে একজন আদর্শ মানুষ হিসেবে মাথা উঁচু করে দাঁড়াতে পারে।</p>
-                        <a href="/about" data-link style="display:inline-block; margin-top:20px; color:var(--accent); font-weight:bold; text-decoration:none;">বিস্তারিত জানুন <i class="fas fa-angle-double-right"></i></a>
-                    </div>
-                </section>
-            `;
-        }
-
-        function renderAbout() {
-            appContent.innerHTML = `
-                <section class="section-container">
-                    <h2 class="section-title">আমাদের <span>সম্পর্কে</span></h2>
-                    <div class="content-card">
-                        <h3 style="color:var(--primary); margin-bottom:15px;"><i class="fas fa-book-open" style="color:var(--accent);"></i> প্রতিষ্ঠার পটভূমি</h3>
-                        <p>দেশের প্রত্যন্ত অঞ্চলে ছড়িয়ে ছিটিয়ে থাকা অসংখ্য হিফজখানার শিক্ষা ব্যবস্থায় একটি একক ও যুগোপযোগী শিক্ষাবোর্ডের অভাব দীর্ঘদিনের। বিচ্ছিন্নভাবে পরিচালিত এই শিক্ষাব্যবস্থাকে একটি সুনির্দিষ্ট রূপরেখার মাধ্যমে পরিচালনা করার স্বপ্ন নিয়ে দেশের শীর্ষস্থানীয় উলামায়ে কেরাম ও কুরআন প্রেমিকদের একনিষ্ঠ প্রচেষ্টায় <strong>"আল হুফফাজ ফাউন্ডেশন বাংলাদেশ"</strong>-এর জন্ম।</p>
-                        
-                        <h3 style="color:var(--primary); margin-top:30px; margin-bottom:15px;"><i class="fas fa-bullseye" style="color:var(--accent);"></i> আমাদের রূপকল্প (Vision)</h3>
-                        <ul style="list-style:none; line-height: 2;">
-                            <li><i class="fas fa-check text-success" style="color:var(--accent); margin-right:10px;"></i> দেশব্যাপী সকল হিফজ মাদরাসাকে একটি শক্তিশালী বোর্ডের অন্তর্ভুক্ত করা।</li>
-                            <li><i class="fas fa-check text-success" style="color:var(--accent); margin-right:10px;"></i> আন্তর্জাতিক মানের হাফেজে কুরআন তৈরি করা।</li>
-                            <li><i class="fas fa-check text-success" style="color:var(--accent); margin-right:10px;"></i> অসচ্ছল ও দরিদ্র হাফেজদের জন্য শিক্ষাবৃত্তি ও কর্মসংস্থানের সুযোগ সৃষ্টি করা।</li>
-                        </ul>
-                    </div>
-                </section>
-            `;
-        }
-
-        function renderActivities() {
-            appContent.innerHTML = `
-                <section class="section-container">
-                    <h2 class="section-title">আমাদের <span>কার্যক্রম</span></h2>
-                    <div class="grid-3">
-                        <div class="activity-card">
-                            <i class="fas fa-quran"></i>
-                            <h3>হিফ্জ শিক্ষা বোর্ড</h3>
-                            <p>দেশব্যাপী নিবন্ধিত মাদরাসাগুলোর বার্ষিক পরীক্ষা নিয়ন্ত্রণ, সিলেবাস প্রণয়ন এবং শিক্ষার মান পরিদর্শন করা। ৫, ১০, ২০ এবং ৩০ পারা গ্রুপে এই কার্যক্রম পরিচালিত হয়।</p>
-                        </div>
-                        <div class="activity-card">
-                            <i class="fas fa-medal"></i>
-                            <h3>হিফজুল কুরআন প্রতিযোগিতা</h3>
-                            <p>মেধাবী ছাত্রদের উৎসাহ প্রদানের লক্ষ্যে থানা, জেলা, বিভাগ ও জাতীয় পর্যায়ে সম্মানজনক হিফজুল কুরআন প্রতিযোগিতার আয়োজন এবং আকর্ষণীয় পুরস্কার প্রদান।</p>
-                        </div>
-                        <div class="activity-card">
-                            <i class="fas fa-chalkboard-teacher"></i>
-                            <h3>শিক্ষক প্রশিক্ষণ কোর্স</h3>
-                            <p>হিফজ বিভাগের শিক্ষকদের তিলাওয়াতের মান আন্তর্জাতিক পর্যায়ে উন্নীত করার লক্ষ্যে বছরব্যাপী আধুনিক ও বিজ্ঞানসম্মত বিষয়ভিত্তিক প্রশিক্ষণ কর্মশালা পরিচালনা।</p>
-                        </div>
-                        <div class="activity-card">
-                            <i class="fas fa-hand-holding-heart"></i>
-                            <h3>শিক্ষাবৃত্তি ও অনুদান</h3>
-                            <p>অসচ্ছল, এতিম ও মেধাবী হাফেজ ছাত্রদের পড়াশোনার খরচ বহন করা এবং বিভিন্ন দুর্যোগে মানবিক সহায়তা প্রদান করা।</p>
-                        </div>
-                    </div>
-                </section>
-            `;
-        }
-
-        function renderGallery() {
-            appContent.innerHTML = `
-                <section class="section-container">
-                    <h2 class="section-title">ছবির <span>গ্যালারি</span></h2>
-                    <p style="text-align:center; margin-bottom:40px; color:var(--text-muted);">আমাদের বিভিন্ন কর্মসূচী, প্রশিক্ষণ ও প্রতিযোগিতার কিছু অবিস্মরণীয় মুহূর্ত</p>
-                    
-                    <div class="gallery-grid">
-                        <div class="gallery-item">
-                            <img src="https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Gallery">
-                            <div class="gallery-overlay">
-                                <h4>হিফজ প্রতিযোগিতা</h4>
-                                <p>জাতীয় পর্যায়ের পুরস্কার বিতরণী</p>
-                            </div>
-                        </div>
-                        <div class="gallery-item">
-                            <img src="https://images.unsplash.com/photo-1604871000636-074fa5117945?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Gallery">
-                            <div class="gallery-overlay">
-                                <h4>শিক্ষক প্রশিক্ষণ</h4>
-                                <p>ঢাকায় অনুষ্ঠিত প্রশিক্ষণ কর্মশালা</p>
-                            </div>
-                        </div>
-                        <div class="gallery-item">
-                            <img src="https://images.unsplash.com/photo-1590076214589-980bd0dff2ba?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Gallery">
-                            <div class="gallery-overlay">
-                                <h4>বার্ষিক পরীক্ষা</h4>
-                                <p>কেন্দ্রীয়ভাবে পরীক্ষা গ্রহণ</p>
-                            </div>
-                        </div>
-                        <div class="gallery-item">
-                            <img src="https://images.unsplash.com/photo-1564391629859-99446d1bf5d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Gallery">
-                            <div class="gallery-overlay">
-                                <h4>মাদরাসা পরিদর্শন</h4>
-                                <p>নিবন্ধিত শাখা পরিদর্শন</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            `;
-        }
-
-        function renderContact() {
-            appContent.innerHTML = `
-                <section class="section-container">
-                    <h2 class="section-title">যোগাযোগ <span>করুন</span></h2>
-                    <div class="content-card" style="display:flex; flex-wrap:wrap; gap:40px;">
-                        <div style="flex:1; min-width:300px;">
-                            <h3 style="color:var(--primary); margin-bottom:20px;">আমাদের ঠিকানা</h3>
-                            <p><i class="fas fa-map-marker-alt" style="color:var(--accent); font-size:20px; width:30px;"></i> <strong>কেন্দ্রীয় কার্যালয়:</strong> গাজীপুর, ঢাকা, বাংলাদেশ</p>
-                            <p><i class="fas fa-phone-alt" style="color:var(--accent); font-size:20px; width:30px; margin-top:15px;"></i> <strong>মোবাইল:</strong> ০১৯০০-০০০০০০, ০১৮০০-০০০০০০</p>
-                            <p><i class="fas fa-envelope" style="color:var(--accent); font-size:20px; width:30px; margin-top:15px;"></i> <strong>ইমেইল:</strong> info@alhuffaz.org</p>
-                        </div>
-                        <div style="flex:1; min-width:300px;">
-                            <h3 style="color:var(--primary); margin-bottom:20px;">বার্তা পাঠান</h3>
-                            <input type="text" placeholder="আপনার নাম" style="width:100%; padding:12px; margin-bottom:15px; border:1px solid #ccc; border-radius:5px; font-family:inherit;">
-                            <input type="tel" placeholder="মোবাইল নম্বর" style="width:100%; padding:12px; margin-bottom:15px; border:1px solid #ccc; border-radius:5px; font-family:inherit;">
-                            <textarea placeholder="আপনার বার্তা লিখুন..." rows="4" style="width:100%; padding:12px; margin-bottom:15px; border:1px solid #ccc; border-radius:5px; font-family:inherit; resize:vertical;"></textarea>
-                            <button class="btn-premium" style="width:100%; border:none; cursor:pointer;" onclick="alert('আপনার বার্তা সফলভাবে পাঠানো হয়েছে!')">বার্তা পাঠান</button>
-                        </div>
-                    </div>
-                </section>
-            `;
-        }
-
-        function renderNotice() {
-            appContent.innerHTML = `
-                <section class="section-container">
-                    <h2 class="section-title">নোটিশ <span>বোর্ড</span></h2>
-                    <ul id="noticeList" class="data-list">
-                        <div style="text-align:center; padding:50px;"><i class="fas fa-spinner fa-spin fa-2x" style="color:var(--primary)"></i></div>
-                    </ul>
-                </section>`;
-            
-            const noticeRef = ref(rtdb, 'notices');
-            onValue(noticeRef, (snapshot) => {
-                const data = snapshot.val();
-                const listEl = document.getElementById('noticeList');
-                if(!listEl) return;
-                listEl.innerHTML = ''; 
-                if(data) {
-                    Object.values(data).reverse().forEach(notice => {
-                        listEl.innerHTML += `
-                            <li>
-                                <h4><i class="fas fa-bullhorn" style="color:var(--accent); margin-right:8px;"></i> ${notice.title}</h4>
-                                <p style="margin-top:5px; color:var(--text-muted);"><i class="far fa-calendar-alt"></i> প্রকাশিত: ${notice.date}</p>
-                            </li>`;
-                    });
-                } else {
-                    listEl.innerHTML = '<li style="text-align:center;">বর্তমানে কোনো নতুন নোটিশ নেই।</li>';
-                }
-            });
-        }
-
-        function renderResult() {
-            appContent.innerHTML = `
-                <section class="section-container">
-                    <h2 class="section-title">পরীক্ষার <span>ফলাফল</span></h2>
-                    <ul id="resultList" class="data-list">
-                        <div style="text-align:center; padding:50px;"><i class="fas fa-spinner fa-spin fa-2x" style="color:var(--primary)"></i></div>
-                    </ul>
-                </section>`;
-            
-            const resultRef = ref(rtdb, 'results');
-            onValue(resultRef, (snapshot) => {
-                const data = snapshot.val();
-                const listEl = document.getElementById('resultList');
-                if(!listEl) return;
-                listEl.innerHTML = '';
-                if(data) {
-                    Object.values(data).forEach(res => {
-                        listEl.innerHTML += `
-                            <li>
-                                <h4><i class="fas fa-user-graduate" style="color:var(--accent); margin-right:8px;"></i> ${res.studentName} (রোল: ${res.rollNo})</h4>
-                                <p style="margin-top:5px; font-size:15px; color:var(--text-muted);">প্রাপ্ত নাম্বার: <strong style="color:var(--primary); font-size:18px;">${res.marks}</strong> &nbsp;|&nbsp; বিভাগ: <span style="background:var(--bg-light); padding:2px 8px; border-radius:4px; border:1px solid #cbd5e1;">${res.grade}</span></p>
-                            </li>`;
-                    });
-                } else {
-                    listEl.innerHTML = '<li style="text-align:center;">এখনো কোনো ফলাফল প্রকাশ করা হয়নি।</li>';
-                }
-            });
-        }
-
-        // Initialize Router
-        window.addEventListener('popstate', router);
-        document.addEventListener('DOMContentLoaded', () => {
-            document.body.addEventListener('click', e => {
-                const link = e.target.closest('[data-link]');
-                if (link) {
-                    e.preventDefault();
-                    navigateTo(link.href);
-                }
-            });
-            router();
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
