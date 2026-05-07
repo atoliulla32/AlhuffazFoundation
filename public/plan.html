@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ভবিষ্যত পরিকল্পনা | আল হুফফাজ ফাউন্ডেশন</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        .plan-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 30px; }
+        .plan-card { background: #fff; padding: 35px 25px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.04); border-bottom: 4px solid var(--primary); transition: 0.4s; position: relative; overflow: hidden; z-index: 1;}
+        .plan-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 0; background: #f0fdf4; z-index: -1; transition: 0.4s; }
+        .plan-card:hover::before { height: 100%; }
+        .plan-card:hover { transform: translateY(-10px); box-shadow: 0 15px 35px rgba(21, 128, 61, 0.1); }
+        .plan-icon { width: 70px; height: 70px; background: #e6f4ea; color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; margin-bottom: 20px; transition: 0.3s;}
+        .plan-card:hover .plan-icon { background: var(--primary); color: #fff; transform: scale(1.1); }
+        .plan-card h3 { color: var(--primary-dark); font-size: 20px; margin-bottom: 15px; font-weight: 700; }
+        .plan-card p { color: #475569; font-size: 15px; text-align: justify; line-height: 1.7; margin: 0;}
+    </style>
+</head>
+<body>
+
+    <div id="header-placeholder"></div>
+
+    <div class="page-header">
+        <h2>আমাদের ভবিষ্যত পরিকল্পনা</h2>
+    </div>
+
+    <div class="container" style="margin-bottom: 80px;">
+        <div class="content-card" style="text-align: center; border: none; box-shadow: none; padding-bottom: 0;">
+            <p style="font-size: 18px; color: #334155; max-width: 800px; margin: 0 auto;">মহান আল্লাহর সন্তুষ্টি অর্জন এবং কুরআনের আলো প্রতিটি ঘরে পৌঁছে দেওয়ার লক্ষ্যে আল হুফফাজ ফাউন্ডেশন কিছু সুদূরপ্রসারী ও ডিজিটাল পরিকল্পনা গ্রহণ করেছে। আমাদের আগামী দিনের লক্ষ্যগুলো নিচে তুলে ধরা হলো:</p>
+        </div>
+
+        <div class="plan-grid">
+            <div class="plan-card">
+                <div class="plan-icon"><i class="fas fa-mosque"></i></div>
+                <h3>মডেল হিফজ মাদরাসা প্রতিষ্ঠা</h3>
+                <p>সারা দেশে একটি কেন্দ্রীয় আন্তর্জাতিক মানের মডেল হিফজ মাদরাসা স্থাপন করা, যেখানে কুরআনের পাশাপাশি যুগোপযোগী সাধারণ শিক্ষাও প্রদান করা হবে।</p>
+            </div>
+            <div class="plan-card">
+                <div class="plan-icon"><i class="fas fa-laptop-code"></i></div>
+                <h3>ডিজিটাল হিফজ ট্র্যাকিং অ্যাপ</h3>
+                <p>শিক্ষার্থীদের প্রতিদিনের সবক, দাওর এবং তিলাওয়াতের মান মনিটরিং করার জন্য নিজস্ব একটি স্মার্ট অ্যাপ এবং সফটওয়্যার তৈরি করা।</p>
+            </div>
+            <div class="plan-card">
+                <div class="plan-icon"><i class="fas fa-hand-holding-heart"></i></div>
+                <h3>হাফেজ কল্যাণ তহবিল</h3>
+                <p>দরিদ্র ও এতিম হাফেজদের উচ্চশিক্ষা গ্রহণ এবং বয়োজ্যেষ্ঠ অসচ্ছল হিফজ শিক্ষকদের আর্থিকভাবে স্বাবলম্বী করতে স্থায়ী কল্যাণ তহবিল গঠন।</p>
+            </div>
+            <div class="plan-card">
+                <div class="plan-icon"><i class="fas fa-globe"></i></div>
+                <h3>আন্তর্জাতিক কুরআন গবেষণা কেন্দ্র</h3>
+                <p>কুরআনের তাফসির, ক্যালিগ্রাফি এবং কিরাত শাস্ত্রের ওপর গবেষণার জন্য একটি সমৃদ্ধ ডিজিটাল লাইব্রেরি ও গবেষণা কেন্দ্র গড়ে তোলা।</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer-placeholder"></div>
+    <script src="script.js"></script>
+</body>
+</html>
