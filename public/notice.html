@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>বিজ্ঞপ্তি বোর্ড | আল হুফফাজ ফাউন্ডেশন</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        .loader-container { text-align: center; padding: 60px 0; color: #f59e0b; }
+        .spinner { border: 4px solid rgba(245, 158, 11, 0.2); border-left-color: #f59e0b; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 15px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        /* আপনার পছন্দের নোটিশ বোর্ড ডিজাইন */
+        .marquee-board {
+            background: #000000;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 2px solid #166534; /* চারপাশের বর্ডার */
+            margin-top: 30px;
+            overflow: hidden;
+        }
+        .marquee-header {
+            background: #111111;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 15px;
+            text-align: center;
+            border-bottom: 2px solid #222222;
+            margin-bottom: 15px;
+        }
+        .dynamic-notice {
+            margin-bottom: 40px;
+        }
+        .dynamic-notice h2 { font-size: 22px; color: gold; margin-bottom: 5px; }
+        .dynamic-notice h3 { font-size: 16px; color: red; margin-top: 0; margin-bottom: 15px; }
+        .dynamic-notice p { color: white; font-size: 16px; white-space: pre-wrap; line-height: 1.6; }
+    </style>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="page-header"><h2>বিজ্ঞপ্তি ও সংবাদ</h2></div>
+
+    <div class="container" style="margin-bottom: 80px; max-width: 800px;">
+        
+        <div class="marquee-board">
+            <div class="marquee-header">
+                <font color="white">📢 আল হুফফাজ ফাউন্ডেশনের সর্বশেষ বিজ্ঞপ্তি সমূহ 📝</font>
+            </div>
+            
+            <div id="loader" class="loader-container">
+                <div class="spinner"></div>
+                <p style="color: gold; font-weight: bold;">বিজ্ঞপ্তি লোড হচ্ছে...</p>
+            </div>
+
+            <marquee id="notice-marquee" behavior="scroll" direction="up" scrollamount="2" height="400px" onmouseover="this.stop();" onmouseout="this.start();" style="display: none;">
+                <center id="notice-list">
+                    </center>
+            </marquee>
+        </div>
+
+    </div>
+
+    <div id="footer-placeholder"></div>
+    <script src="script.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAjv9u2Qn3EdVxNKBMcT1ezHp-5NitucT0",
+            authDomain: "foundation-ntc.firebaseapp.com",
+            projectId: "foundation-ntc",
+            storageBucket: "foundation-ntc.firebasestorage.app",
+            messagingSenderId: "940836724866",
+            appId: "1:940836724866:web:6a93fad2b27d6e0302949b"
+        };
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+        const db = firebase.firestore();
+
+        const noticeList = document.getElementById('notice-list');
+        const loader = document.getElementById('loader');
+        const marquee = document.getElementById('notice-marquee');
+
+        // ডাটাবেজ থেকে লাইভ নোটিশ টানা হচ্ছে
+        db.collection("notices").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
+            loader.style.display = 'none';
+            marquee.style.display = 'block';
+            noticeList.innerHTML = '';
+            
+            if (snapshot.empty) {
+                noticeList.innerHTML = '<h3 style="color:red; margin-top: 50px;">বর্তমানে কোনো নতুন বিজ্ঞপ্তি নেই।</h3>';
+                return;
+            }
+
+            snapshot.forEach((doc) => {
+                const notice = doc.data();
+                
+                noticeList.innerHTML += `
+                    <div class="dynamic-notice">
+                        <h2>💓 ${notice.title} ✍️</h2>
+                        <h3>(${notice.date})</h3>
+                        <p>👉 ${notice.description}</p>
+                        <hr style="border: 1px dashed #333333; width: 60%; margin: 25px auto;">
+                    </div>
+                `;
+            });
+        }, (error) => {
+            loader.innerHTML = '<p style="color:red; text-align:center;">ইন্টারনেট সংযোগ চেক করুন!</p>';
+        });
+    </script>
+</body>
+</html>
