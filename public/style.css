@@ -41,18 +41,12 @@ header { background: var(--white); padding: 10px 0; position: sticky; top: 0; z-
 .card:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
 .card i { font-size: 40px; color: var(--primary); margin-bottom: 20px; }
 
-/* Mobile Menu CSS & 'X' icon logic */
-.menu-toggle { display: none; font-size: 24px; cursor: pointer; color: var(--primary); position: relative; }
-.menu-toggle .fa-times { display: none; } /* Hide the close icon initially */
-
+/* Mobile Menu CSS */
+.menu-toggle { display: none; font-size: 26px; cursor: pointer; color: var(--primary); transition: 0.3s; }
 @media (max-width: 1024px) {
     .nav-links { position: fixed; top: 70px; right: -100%; width: 280px; height: calc(100vh - 70px); background: white; flex-direction: column; padding: 20px; box-shadow: -5px 0 15px rgba(0,0,0,0.1); transition: right 0.4s ease-in-out; z-index: 1000; overflow-y: auto; display: flex; margin: 0;}
     .nav-links.active { right: 0; }
     .dropdown-menu { position: static; box-shadow: none; border-left: 2px solid var(--primary); margin-left: 10px; display: none; }
     .dropdown.active .dropdown-menu { display: block; }
     .menu-toggle { display: block; }
-
-    /* When the menu button is active (menu is open) */
-    .menu-toggle.active .fa-bars { display: none; } /* Hide the bars icon */
-    .menu-toggle.active .fa-times { display: block; color: #ff0000; } /* Show the red close icon */
 }
