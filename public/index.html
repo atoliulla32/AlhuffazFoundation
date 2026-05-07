@@ -3,161 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>আল হুফফাজ ফাউন্ডেশন বাংলাদেশ | কুরআনের আলোয় আলোকিত বিশ্ব</title>
+    <title>আল হুফফাজ ফাউন্ডেশন বাংলাদেশ</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <style>
-        :root {
-            --primary: #15803d; 
-            --primary-dark: #166534;
-            --accent: #f59e0b;
-            --bg-soft: #f8fafc;
-            --white: #ffffff;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
-        body { font-family: 'Noto Sans Bengali', sans-serif; background-color: var(--bg-soft); color: var(--text-main); line-height: 1.8; overflow-x: hidden; }
-
-        /* --- Header --- */
-        header { background: var(--white); padding: 10px 0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .nav-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
-        .logo-section { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-        .logo-section img { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--primary); }
-        .logo-text h1 { font-size: 18px; color: var(--primary-dark); font-weight: 700; line-height: 1.2; }
-
-        /* Navigation */
-        .nav-links { display: flex; gap: 15px; list-style: none; margin: 0; }
-        .nav-links li { position: relative; }
-        .nav-links a { text-decoration: none; color: var(--text-main); font-weight: 600; font-size: 15px; padding: 10px 5px; transition: 0.3s; display: block; }
-        .nav-links a:hover { color: var(--primary); }
-
-        /* Dropdown */
-        .dropdown-menu { display: none; position: absolute; top: 100%; left: 0; background: var(--white); min-width: 220px; box-shadow: var(--shadow); border-radius: 5px; padding: 10px 0; border: 1px solid #edf2f7; z-index: 1001; }
-        @media (min-width: 1025px) { .dropdown:hover .dropdown-menu { display: block; } }
-        .dropdown-menu a { display: block; padding: 8px 20px; font-weight: 400; border-bottom: 1px solid #f1f5f9; }
-
-        /* --- Hero --- */
-        .hero { background: linear-gradient(rgba(21, 128, 61, 0.8), rgba(15, 23, 42, 0.9)), url('https://images.unsplash.com/photo-1584281723351-95ad9970422c?auto=format&fit=crop&w=1600&q=80') center/cover; height: 35vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: white; padding: 20px; }
-        .hero h2 { font-size: 2.2rem; margin-bottom: 15px; }
-
-        /* --- Container --- */
-        .container { max-width: 1200px; margin: 60px auto; padding: 0 20px; }
-        .section-title { text-align: center; margin-bottom: 40px; }
-        .section-title h2 { color: var(--primary-dark); font-size: 28px; }
-        .line { width: 50px; height: 4px; background: var(--accent); margin: 10px auto; border-radius: 2px; }
-
-        .content-card { background: var(--white); padding: 40px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border-top: 5px solid var(--primary); }
-        .activities-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-top: 40px; }
-        .card { background: var(--white); padding: 30px; border-radius: 12px; text-align: center; transition: 0.3s; border: 1px solid #e2e8f0; }
-        .card:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
-        .card i { font-size: 40px; color: var(--primary); margin-bottom: 20px; }
-
-        /* --- Footer --- */
-        footer { background: #0f172a; color: #94a3b8; padding: 60px 20px 20px; }
-        .footer-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; }
-        .footer-col h4 { color: white; margin-bottom: 20px; font-size: 18px; border-bottom: 2px solid var(--primary); display: inline-block; padding-bottom: 5px; }
-        .footer-col p { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-        .footer-col i { color: var(--accent); }
-        .footer-links { list-style: none; padding: 0; }
-        .footer-links li { margin-bottom: 10px; }
-        .footer-links a { color: #94a3b8; text-decoration: none; transition: 0.3s; }
-        .footer-links a:hover { color: var(--accent); padding-left: 5px; }
-        
-        .social-icons { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
-        .social-icons a { color: #fff; padding: 10px 15px; border-radius: 5px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: 0.3s; }
-        .social-icons .fb { background: #3b5998; }
-        .social-icons .yt { background: #ff0000; }
-        .social-icons a:hover { opacity: 0.8; }
-
-        .footer-bottom { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #1e293b; font-size: 13px; }
-
-        /* Mobile Menu */
-        .menu-toggle { display: none; font-size: 24px; cursor: pointer; color: var(--primary); }
-
-        @media (max-width: 1024px) {
-            .nav-links { 
-                position: fixed; top: 70px; right: -100%; /* মেনু ডানদিকে লুকানো */
-                width: 280px; height: calc(100vh - 70px); background: white; 
-                flex-direction: column; padding: 20px; box-shadow: -5px 0 15px rgba(0,0,0,0.1); 
-                transition: right 0.4s ease-in-out; /* স্লাইড অ্যানিমেশন */
-                z-index: 1000; overflow-y: auto; display: flex; margin: 0;
-            }
-            .nav-links.active { right: 0; /* ক্লিক করলে ডানদিক থেকে আসবে */ }
-            .dropdown-menu { position: static; box-shadow: none; border-left: 2px solid var(--primary); margin-left: 10px; display: none; }
-            .dropdown.active .dropdown-menu { display: block; }
-            .menu-toggle { display: block; }
-            .hero h2 { font-size: 1.5rem; }
-        }
-    </style>
+    
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <header>
-        <div class="nav-container">
-            <a href="index.html" class="logo-section">
-                <img src="https://res.cloudinary.com/ddvprmv9g/image/upload/v1777644601/gu7xxpbkokyrx9wgifsn.jpg" alt="Logo">
-                <div class="logo-text">
-                    <h1>আল হুফফাজ <br><small style="font-weight: 400; color: var(--text-muted); font-size: 13px;">ফাউন্ডেশন বাংলাদেশ</small></h1>
-                </div>
-            </a>
+    <div id="header-placeholder"></div>
 
-            <div class="menu-toggle" onclick="toggleMenu()">
-                <i class="fas fa-bars"></i>
-            </div>
-
-            <ul class="nav-links" id="navLinks">
-                <li><a href="index.html">প্রথম পাতা</a></li>
-                <li class="dropdown">
-                    <a href="javascript:void(0)" onclick="toggleDropdown(this.parentElement)">পরিচিতি <i class="fas fa-caret-down"></i></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="about.html">আমাদের সম্পর্কে</a></li>
-                        <li><a href="mission.html">লক্ষ্য ও উদ্দেশ্য</a></li>
-                        <li><a href="plan.html">ভবিষ্যত পরিকল্পনা</a></li>
-                        <li><a href="committee.html">কর্মকর্তাবৃন্দ</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a href="javascript:void(0)" onclick="toggleDropdown(this.parentElement)">প্রকল্প <i class="fas fa-caret-down"></i></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="board.html">হিফজ শিক্ষা বোর্ড</a></li>
-                        <li><a href="competition.html">জাতীয় হিফজুল কুরআন প্রতিযোগিতা</a></li>
-                        <li><a href="training.html">হিফজ শিক্ষক প্রশিক্ষণ কোর্স</a></li>
-                    </ul>
-                </li>
-                <li><a href="gallery.html">ছবির গ্যালারি</a></li>
-                <li><a href="audio.html">অডিও লাইব্রেরী</a></li>
-                <li><a href="notice.html">বিজ্ঞপ্তি</a></li>
-                <li><a href="contact.html">যোগাযোগ</a></li>
-            </ul>
-        </div>
-    </header>
-
-    <section class="hero">
+    <section class="hero" style="height: 35vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: white; background: linear-gradient(rgba(21, 128, 61, 0.8), rgba(15, 23, 42, 0.9)), url('https://images.unsplash.com/photo-1584281723351-95ad9970422c?auto=format&fit=crop&w=1600&q=80') center/cover;">
         <div style="font-size: 22px; margin-bottom: 10px;">بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ</div>
-        <h2>কুরআনের আলোয় আলোকিত হোক বিশ্বময়</h2>
+        <h2 style="font-size: 2.2rem; margin-bottom: 15px;">কুরআনের আলোয় আলোকিত হোক বিশ্বময়</h2>
         <p style="max-width: 700px; opacity: 0.9;">কুরআনের শিক্ষা ও হাফেজদের মানোন্নয়নে আল হুফফাজ ফাউন্ডেশন একটি নিবেদিত নাম।</p>
     </section>
 
     <div class="container">
-        <section id="about">
-            <div class="section-title">
-                <h2>আমাদের সম্পর্কে</h2>
-                <div class="line"></div>
-            </div>
-            <div class="content-card">
-                <p>আল হুফফাজ ফাউন্ডেশন বাংলাদেশ একটি অরাজনৈতিক ও সেবামূলক প্রতিষ্ঠান। আমাদের মূল লক্ষ্য হলো সারা দেশের হিফজ মাদরাসাগুলোর পাঠদান পদ্ধতিকে উন্নত করা এবং হাফেজদের আধুনিক ও নৈতিক শিক্ষায় শিক্ষিত করে তোলা। বিশুদ্ধ কুরআন তিলাওয়াত এবং এর মর্মবাণী মানুষের কাছে পৌঁছে দিতে আমরা প্রতিনিয়ত কাজ করে যাচ্ছি।</p>
-                <div style="text-align: center; margin-top: 20px;">
-                    <a href="about.html" style="color: var(--primary); font-weight: bold; text-decoration: none;">বিস্তারিত পড়ুন <i class="fas fa-arrow-right"></i></a>
-                </div>
-            </div>
-        </section>
-
-        <section id="activities" style="margin-top: 80px;">
+        <section id="activities" style="margin-top: 40px;">
             <div class="section-title">
                 <h2>আমাদের কার্যক্রম</h2>
                 <div class="line"></div>
@@ -166,72 +30,24 @@
                 <div class="card">
                     <i class="fas fa-book-open"></i>
                     <h3>হিফজ শিক্ষাবোর্ড</h3>
-                    <p>নিবন্ধিত মাদরাসাগুলোর মানোন্নয়ন এবং বার্ষিক কেন্দ্রীয় পরীক্ষা তদারকি করা।</p>
                     <a href="board.html" style="color: var(--primary); font-size: 14px; text-decoration: none; font-weight: bold;">বিস্তারিত <i class="fas fa-arrow-right"></i></a>
                 </div>
                 <div class="card">
                     <i class="fas fa-trophy"></i>
                     <h3>জাতীয় প্রতিযোগিতা</h3>
-                    <p>কুরআনের হাফেজদের উৎসাহিত করতে দেশব্যাপী কুরআন প্রতিযোগিতার আয়োজন।</p>
                     <a href="competition.html" style="color: var(--primary); font-size: 14px; text-decoration: none; font-weight: bold;">বিস্তারিত <i class="fas fa-arrow-right"></i></a>
                 </div>
                 <div class="card">
                     <i class="fas fa-users-gear"></i>
                     <h3>শিক্ষক প্রশিক্ষণ</h3>
-                    <p>হিফজ শিক্ষকদের তিলাওয়াত ও পাঠদান পদ্ধতির মান বৃদ্ধির জন্য বিশেষ কোর্স।</p>
                     <a href="training.html" style="color: var(--primary); font-size: 14px; text-decoration: none; font-weight: bold;">বিস্তারিত <i class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
         </section>
     </div>
 
-    <footer>
-        <div class="footer-grid">
-            <div class="footer-col">
-                <h4>যোগাযোগের ঠিকানা</h4>
-                <p><i class="fas fa-map-marker-alt"></i> প্রধান কার্যালয়, গাজীপুর, ঢাকা।</p>
-                <p><i class="fas fa-phone"></i> +৮৮০ ১৯০০-০০০০০০</p>
-                <p><i class="fas fa-envelope"></i> info@alhuffaz.org</p>
-            </div>
-            <div class="footer-col">
-                <h4>গুরুত্বপূর্ণ লিংক</h4>
-                <ul class="footer-links">
-                    <li><a href="about.html"><i class="fas fa-angle-right"></i> আমাদের সম্পর্কে</a></li>
-                    <li><a href="plan.html"><i class="fas fa-angle-right"></i> ভবিষ্যত পরিকল্পনা</a></li>
-                    <li><a href="board.html"><i class="fas fa-angle-right"></i> হিফজ শিক্ষা বোর্ড</a></li>
-                    <li><a href="notice.html"><i class="fas fa-angle-right"></i> বিজ্ঞপ্তি</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>সোশ্যাল মিডিয়া</h4>
-                <p style="margin-bottom: 15px;">আমাদের কার্যক্রমের নিয়মিত আপডেট পেতে সোশ্যাল মিডিয়ায় যুক্ত থাকুন:</p>
-                <div class="social-icons">
-                    <a href="https://www.facebook.com/profile.php?id=61579231990412" target="_blank" class="fb">
-                        <i class="fab fa-facebook-f"></i> Facebook
-                    </a>
-                    <a href="https://youtube.com/@huffazulquran-ju8dk?si=KxaoWaFMnEXE7IXQ" target="_blank" class="yt">
-                        <i class="fab fa-youtube"></i> YouTube
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            &copy; ২০২৬ আল হুফফাজ ফাউন্ডেশন বাংলাদেশ। সর্বস্বত্ব সংরক্ষিত।
-        </div>
-    </footer>
+    <div id="footer-placeholder"></div>
 
-    <script>
-        // স্লাইড মেনু ওপেন/ক্লোজ ফাংশন
-        function toggleMenu() {
-            document.getElementById("navLinks").classList.toggle("active");
-        }
-
-        // ড্রপডাউন মেনু টগল ফাংশন
-        function toggleDropdown(element) {
-            if (window.innerWidth <= 1024) {
-                element.classList.toggle("active");
-            }
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
