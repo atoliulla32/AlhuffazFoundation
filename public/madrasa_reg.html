@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>মাদরাসা নিবন্ধন | আল হুফফাজ শিক্ষাবোর্ড</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #15803d; 
+            --secondary-color: #166534;
+            --accent-color: #f59e0b;
+            --success-color: #10b981;
+            --error-color: #ef4444;
+            --guide-color: #6366f1;
+            --guide-bg: #e0e7ff;
+            --bg-color: #f0fdf4;
+            --text-color: #1e293b;
+            --border-radius: 12px;
+        }
+
+        body { font-family: 'Noto Sans Bengali', sans-serif; background-color: var(--bg-color); margin: 0; padding: 15px; color: var(--text-color); font-size: 15px; scroll-behavior: smooth;}
+        
+        .form-container { max-width: 850px; margin: 0 auto; background: #fff; border-radius: var(--border-radius); box-shadow: 0 10px 25px rgba(0,0,0,0.08); overflow: hidden; padding-bottom: 20px;}
+        
+        .header { background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: #fff; padding: 25px 20px; text-align: center; }
+        .bismillah { font-family: 'Arial', serif; font-size: 16px; margin-bottom: 12px; opacity: 0.9; }
+        .logo { width: 90px; height: 90px; margin: 0 auto 12px; background: #fff; padding: 4px; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.2);}
+        .logo img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .header h1 { font-size: 24px; margin: 0 0 5px 0; font-weight: 700; }
+        .header p { margin: 0; font-size: 15px; opacity: 0.9; font-weight: 500;}
+
+        .main-form { padding: 25px; }
+        
+        fieldset { border: 1px solid #bbf7d0; border-radius: 10px; padding: 20px; margin-bottom: 25px; background: #fff; position: relative; transition: all 0.3s ease;}
+        legend { background: var(--secondary-color); color: #fff; padding: 6px 16px; border-radius: 6px; font-size: 15px; font-weight: bold; margin-left: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.15); }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        
+        .form-group { display: flex; flex-direction: column; gap: 6px; position: relative; margin-bottom: 15px;}
+        label { font-size: 14px; font-weight: bold; color: #334155; }
+        input, select, textarea { padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: 'Noto Sans Bengali', sans-serif; font-size: 14px; background: #f8fafc; transition: 0.3s; width: 100%; box-sizing: border-box;}
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.15); background: #fff; }
+        
+        .error-highlight { border: 2px solid var(--error-color) !important; background-color: #fef2f2 !important; box-shadow: 0 0 8px rgba(239, 68, 68, 0.4) !important; transition: 0.3s; }
+        .active-focus { border: 2px solid var(--accent-color) !important; background-color: #fffbeb !important; box-shadow: 0 0 12px rgba(245, 158, 11, 0.6) !important; transition: 0.3s; }
+
+        @keyframes pulseGuide { 0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); } 70% { box-shadow: 0 0 0 12px rgba(99, 102, 241, 0); } 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); } }
+        .pulse-guide { animation: pulseGuide 2s infinite; border: 2px solid var(--guide-color) !important; background-color: var(--guide-bg) !important; border-radius: 8px;}
+
+        .photo-upload-container { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; padding: 15px; background: #f0fdf4; border: 1px dashed var(--primary-color); border-radius: 8px; transition: 0.3s; outline: none; }
+        .photo-box { width: 120px; height: 120px; border: 2px dashed var(--primary-color); background: #fff; border-radius: 8px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; text-align: center; overflow: hidden; position: relative; flex-shrink: 0; outline: none; transition: 0.3s;}
+        .photo-box img { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; display: none; }
+        .photo-box input { display: none; }
+        .photo-text { font-size: 12px; font-weight: bold; color: var(--secondary-color); z-index: 1; padding: 5px; line-height: 1.4; }
+        .photo-instructions { flex-grow: 1; font-size: 13px; color: #475569; }
+
+        .btn-submit { background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; border: none; padding: 16px; font-size: 18px; font-weight: bold; width: 100%; border-radius: 8px; cursor: pointer; transition: 0.3s; margin-top: 10px; box-shadow: 0 4px 10px rgba(21, 128, 61, 0.3);}
+        .btn-submit:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(21, 128, 61, 0.4); }
+
+        .app-tooltip { position: absolute; background: linear-gradient(135deg, #7c3aed, #4f46e5); color: #ffffff; padding: 12px 18px; border-radius: 8px; font-size: 14px; font-weight: 600; pointer-events: none; z-index: 100000; box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4); opacity: 0; visibility: hidden; transition: opacity 0.3s ease; max-width: 280px; line-height: 1.5; }
+        .app-tooltip.show { opacity: 1; visibility: visible; }
+        .app-tooltip::after { content: ''; position: absolute; top: 100%; left: 20px; border-width: 8px; border-style: solid; border-color: #4f46e5 transparent transparent transparent; }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(5px); z-index: 100000; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; }
+        .modal-box { background: #fff; padding: 30px; border-radius: 16px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.25); transform: translateY(30px) scale(0.95); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .modal-box.show { transform: translateY(0) scale(1); }
+        .modal-icon { font-size: 55px; margin-bottom: 15px; }
+        .modal-title { font-size: 22px; font-weight: bold; color: #1e293b; margin-bottom: 10px; }
+        .modal-desc { font-size: 15px; color: #64748b; margin-bottom: 25px; line-height: 1.5; }
+        .modal-btn { background: var(--primary-color); color: #fff; border: none; padding: 12px 25px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; width: 100%; }
+        .modal-btn:hover { background: var(--secondary-color); }
+        .modal-btn.success-btn { background: var(--success-color); }
+
+        .preview-modal-box { background: #f8fafc; padding: 20px; border-radius: 16px; width: 95%; max-width: 850px; max-height: 95vh; display: flex; flex-direction: column; box-shadow: 0 25px 50px rgba(0,0,0,0.25); transform: translateY(30px) scale(0.95); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .preview-modal-box.show { transform: translateY(0) scale(1); }
+        .preview-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 15px; margin-bottom: 15px; }
+        .preview-content { flex-grow: 1; overflow-y: auto; overflow-x: hidden; background: #cbd5e1; border: 1px solid #94a3b8; border-radius: 8px; padding: 15px 0; text-align: center; display: flex; justify-content: center; }
+        .preview-actions { display: flex; gap: 15px; margin-top: 20px; justify-content: flex-end; }
+        .btn-edit { background: #64748b; color: #fff; border: none; padding: 12px 25px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        
+        .loader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); z-index: 200000; display: none; flex-direction: column; align-items: center; justify-content: center; color: white; backdrop-filter: blur(5px); }
+        .spinner { width: 70px; height: 70px; border: 6px solid rgba(255, 255, 255, 0.3); border-top-color: var(--accent-color); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .progress-text { font-size: 28px; font-weight: bold; margin-top: 20px; color: #fff;}
+
+        @media (max-width: 600px) {
+            .grid-2 { grid-template-columns: 1fr; gap: 5px; }
+            .photo-upload-container { flex-direction: column; text-align: center; }
+            .preview-actions { flex-direction: column; }
+            .preview-modal-box { padding: 15px 10px; width: 98%; }
+        }
+
+        #pdf-render-container { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="loader-overlay" id="loaderOverlay">
+        <div class="spinner"></div>
+        <div class="progress-text"><span id="progressPercent">0</span>%</div>
+        <div style="font-size: 15px; margin-top: 5px; opacity: 0.8;">নিবন্ধন তথ্য জমা হচ্ছে, অপেক্ষা করুন...</div>
+    </div>
+
+    <div class="modal-overlay" id="customAlertOverlay">
+        <div class="modal-box" id="customAlertBox">
+            <div class="modal-icon" id="customAlertIcon">⚠️</div>
+            <div class="modal-title" id="customAlertTitle">সতর্কতা</div>
+            <div class="modal-desc" id="customAlertDesc">মেসেজ এখানে দেখাবে</div>
+            <button class="modal-btn" id="customAlertBtn" onclick="closeCustomAlert()">ঠিক আছে</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="previewModalOverlay">
+        <div class="preview-modal-box" id="previewModalBox">
+            <div class="preview-header">
+                <h2 style="margin:0; color:var(--secondary-color); font-size: 20px;">📄 নিবন্ধন ফরমের প্রিভিউ</h2>
+                <button type="button" style="background:none; border:none; font-size:24px; cursor:pointer; color:#ef4444;" onclick="closePreview()">×</button>
+            </div>
+            <div class="preview-content" id="previewContentDiv"></div>
+            <div class="preview-actions">
+                <button type="button" class="btn-edit" onclick="closePreview()">✏️ এডিট করুন</button>
+                <button type="button" class="modal-btn success-btn" style="width: auto;" onclick="executeFinalSubmit()">✅ চূড়ান্ত সাবমিট ও ডাউনলোড</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="appTooltip" class="app-tooltip"></div>
+
+    <main class="form-container">
+        <header class="header">
+            <div class="bismillah">بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ</div>
+            <div class="logo"><img src="https://res.cloudinary.com/ddvprmv9g/image/upload/v1777644601/gu7xxpbkokyrx9wgifsn.jpg" alt="আল হুফফাজ লোগো"></div>
+            <h1>আল হুফফাজ শিক্ষাবোর্ড বাংলাদেশ</h1>
+            <p>মাদরাসা নিবন্ধন আবেদন ফরম</p>
+        </header>
+
+        <form class="main-form" id="madrasaForm">
+
+            <div class="photo-upload-container" id="photoUploadSection" data-guide="photo" tabindex="0">
+                <label class="photo-box" id="photoContainer">
+                    <span class="photo-text" id="photoText">📷<br>লোগো / ছবি</span>
+                    <img id="photoPreview" alt="Madrasa Logo">
+                    <input type="file" id="photoInput" accept="image/*">
+                </label>
+                <div class="photo-instructions">
+                    <h3 style="margin: 0 0 5px 0; color: var(--primary-color);">মাদরাসার লোগো বা ছবি আপলোড করুন</h3>
+                    <p style="margin: 0;">আপনার মাদরাসার একটি সুন্দর ছবি অথবা লোগো আপলোড করুন। (আবশ্যক)</p>
+                </div>
+            </div>
+
+            <fieldset>
+                <legend>🔹 মাদরাসার প্রাথমিক তথ্য</legend>
+                
+                <div class="form-group">
+                    <label>মাদরাসার নাম (আবশ্যক)</label>
+                    <input type="text" id="madrasaName" placeholder="আপনার মাদরাসার পূর্ণ নাম লিখুন" oninput="removeError(this)" data-guide="madrasaName">
+                </div>
+                
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>প্রতিষ্ঠা সাল</label>
+                        <input type="number" id="establishedYear" placeholder="যেমন: ২০১৫" oninput="removeError(this)" data-guide="establishedYear">
+                    </div>
+                    <div class="form-group">
+                        <label>মাদরাসার ধরন</label>
+                        <select id="madrasaType" onchange="removeError(this)" data-guide="madrasaType">
+                            <option value="">নির্বাচন করুন</option>
+                            <option value="আবাসিক">সম্পূর্ণ আবাসিক</option>
+                            <option value="অনাবাসিক">অনাবাসিক (ডে-কেয়ার)</option>
+                            <option value="আবাসিক ও অনাবাসিক">উভয় (আবাসিক ও অনাবাসিক)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>প্রতিষ্ঠাতার নাম</label>
+                        <input type="text" id="founderName" placeholder="প্রতিষ্ঠাতার নাম লিখুন" oninput="removeError(this)" data-guide="founderName">
+                    </div>
+                    <div class="form-group">
+                        <label>মুহতামিম / প্রধান শিক্ষকের নাম (আবশ্যক)</label>
+                        <input type="text" id="principalName" placeholder="মুহতামিমের নাম লিখুন" oninput="removeError(this)" data-guide="principalName">
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>🔹 যোগাযোগ ও ঠিকানা</legend>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>গ্রাম / রোড / মহল্লা (আবশ্যক)</label>
+                        <input type="text" id="village" placeholder="গ্রাম বা রাস্তার নাম" oninput="removeError(this)" data-guide="village">
+                    </div>
+                    <div class="form-group">
+                        <label>ডাকঘর (আবশ্যক)</label>
+                        <input type="text" id="postOffice" placeholder="ডাকঘরের নাম" oninput="removeError(this)" data-guide="postOffice">
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>থানা / উপজেলা (আবশ্যক)</label>
+                        <input type="text" id="thana" placeholder="থানার নাম" oninput="removeError(this)" data-guide="thana">
+                    </div>
+                    <div class="form-group">
+                        <label>জেলা (আবশ্যক)</label>
+                        <input type="text" id="district" placeholder="জেলার নাম" oninput="removeError(this)" data-guide="district">
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>যোগাযোগের মোবাইল নম্বর (আবশ্যক)</label>
+                        <input type="tel" id="phone" maxlength="11" placeholder="১১ ডিজিটের সচল নম্বর" oninput="this.value = this.value.replace(/[^0-9]/g, ''); removeError(this)" data-guide="phone">
+                    </div>
+                    <div class="form-group">
+                        <label>বর্তমান ছাত্র সংখ্যা (আবশ্যক)</label>
+                        <input type="number" id="studentCount" placeholder="মোট ছাত্র সংখ্যা" oninput="removeError(this)" data-guide="studentCount">
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>🔹 বোর্ডের অঙ্গীকারনামা</legend>
+                <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 14px; text-align: justify; line-height: 1.6; color: #475569;">
+                    <b>আমরা এই মর্মে অঙ্গীকার করছি যে,</b><br>
+                    আল-হুফফাজ শিক্ষাবোর্ড বাংলাদেশ-এর সকল নিয়ম, সিলেবাস ও পরীক্ষার নীতিমালা মেনে মাদরাসা পরিচালনা করব। বোর্ডের যেকোনো নির্দেশনায় আমাদের স্বতঃস্ফূর্ত অংশগ্রহণ থাকবে। বোর্ডের আদর্শ ও লক্ষ্যের পরিপন্থী কোনো কার্যকলাপে আমাদের মাদরাসা যুক্ত থাকবে না। এ প্রসঙ্গে অঙ্গীকার করছি যে, অত্র শর্তে আমাদের মাদরাসাকে নিবন্ধিত করা হোক।
+                </div>
+                <div class="form-group" style="margin-top: 15px; display: flex; align-items: center; gap: 10px;">
+                    <input type="checkbox" id="agreeCheckbox" style="width: 20px; height: 20px; cursor: pointer;" onchange="removeError(this)">
+                    <label for="agreeCheckbox" style="cursor: pointer; font-size: 14px; margin: 0;">আমি উপরোক্ত অঙ্গীকারনামা পড়েছি এবং একমত পোষণ করছি।</label>
+                </div>
+            </fieldset>
+
+            <button type="submit" id="submitBtn" class="btn-submit">নিবন্ধন আবেদন জমা দিন</button>
+        </form>
+    </main>
+
+    <div id="pdf-render-container"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // ফায়ারবেস কনফিগারেশন (আপনার ডাটাবেজের)
+        const firebaseConfig = {
+            apiKey: "AIzaSyAjv9u2Qn3EdVxNKBMcT1ezHp-5NitucT0",
+            authDomain: "foundation-ntc.firebaseapp.com",
+            projectId: "foundation-ntc",
+            storageBucket: "foundation-ntc.firebasestorage.app",
+            messagingSenderId: "940836724866",
+            appId: "1:940836724866:web:b93b489374f410be02949b",
+            measurementId: "G-ZLFY4KC3L8"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let isSuccessState = false;
+        window.pendingSubmissionData = null;
+
+        const fieldGuides = {
+            'photo': '📸 <b>লোগো/ছবি:</b> আপনার মাদরাসার লোগো অথবা সুন্দর একটি ছবি আপলোড করুন।',
+            'madrasaName': '🏫 <b>মাদরাসার নাম:</b> আপনার মাদরাসার পূর্ণ নাম লিখুন।',
+            'establishedYear': '📅 <b>প্রতিষ্ঠা সাল:</b> কত সালে মাদরাসাটি প্রতিষ্ঠিত হয়েছে তা লিখুন।',
+            'madrasaType': '🏠 <b>ধরন:</b> এটি কি আবাসিক নাকি অনাবাসিক তা নির্বাচন করুন।',
+            'founderName': '👤 <b>প্রতিষ্ঠাতা:</b> যিনি মাদরাসাটি প্রতিষ্ঠা করেছেন তার নাম।',
+            'principalName': '👳‍♂️ <b>মুহতামিম:</b> বর্তমান মুহতামিম বা প্রধান শিক্ষকের নাম।',
+            'village': '🏡 <b>ঠিকানা:</b> গ্রাম বা রাস্তার নাম লিখুন।',
+            'postOffice': '📮 <b>ডাকঘর:</b> ডাকঘরের নাম লিখুন।',
+            'thana': '🏢 <b>থানা:</b> উপজেলা বা থানার নাম লিখুন।',
+            'district': '🗺️ <b>জেলা:</b> আপনার জেলার নাম লিখুন।',
+            'phone': '📞 <b>মোবাইল নম্বর:</b> যোগাযোগের জন্য একটি সচল নম্বর দিন।',
+            'studentCount': '👥 <b>ছাত্র সংখ্যা:</b> বর্তমানে মোট কতজন ছাত্র পড়ছে তা লিখুন।'
+        };
+
+        const tooltip = document.getElementById('appTooltip');
+        let currentActiveGuide = null;
+
+        function showGuideTooltip(el, textId) {
+            if(!el || !fieldGuides[textId]) return;
+            if(currentActiveGuide) currentActiveGuide.classList.remove('pulse-guide');
+            el.classList.add('pulse-guide'); currentActiveGuide = el;
+            tooltip.innerHTML = fieldGuides[textId]; 
+            tooltip.classList.add('show');
+            const rect = el.getBoundingClientRect();
+            
+            let topPos = window.scrollY + rect.top - tooltip.offsetHeight - 15;
+            if(topPos < window.scrollY) topPos = window.scrollY + 10; 
+
+            let leftPos = rect.left; 
+            if(leftPos + 280 > window.innerWidth) leftPos = window.innerWidth - 290;
+            
+            tooltip.style.top = topPos + 'px';
+            tooltip.style.left = Math.max(10, leftPos) + 'px';
+        }
+
+        function hideGuideTooltip(force = false) {
+            tooltip.classList.remove('show');
+            if(currentActiveGuide) currentActiveGuide.classList.remove('pulse-guide');
+            currentActiveGuide = null;
+        }
+
+        window.addEventListener('load', () => { setTimeout(() => { document.getElementById('photoUploadSection').focus(); }, 600); });
+
+        document.body.addEventListener('focusin', function(e) {
+            document.querySelectorAll('.active-focus').forEach(el => el.classList.remove('active-focus'));
+            let target = e.target;
+            if(target.closest && target.closest('.photo-upload-container')) target = target.closest('.photo-upload-container');
+
+            if(['INPUT', 'SELECT', 'TEXTAREA'].includes(target.tagName) || target.classList.contains('photo-upload-container') || target.tabIndex === 0) {
+                if (target.type !== 'radio' && target.type !== 'checkbox') target.classList.add('active-focus');
+                const guide = target.getAttribute('data-guide') || target.id;
+                if(guide) showGuideTooltip(target, guide);
+            }
+        });
+
+        document.body.addEventListener('focusout', function(e) {
+             let target = e.target;
+             if(target.closest && target.closest('.photo-upload-container')) target = target.closest('.photo-upload-container');
+             if(target.classList) target.classList.remove('active-focus');
+             hideGuideTooltip();
+        });
+
+        document.addEventListener('input', function(e) { hideGuideTooltip(true); if(e.target.classList) e.target.classList.remove('active-focus'); });
+        
+        document.addEventListener('keydown', function(e) {
+            const el = e.target;
+            if (e.key === 'Enter' && (el.tagName === 'INPUT' || el.tagName === 'SELECT') && el.type !== 'file') {
+                e.preventDefault(); el.blur(); window.autoFocusNext(el);
+            }
+        });
+
+        window.autoFocusNext = function(currentEl) {
+            hideGuideTooltip();
+            setTimeout(() => {
+                const focusable = Array.from(document.querySelectorAll('input:not([type="hidden"]), select, textarea, [tabindex="0"]')).filter(e => !e.disabled && e.offsetParent !== null && e.style.display !== 'none');
+                const currentIndex = focusable.indexOf(currentEl);
+                if(currentIndex > -1 && currentIndex + 1 < focusable.length) { 
+                    focusable[currentIndex + 1].scrollIntoView({behavior: 'smooth', block: 'center'}); focusable[currentIndex + 1].focus(); 
+                }
+            }, 100);
+        }
+
+        window.removeError = function(el) { el.classList.remove('error-highlight'); el.classList.remove('active-focus'); }
+
+        const CLOUD_NAME = "dd0dgwdkc"; 
+        const UPLOAD_PRESET = "pending-management-afcmbd"; 
+        let finalImageUrl = ""; let base64PhotoStr = "";
+
+        document.getElementById('photoInput').addEventListener('change', async (e) => {
+            const file = e.target.files[0]; if (!file) return;
+            const preview = document.getElementById('photoPreview'), photoBox = document.getElementById('photoContainer'), photoText = document.getElementById('photoText');
+            window.removeError(document.getElementById('photoUploadSection')); 
+            document.getElementById('photoUploadSection').classList.remove('active-focus'); 
+            hideGuideTooltip();
+            
+            const reader = new FileReader(); reader.onload = (ev) => { preview.src = ev.target.result; preview.style.display = "block"; base64PhotoStr = ev.target.result; }; reader.readAsDataURL(file);
+            photoText.style.display = "block"; photoText.innerHTML = "⏳<br>আপলোড..."; photoText.style.color = "#ca8a04"; document.getElementById('submitBtn').disabled = true;
+            
+            const formData = new FormData(); formData.append("file", file); formData.append("upload_preset", UPLOAD_PRESET);
+            
+            try { 
+                const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`, { method: "POST", body: formData }); 
+                const data = await res.json();
+                if(data.secure_url) { finalImageUrl = data.secure_url; photoText.style.display = "none"; window.autoFocusNext(document.getElementById('photoUploadSection')); } 
+                else { throw new Error("Upload Error"); }
+            } catch (err) { photoText.innerHTML = "ব্যর্থ!<br>আবার দিন"; photoText.style.color = "red"; preview.style.display = "none"; } 
+            finally { document.getElementById('submitBtn').disabled = false; }
+        });
+
+        window.showCustomAlert = function(type, title, message) {
+            const overlay = document.getElementById('customAlertOverlay'), box = document.getElementById('customAlertBox');
+            const icon = document.getElementById('customAlertIcon'), btn = document.getElementById('customAlertBtn');
+            isSuccessState = (type === 'success');
+            if(type === 'error') { icon.innerHTML = '⚠️'; icon.style.color = '#ef4444'; btn.className = 'modal-btn'; } 
+            else if(type === 'success') { icon.innerHTML = '✅'; icon.style.color = '#10b981'; btn.className = 'modal-btn success-btn'; } 
+            document.getElementById('customAlertTitle').innerHTML = title; document.getElementById('customAlertDesc').innerHTML = message;
+            overlay.style.display = 'flex'; setTimeout(() => { overlay.style.opacity = '1'; box.classList.add('show'); }, 10);
+        }
+        
+        window.closeCustomAlert = function() {
+            const overlay = document.getElementById('customAlertOverlay'), box = document.getElementById('customAlertBox');
+            overlay.style.opacity = '0'; box.classList.remove('show');
+            setTimeout(() => { overlay.style.display = 'none'; if(isSuccessState) window.location.reload(); }, 300);
+        }
+
+        window.closePreview = function() {
+            const overlay = document.getElementById('previewModalOverlay'), box = document.getElementById('previewModalBox');
+            box.classList.remove('show'); setTimeout(() => { overlay.style.display = 'none'; overlay.style.opacity = '0'; }, 300);
+        }
+
+        // মাদরাসা নিবন্ধনের PDF ডিজাইন
+        function buildPdfHtml(data) {
+            const photoBlock = data.localPhoto ? `<img src="${data.localPhoto}" style="width:100%; height:100%; object-fit:cover;">` : `<div style="padding-top:45px; text-align:center; color:#999; font-size:12px; font-weight:bold;">লোগো / ছবি</div>`;
+            const dateStr = new Date().toLocaleDateString('bn-BD');
+            
+            return `
+            <div style="width: 794px; min-height: 1122px; box-sizing: border-box; padding: 30px; background: #ffffff; font-family: 'Noto Sans Bengali', sans-serif; color: #000; line-height: 1.6;">
+                
+                <div style="border: 2px solid #166534; padding: 25px; position: relative; margin-bottom: 20px; border-radius: 5px;">
+                    
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <p style="margin:0; font-size: 14px;">বিসমিল্লাহির রাহমানির রাহিম</p>
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin: 5px 0;">
+                            <img src="https://res.cloudinary.com/ddvprmv9g/image/upload/v1777644601/gu7xxpbkokyrx9wgifsn.jpg" crossorigin="anonymous" style="width: 60px; height: 60px;">
+                            <h1 style="margin: 0; font-size: 26px; color: #166534; font-weight: bold;">আল হুফফাজ শিক্ষাবোর্ড বাংলাদেশ</h1>
+                        </div>
+                        <p style="margin: 0; font-size: 14px;">কুরআনের আলোয় আলোকিত হোক বিশ্বময়</p>
+                        <p style="margin: 0; font-size: 14px;">গাজীপুর, ঢাকা, বাংলাদেশ</p>
+                        
+                        <div style="background: #166534; color: #fff; display: inline-block; padding: 5px 25px; font-size: 20px; font-weight: bold; border-radius: 20px; margin-top: 15px;">মাদরাসা নিবন্ধন আবেদন</div>
+                    </div>
+
+                    <div style="position: absolute; top: 25px; right: 25px; width: 100px; height: 120px; border: 1px solid #000; display: flex; align-items: center; justify-content: center; border-radius: 5px; overflow: hidden;">
+                        ${photoBlock}
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 25px;">
+                        <div style="width: 40%;">রেজিঃ নং <span style="border-bottom: 1px dotted #000; display:inline-block; width: 150px;">(অফিস কর্তৃক পূরণীয়)</span></div>
+                        <div style="width: 40%; text-align: right;">তারিখ: <span style="border-bottom: 1px dotted #000; display:inline-block; width: 150px;">${dateStr}</span></div>
+                    </div>
+
+                    <table style="width: 100%; border-collapse: collapse; font-size: 16px; margin-bottom: 20px;">
+                        <tr>
+                            <td style="padding: 8px 0; width: 180px; font-weight: bold;">মাদরাসার নাম</td>
+                            <td style="padding: 8px 0;">: <span style="border-bottom: 1px dotted #000; display:inline-block; width: 90%; padding-left: 5px; font-weight: bold;">${data.madrasaName}</span></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px 0;">মুহতামিমের নাম</td>
+                            <td style="padding: 8px 0;">: <span style="border-bottom: 1px dotted #000; display:inline-block; width: 90%; padding-left: 5px;">${data.principalName}</span></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px 0;">প্রতিষ্ঠাতার নাম</td>
+                            <td style="padding: 8px 0;">: <span style="border-bottom: 1px dotted #000; display:inline-block; width: 90%; padding-left: 5px;">${data.founderName || 'প্রযোজ্য নয়'}</span></td>
+                        </tr>
+                    </table>
+                    
+                    <div style="display: flex; justify-content: space-between; font-size: 16px; margin-bottom: 15px;">
+                        <div style="width: 48%;">প্রতিষ্ঠা সাল : <span style="border-bottom: 1px dotted #000; display:inline-block; width: 60%;">${data.establishedYear || 'N/A'}</span></div>
+                        <div style="width: 48%;">মাদরাসার ধরন : <span style="border-bottom: 1px dotted #000; display:inline-block; width: 60%;">${data.madrasaType || 'N/A'}</span></div>
+                    </div>
+
+                    <div style="font-weight: bold; margin-top: 15px; margin-bottom: 5px; font-size: 16px;">মাদরাসার পূর্ণাঙ্গ ঠিকানা:</div>
+                    <div style="display: flex; justify-content: space-between; font-size: 16px; margin-bottom: 15px;">
+                        <div style="width: 48%;">গ্রাম/মহল্লা : <span style="border-bottom: 1px dotted #000; display:inline-block; width: 70%;">${data.village}</span></div>
+                        <div style="width: 48%;">ডাকঘর : <span style="border-bottom: 1px dotted #000; display:inline-block; width: 70%;">${data.postOffice}</span></div>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; font-size: 16px; margin-bottom: 25px;">
+                        <div style="width: 48%;">থানা/উপজেলা : <span style="border-bottom: 1px dotted #000; display:inline-block; width: 60%;">${data.thana}</span></div>
+                        <div style="width: 48%;">জেলা : <span style="border-bottom: 1px dotted #000; display:inline-block; width: 80%;">${data.district}</span></div>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; font-size: 16px; margin-bottom: 30px;">
+                        <div style="width: 55%;">যোগাযোগের মোবাইল : <span style="border-bottom: 1px dotted #000; display:inline-block; width: 60%; font-weight: bold;">${data.phone}</span></div>
+                        <div style="width: 40%;">মোট ছাত্র সংখ্যা : <span style="border-bottom: 1px dotted #000; display:inline-block; width: 60%;">${data.studentCount} জন</span></div>
+                    </div>
+
+                    <div style="border: 2px solid #64748b; border-radius: 10px; padding: 15px; position: relative; margin-bottom: 60px;">
+                        <div style="background: #166534; color: #fff; padding: 2px 15px; font-weight: bold; position: absolute; top: -15px; left: 50%; transform: translateX(-50%); border-radius: 5px;">অঙ্গীকারনামা</div>
+                        <p style="margin: 10px 0 0 0; text-align: justify; font-size: 14px; line-height: 1.8;">
+                            আমরা এই মর্মে অঙ্গীকার করছি যে, আল-হুফফাজ শিক্ষাবোর্ড বাংলাদেশ-এর সকল নিয়ম, সিলেবাস ও পরীক্ষার নীতিমালা মেনে মাদরাসা পরিচালনা করব। বোর্ডের যেকোনো নির্দেশনায় আমাদের স্বতঃস্ফূর্ত অংশগ্রহণ থাকবে। বোর্ডের আদর্শ ও লক্ষ্যের পরিপন্থী কোনো কার্যকলাপে আমাদের মাদরাসা যুক্ত থাকবে না। এ প্রসঙ্গে অঙ্গীকার করছি যে, অত্র শর্তে আমাদের মাদরাসাকে নিবন্ধিত করা হোক।
+                        </p>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                        <div style="border-top: 1px solid #000; width: 180px; text-align: center; font-weight: bold;">মাদরাসা মুহতামিমের স্বাক্ষর</div>
+                        <div style="border-top: 1px solid #000; width: 180px; text-align: center; font-weight: bold;">বোর্ড চেয়ারম্যানের স্বাক্ষর</div>
+                    </div>
+                </div>
+
+                <div style="border-top: 2px dashed #94a3b8; margin: 30px 0; position: relative;">
+                     <div style="position: absolute; top: -12px; left: 50%; background: #fff; padding: 0 10px;">✂️</div>
+                </div>
+
+                <div style="background: #e2e8f0; padding: 20px; border-radius: 5px; border: 1px solid #cbd5e1;">
+                    <div style="text-align: center; margin-bottom: 15px;">
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin: 5px 0;">
+                            <img src="https://res.cloudinary.com/ddvprmv9g/image/upload/v1777644601/gu7xxpbkokyrx9wgifsn.jpg" crossorigin="anonymous" style="width: 40px; height: 40px;">
+                            <h2 style="margin: 0; font-size: 20px; color: #166534; font-weight: bold;">আল হুফফাজ শিক্ষাবোর্ড বাংলাদেশ</h2>
+                        </div>
+                        <div style="background: #166534; color: #fff; display: inline-block; padding: 3px 20px; font-size: 16px; font-weight: bold; border-radius: 15px; margin-top: 5px;">নিবন্ধন রসিদ (মাদরাসা শাখা)</div>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                        <div style="width: 35%;">রেজিঃ নং: <span style="border-bottom: 1px dotted #000; display:inline-block; width: 80px;"></span></div>
+                        <div style="width: 60%;">মাদরাসার নাম: <span style="border-bottom: 1px dotted #000; display:inline-block; width: 70%; padding-left: 5px;">${data.madrasaName}</span></div>
+                    </div>
+
+                    <p style="font-size: 14px; text-align: center; margin-bottom: 40px;">
+                        আপনাদের মাদরাসা নিবন্ধনের আবেদনটি আমাদের দপ্তরে গৃহীত হয়েছে। যাচাই-বাছাই শেষে চূড়ান্ত সনদ প্রদান করা হবে।
+                    </p>
+
+                    <div style="display: flex; justify-content: space-between;">
+                        <div style="border-top: 1px solid #000; width: 150px; text-align: center; font-weight: bold; font-size: 14px;">আবেদনকারীর স্বাক্ষর</div>
+                        <div style="border-top: 1px solid #000; width: 150px; text-align: center; font-weight: bold; font-size: 14px;">বোর্ড মহাসচিবের স্বাক্ষর</div>
+                    </div>
+                </div>
+
+            </div>`;
+        }
+
+        document.getElementById('madrasaForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const phoneInput = document.getElementById('phone');
+            if (phoneInput.value.length !== 11) {
+                phoneInput.classList.add('error-highlight'); phoneInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                showCustomAlert('error', 'ভুল নম্বর!', 'মোবাইল নম্বর অবশ্যই ১১ ডিজিটের হতে হবে।'); return;
+            }
+
+            const checkbox = document.getElementById('agreeCheckbox');
+            if(!checkbox.checked) {
+                checkbox.classList.add('error-highlight');
+                showCustomAlert('error', 'সতর্কতা', 'আবেদন সম্পন্ন করতে অঙ্গীকারনামায় সম্মতি দিন।'); return;
+            }
+
+            // আবশ্যক ফিল্ড চেক
+            const reqFields = ['madrasaName', 'principalName', 'village', 'postOffice', 'thana', 'district', 'phone', 'studentCount'];
+            let firstErrorEl = null;
+
+            if (!finalImageUrl) { 
+                document.getElementById('photoUploadSection').classList.add('error-highlight'); 
+                firstErrorEl = document.getElementById('photoUploadSection'); 
+            }
+
+            reqFields.forEach(id => {
+                const el = document.getElementById(id);
+                if (!el.value.trim()) { el.classList.add('error-highlight'); if(!firstErrorEl) firstErrorEl = el; }
+            });
+
+            if (firstErrorEl) {
+                firstErrorEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                showCustomAlert('error', 'তথ্য অসম্পূর্ণ!', 'অনুগ্রহ করে সমস্ত আবশ্যক তথ্যগুলো সঠিকভাবে পূরণ করুন।'); return;
+            }
+
+            const madrasaData = {
+                photoUrl: finalImageUrl,
+                localPhoto: base64PhotoStr, 
+                madrasaName: document.getElementById('madrasaName').value.trim(),
+                establishedYear: document.getElementById('establishedYear').value.trim(),
+                madrasaType: document.getElementById('madrasaType').value.trim(),
+                founderName: document.getElementById('founderName').value.trim(),
+                principalName: document.getElementById('principalName').value.trim(),
+                village: document.getElementById('village').value.trim(),
+                postOffice: document.getElementById('postOffice').value.trim(),
+                thana: document.getElementById('thana').value.trim(),
+                district: document.getElementById('district').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                studentCount: document.getElementById('studentCount').value.trim()
+            };
+
+            window.pendingSubmissionData = madrasaData;
+
+            const previewHTML = buildPdfHtml(madrasaData);
+            setTimeout(() => {
+                const modalBox = document.getElementById('previewModalBox');
+                const contentWidth = document.getElementById('previewContentDiv').clientWidth; 
+                const scaleValue = Math.min(1, (contentWidth - 20) / 794); 
+                const scaledHeight = 1122 * scaleValue; 
+                const scaledWidth = 794 * scaleValue; 
+                document.getElementById('previewContentDiv').innerHTML = `<div style="width: ${scaledWidth}px; height: ${scaledHeight}px; margin: 0 auto; overflow: hidden;"><div style="transform: scale(${scaleValue}); transform-origin: top left; width: 794px; height: 1122px; background: #fff;">${previewHTML}</div></div>`;
+            }, 50);
+            
+            const overlay = document.getElementById('previewModalOverlay');
+            const box = document.getElementById('previewModalBox');
+            overlay.style.display = 'flex'; setTimeout(() => { overlay.style.opacity = '1'; box.classList.add('show'); }, 100);
+        });
+
+        window.executeFinalSubmit = async function() {
+            closePreview();
+            
+            document.getElementById('loaderOverlay').style.display = 'flex';
+            let progress = 0; const progressEl = document.getElementById('progressPercent');
+            const progressInterval = setInterval(() => {
+                if(progress < 90) { progress += Math.floor(Math.random() * 10) + 1; }
+                if(progress > 90) progress = 90; progressEl.innerText = progress;
+            }, 300);
+
+            try {
+                const madrasaData = window.pendingSubmissionData;
+                const dbData = { ...madrasaData }; delete dbData.localPhoto; dbData.timestamp = serverTimestamp();
+                
+                // ফায়ারবেসে "madrasa_registrations" নামে নতুন কালেকশনে সেভ হবে
+                await addDoc(collection(db, "madrasa_registrations"), dbData);
+
+                const pdfContainer = document.getElementById('pdf-render-container');
+                pdfContainer.style.display = 'block'; pdfContainer.style.position = 'absolute'; pdfContainer.style.left = '-9999px'; 
+                pdfContainer.innerHTML = buildPdfHtml(madrasaData);
+                
+                const canvas = await html2canvas(pdfContainer.firstElementChild, { scale: 2, useCORS: true, allowTaint: true });
+                const imgData = canvas.toDataURL('image/jpeg', 1.0);
+                const { jsPDF } = window.jspdf; const pdf = new jsPDF('p', 'pt', 'a4');
+                const pageW = pdf.internal.pageSize.getWidth(); const pageH = pdf.internal.pageSize.getHeight();
+                let imgW = pageW; let imgH = (canvas.height * pageW) / canvas.width;
+                
+                if (imgH > pageH) {
+                    const ratio = pageH / imgH; imgH = pageH; imgW = imgW * ratio;
+                    const marginX = (pageW - imgW) / 2; pdf.addImage(imgData, 'JPEG', marginX, 0, imgW, imgH);
+                } else { pdf.addImage(imgData, 'JPEG', 0, 0, imgW, imgH); }
+
+                pdf.save(`Madrasa_Reg_${madrasaData.madrasaName}.pdf`);
+                pdfContainer.style.display = 'none'; clearInterval(progressInterval); progressEl.innerText = '100';
+
+                setTimeout(() => {
+                    document.getElementById('loaderOverlay').style.display = 'none';
+                    showCustomAlert('success', 'আলহামদুলিল্লাহ!', 'আপনার মাদরাসা নিবন্ধনের আবেদনটি সফলভাবে জমা হয়েছে এবং PDF ফাইল ডাউনলোড শুরু হয়েছে।');
+                }, 500);
+
+            } catch (error) {
+                clearInterval(progressInterval); document.getElementById('loaderOverlay').style.display = 'none';
+                showCustomAlert('error', 'দুঃখিত!', 'সার্ভারে সংযোগে অথবা ডাটাবেস সেটআপে সমস্যা হয়েছে: ' + error.message);
+                console.error(error);
+            }
+        };
+
+    </script>
+</body>
+          </html>
