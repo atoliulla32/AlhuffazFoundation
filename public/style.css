@@ -1,4 +1,4 @@
-::root {
+:root {
     --primary: #15803d; 
     --primary-dark: #166534;
     --accent: #f59e0b;
@@ -41,29 +41,18 @@ header { background: var(--white); padding: 10px 0; position: sticky; top: 0; z-
 .card:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
 .card i { font-size: 40px; color: var(--primary); margin-bottom: 20px; }
 
-/* Footer CSS (মোবাইলের জন্য সাইজ অনেক ছোট করা হয়েছে) */
-footer { background: #0f172a; color: #94a3b8; padding: 25px 20px 10px; margin-top: 40px; }
-.footer-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }
-.footer-col h4 { color: white; margin-bottom: 8px; font-size: 16px; border-bottom: 2px solid var(--primary); display: inline-block; padding-bottom: 5px; }
-.footer-col p { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; font-size: 13px; line-height: 1.5; }
-.footer-col i { color: var(--accent); }
-.footer-links { list-style: none; padding: 0; }
-.footer-links li { margin-bottom: 6px; }
-.footer-links a { color: #94a3b8; text-decoration: none; transition: 0.3s; font-size: 13px; }
-.footer-links a:hover { color: var(--accent); padding-left: 5px; }
-.social-icons { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-.social-icons a { color: #fff; padding: 6px 10px; border-radius: 4px; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; font-size: 12px; transition: 0.3s; }
-.social-icons .fb { background: #3b5998; }
-.social-icons .yt { background: #ff0000; }
-.social-icons a:hover { opacity: 0.8; }
-.footer-bottom { text-align: center; margin-top: 20px; padding-top: 10px; border-top: 1px solid #1e293b; font-size: 11px; color: #64748b; }
+/* Mobile Menu CSS & 'X' icon logic */
+.menu-toggle { display: none; font-size: 24px; cursor: pointer; color: var(--primary); position: relative; }
+.menu-toggle .fa-times { display: none; } /* Hide the close icon initially */
 
-/* Mobile Menu CSS */
-.menu-toggle { display: none; font-size: 24px; cursor: pointer; color: var(--primary); }
 @media (max-width: 1024px) {
     .nav-links { position: fixed; top: 70px; right: -100%; width: 280px; height: calc(100vh - 70px); background: white; flex-direction: column; padding: 20px; box-shadow: -5px 0 15px rgba(0,0,0,0.1); transition: right 0.4s ease-in-out; z-index: 1000; overflow-y: auto; display: flex; margin: 0;}
     .nav-links.active { right: 0; }
     .dropdown-menu { position: static; box-shadow: none; border-left: 2px solid var(--primary); margin-left: 10px; display: none; }
     .dropdown.active .dropdown-menu { display: block; }
     .menu-toggle { display: block; }
+
+    /* When the menu button is active (menu is open) */
+    .menu-toggle.active .fa-bars { display: none; } /* Hide the bars icon */
+    .menu-toggle.active .fa-times { display: block; color: #ff0000; } /* Show the red close icon */
 }
