@@ -3,73 +3,328 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>আল হুফফাজ ফাউন্ডেশন বাংলাদেশ | কুরআনের আলোয় আলোকিত বিশ্বময়</title>
+    <title>মাদরাসা নিবন্ধন আবেদন | আল হুফফাজ</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <link rel="stylesheet" href="style.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        :root { --primary: #064e3b; --secondary: #15803d; --accent: #f59e0b; --bg: #f1f5f9; --glass: rgba(255, 255, 255, 0.95); }
+        body { font-family: 'Noto Sans Bengali', sans-serif; background: var(--bg); margin: 0; }
+
+        .reg-container { max-width: 1000px; margin: 40px auto; background: var(--glass); border-radius: 30px; box-shadow: 0 30px 70px rgba(0,0,0,0.1); overflow: hidden; border: 1px solid rgba(255,255,255,0.3); backdrop-filter: blur(10px); }
+        
+        .reg-header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; padding: 60px 20px; text-align: center; position: relative; }
+        .reg-header::after { content: ""; position: absolute; bottom: 0; left: 0; width: 100%; height: 50px; background: white; clip-path: polygon(0 100%, 100% 100%, 100% 0); }
+        .logo-box { width: 110px; height: 110px; background: #fff; padding: 8px; border-radius: 35px; margin: 0 auto 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); transform: rotate(-5deg); transition: 0.3s; }
+        .logo-box:hover { transform: rotate(0deg) scale(1.05); }
+        .logo-box img { width: 100%; border-radius: 30px; }
+        .reg-header h1 { font-size: 32px; font-weight: 800; margin: 0; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        
+        .photo-widget { background: #fff; border: 3px dashed #cbd5e1; border-radius: 25px; padding: 30px; text-align: center; cursor: pointer; transition: 0.3s; position: relative; margin: -50px auto 40px; width: 250px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); z-index: 10; animation: pulseBorder 2s infinite; }
+        .photo-widget:hover { border-color: var(--secondary); background: #f0fdf4; }
+        @keyframes pulseBorder { 0% { border-color: #cbd5e1; } 50% { border-color: var(--accent); } 100% { border-color: #cbd5e1; } }
+        .photo-preview-circle { width: 100px; height: 100px; background: #f8fafc; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 40px; color: var(--secondary); overflow: hidden; }
+        .photo-preview-circle img { width: 100%; height: 100%; object-fit: cover; }
+
+        .main-form { padding: 40px; }
+        .form-section { margin-bottom: 45px; }
+        .section-title { font-size: 18px; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 10px; margin-bottom: 25px; padding-bottom: 10px; border-bottom: 2px solid #e2e8f0; }
+        .section-title i { background: var(--secondary); color: #fff; width: 35px; height: 35px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        .input-group { display: flex; flex-direction: column; gap: 8px; }
+        .input-group label { font-size: 14px; font-weight: 700; color: #475569; }
+        .input-wrapper { position: relative; }
+        .input-wrapper i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--secondary); }
+        .input-wrapper input, .input-wrapper select { width: 100%; padding: 14px 15px 14px 45px; border: 2px solid #e2e8f0; border-radius: 15px; font-size: 15px; transition: 0.3s; box-sizing: border-box; background: #fff; font-family: inherit; }
+        .input-wrapper input:focus, .input-wrapper select:focus { border-color: var(--secondary); box-shadow: 0 0 0 5px rgba(21, 128, 61, 0.1); outline: none; }
+
+        .btn-submit { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; border: none; padding: 22px; font-size: 20px; font-weight: 800; width: 100%; border-radius: 20px; cursor: pointer; transition: 0.4s; box-shadow: 0 15px 35px rgba(6, 78, 59, 0.3); display: flex; align-items: center; justify-content: center; gap: 15px; }
+        .btn-submit:hover { transform: translateY(-5px); box-shadow: 0 20px 45px rgba(6, 78, 59, 0.4); }
+
+        .overlay-center { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(15px); z-index: 1000000; display: none; flex-direction: column; align-items: center; justify-content: center; color: white; }
+        .loader-ring { width: 120px; height: 120px; border-radius: 50%; border: 4px solid rgba(255,255,255,0.1); border-top: 4px solid var(--accent); animation: spin 1s linear infinite; display: flex; align-items: center; justify-content: center; }
+        .loader-text { position: absolute; font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 24px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .success-card { background: #fff; padding: 50px 30px; border-radius: 40px; text-align: center; width: 90%; max-width: 450px; color: #1e293b; transform: scale(0.8); transition: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .success-card.show { transform: scale(1); }
+        .check-icon { width: 100px; height: 100px; background: #dcfce7; color: #10b981; font-size: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 30px; }
+
+        @media (max-width: 600px) { .main-form { padding: 20px; } .reg-header h1 { font-size: 24px; } }
+    </style>
 </head>
 <body>
 
     <div id="header-placeholder"></div>
 
-    <section class="hero" style="height: 35vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: white; background: linear-gradient(rgba(21, 128, 61, 0.8), rgba(15, 23, 42, 0.9)), url('https://images.unsplash.com/photo-1584281723351-95ad9970422c?auto=format&fit=crop&w=1600&q=80') center/cover;">
-        <div style="font-size: 22px; margin-bottom: 10px; font-family: serif;">بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ</div>
-        <h2 style="font-size: 2.2rem; margin-bottom: 15px; font-weight: 700;">কুরআনের আলোয় আলোকিত হোক বিশ্বময়</h2>
-        <p style="max-width: 700px; opacity: 0.9;">কুরআনের শিক্ষা ও হাফেজদের মানোন্নয়নে আল হুফফাজ ফাউন্ডেশন একটি নিবেদিত নাম।</p>
-    </section>
+    <div class="overlay-center" id="loaderOverlay">
+        <div class="loader-ring"></div>
+        <div class="loader-text"><span id="pNum">0</span>%</div>
+        <h2 style="margin-top: 40px; font-weight: 300;">আবেদন প্রসেস হচ্ছে...</h2>
+    </div>
 
-    <div class="container">
-        
-        <section id="about">
-            <div class="section-title">
-                <h2>আমাদের সম্পর্কে</h2>
-                <div class="line"></div>
-            </div>
-            <div class="content-card">
-                <p style="text-align: center; color: var(--primary); font-weight: 600; margin-bottom: 20px; font-size: 18px;">
-                    সকল প্রশংসা মহান আল্লাহর। দরূদ ও সালাম সর্বশেষ নবী হযরত মুহাম্মাদ (সঃ) এর উপর।
-                </p>
-                <p style="text-align: justify;">
-                    দেশে হাজার হাজার হিফজ মাদরাসা থাকলেও এগুলোর শিক্ষা কার্যক্রমকে আরও সুসংহত এবং হাফেজদের মানোন্নয়নের জন্য একটি নির্দিষ্ট নীতিমালার প্রয়োজন ছিল। সেই প্রয়োজনীয়তা অনুভব করে দেশের শীর্ষস্থানীয় উলামায়ে কিরাম ও উদ্যোমী হাফেজদের সমন্বয়ে <strong>"আল হুফফাজ ফাউন্ডেশন বাংলাদেশ"</strong> প্রতিষ্ঠিত হয়। এই সংগঠনের মূল লক্ষ্য হলো হিফজখানার ছাত্রদের পড়ার মান উন্নত করা, শিক্ষকদের প্রশিক্ষণ দেওয়া এবং কুরআনের শিক্ষাকে সারা দেশে ব্যাপকভাবে ছড়িয়ে দেওয়া।
-                </p>
-                <div style="text-align: center; margin-top: 20px;">
-                    <a href="about.html" style="color: var(--primary); font-weight: bold; text-decoration: none;">বিস্তারিত পড়ুন <i class="fas fa-arrow-right"></i></a>
-                </div>
-            </div>
-        </section>
+    <div class="overlay-center" id="successOverlay" style="background: rgba(15, 23, 42, 0.8);">
+        <div class="success-card" id="successCard">
+            <div class="check-icon"><i class="fas fa-check"></i></div>
+            <h2 style="color: var(--primary); margin-bottom: 10px;">আলহামদুলিল্লাহ!</h2>
+            <p style="font-size: 15px; color: #64748b; line-height: 1.6; margin-bottom: 25px;">
+                আপনার মাদরাসার আবেদনটি <b>সফলভাবে জমা হয়েছে</b>। যাচাই-বাছাই শেষে চূড়ান্ত সিদ্ধান্ত জানানো হবে। আপনার ট্র্যাকিং আইডি ও আবেদনপত্রের PDF ডাউনলোড হচ্ছে।
+            </p>
+            <h3 id="finalRegId" style="background: #f1f5f9; padding: 15px; border-radius: 15px; color: var(--secondary);">ট্র্যাকিং আইডি: AHFB-XX-XXXX</h3>
+            <button class="btn-submit" onclick="location.reload()" style="margin-top: 30px; padding: 15px;">ঠিক আছে</button>
+        </div>
+    </div>
 
-        <section id="activities" style="margin-top: 80px;">
-            <div class="section-title">
-                <h2>আমাদের কার্যক্রম</h2>
-                <div class="line"></div>
+    <div class="reg-container">
+        <header class="reg-header">
+            <div class="logo-box"><img src="https://res.cloudinary.com/ddvprmv9g/image/upload/v1777644601/gu7xxpbkokyrx9wgifsn.jpg" alt="Logo"></div>
+            <h1>মাদরাসা নিবন্ধন আবেদন</h1>
+            <p>আল হুফফাজ শিক্ষাবোর্ড বাংলাদেশ | স্মার্ট এডুকেশন বোর্ড</p>
+        </header>
+
+        <form class="main-form" id="regForm">
+            
+            <div class="photo-widget" onclick="document.getElementById('pInput').click()">
+                <div class="photo-preview-circle" id="pCircle">
+                    <i class="fas fa-camera"></i>
+                    <img id="pImg">
+                </div>
+                <div class="photo-guide-text">
+                    <strong style="color: var(--primary);">ছবি আপলোড করুন</strong><br>
+                    <small style="color: #64748b;">ক্লিক করে মাদরাসার ছবি দিন</small>
+                </div>
+                <input type="file" id="pInput" accept="image/*" style="display:none;">
             </div>
-            <div class="activities-grid">
-                <div class="card">
-                    <i class="fas fa-book-open"></i>
-                    <h3>হিফজ শিক্ষাবোর্ড</h3>
-                    <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 15px;">নিবন্ধিত মাদরাসাগুলোর মানোন্নয়ন এবং বার্ষিক কেন্দ্রীয় পরীক্ষা তদারকি করা।</p>
-                    <a href="board.html" style="color: var(--primary); font-size: 14px; text-decoration: none; font-weight: bold;">বিস্তারিত <i class="fas fa-arrow-right"></i></a>
-                </div>
-                <div class="card">
-                    <i class="fas fa-trophy"></i>
-                    <h3>জাতীয় প্রতিযোগিতা</h3>
-                    <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 15px;">কুরআনের হাফেজদের উৎসাহিত করতে দেশব্যাপী কুরআন প্রতিযোগিতার আয়োজন।</p>
-                    <a href="competition.html" style="color: var(--primary); font-size: 14px; text-decoration: none; font-weight: bold;">বিস্তারিত <i class="fas fa-arrow-right"></i></a>
-                </div>
-                <div class="card">
-                    <i class="fas fa-users-gear"></i>
-                    <h3>শিক্ষক প্রশিক্ষণ</h3>
-                    <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 15px;">হিফজ শিক্ষকদের তিলাওয়াত ও পাঠদান পদ্ধতির মান বৃদ্ধির জন্য বিশেষ কোর্স।</p>
-                    <a href="training.html" style="color: var(--primary); font-size: 14px; text-decoration: none; font-weight: bold;">বিস্তারিত <i class="fas fa-arrow-right"></i></a>
+
+            <div class="form-section">
+                <div class="section-title"><i>১</i> সাধারণ তথ্য</div>
+                <div class="grid">
+                    <div class="input-group">
+                        <label>মাদরাসার নাম (বাংলায়)</label>
+                        <div class="input-wrapper"><i class="fas fa-university"></i><input type="text" id="mName" placeholder="সম্পূর্ণ নাম লিখুন" required></div>
+                    </div>
+                    <div class="input-group">
+                        <label>মাদরাসার ধরন</label>
+                        <div class="input-wrapper"><i class="fas fa-tags"></i>
+                            <select id="mType">
+                                <option value="কওমী">কওমী মাদরাসা</option>
+                                <option value="হিফজ">হিফজ মাদরাসা</option>
+                                <option value="নূরানী">নূরানী ও মক্তব</option>
+                                <option value="প্রাইভেট">প্রাইভেট মাদরাসা</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>শিক্ষা স্তর (জামাত)</label>
+                        <div class="input-wrapper"><i class="fas fa-layer-group"></i><input type="text" id="mLevel" placeholder="যেমন: নাজেরা থেকে তাকমিল" required></div>
+                    </div>
+                    <div class="input-group">
+                        <label>মুহতামিম/প্রধান শিক্ষকের নাম</label>
+                        <div class="input-wrapper"><i class="fas fa-user-tie"></i><input type="text" id="mPrincipal" required></div>
+                    </div>
                 </div>
             </div>
-        </section>
+
+            <div class="form-section">
+                <div class="section-title"><i>২</i> অবস্থান ও ঠিকানা</div>
+                <div class="grid">
+                    <div class="input-group">
+                        <label>বিভাগ</label>
+                        <div class="input-wrapper"><i class="fas fa-map"></i>
+                            <select id="mDiv" onchange="updateDistricts()" required>
+                                <option value="">বিভাগ সিলেক্ট করুন</option>
+                                <option value="ঢাকা">ঢাকা</option>
+                                <option value="চট্টগ্রাম">চট্টগ্রাম</option>
+                                <option value="রাজশাহী">রাজশাহী</option>
+                                <option value="সিলেট">সিলেট</option>
+                                <option value="খুলনা">খুলনা</option>
+                                <option value="বরিশাল">বরিশাল</option>
+                                <option value="রংপুর">রংপুর</option>
+                                <option value="ময়মনসিংহ">ময়মনসিংহ</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>জেলা</label>
+                        <div class="input-wrapper"><i class="fas fa-map-marker-alt"></i><select id="mDist" required><option value="">প্রথমে বিভাগ বেছে নিন</option></select></div>
+                    </div>
+                    <div class="input-group">
+                        <label>উপজেলা/থানা</label>
+                        <div class="input-wrapper"><i class="fas fa-city"></i><input type="text" id="mThana" placeholder="থানার নাম লিখুন" required></div>
+                    </div>
+                    <div class="input-group">
+                        <label>গ্রাম/রাস্তা</label>
+                        <div class="input-wrapper"><i class="fas fa-home"></i><input type="text" id="mVillage" required></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <div class="section-title"><i>৩</i> অবকাঠামো ও যোগাযোগ</div>
+                <div class="grid">
+                    <div class="input-group">
+                        <label>মালিকানা স্ট্যাটাস</label>
+                        <div class="input-wrapper"><i class="fas fa-key"></i>
+                            <select id="mOwner">
+                                <option value="নিজস্ব ভবন">নিজস্ব ভবন</option>
+                                <option value="ভাড়া ভবন">ভাড়া ভবন</option>
+                                <option value="মালিকানাধীন">ব্যক্তি মালিকানাধীন</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>মোট শিক্ষক সংখ্যা</label>
+                        <div class="input-wrapper"><i class="fas fa-users"></i><input type="number" id="tCount" required></div>
+                    </div>
+                    <div class="input-group">
+                        <label>মোট ছাত্র সংখ্যা</label>
+                        <div class="input-wrapper"><i class="fas fa-user-graduate"></i><input type="number" id="sCount" required></div>
+                    </div>
+                    <div class="input-group">
+                        <label>মোবাইল নম্বর (প্রধানের)</label>
+                        <div class="input-wrapper"><i class="fas fa-phone-alt"></i><input type="tel" id="mPhone" maxlength="11" placeholder="০১৭XXXXXXXX" required></div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit">
+                <i class="fas fa-paper-plane"></i> আবেদন জমা দিন
+            </button>
+        </form>
     </div>
 
     <div id="footer-placeholder"></div>
-
+    <div id="pdf-render-box" style="position: absolute; left: -9999px; top: 0; width: 794px; display: none;"></div>
     <script src="script.js"></script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        
+        const firebaseConfig = { apiKey: "AIzaSyAjv9u2Qn3EdVxNKBMcT1ezHp-5NitucT0", authDomain: "foundation-ntc.firebaseapp.com", projectId: "foundation-ntc", storageBucket: "foundation-ntc.firebasestorage.app", messagingSenderId: "940836724866", appId: "1:940836724866:web:b93b489374f410be02949b" };
+        const app = initializeApp(firebaseConfig); const db = getFirestore(app);
+
+        let imgUrl = ""; let b64 = "";
+
+        const dists = { 
+            "ঢাকা": ["ঢাকা", "ফরিদপুর", "গাজীপুর", "গোপালগঞ্জ", "কিশোরগঞ্জ", "মাদারীপুর", "মানিকগঞ্জ", "মুন্সীগঞ্জ", "নারায়ণগঞ্জ", "নরসিংদী", "রাজবাড়ী", "শরীয়তপুর", "টাঙ্গাইল"], 
+            "চট্টগ্রাম": ["চট্টগ্রাম", "বান্দরবান", "ব্রাহ্মণবাড়িয়া", "চাঁদপুর", "কুমিল্লা", "কক্সবাজার", "ফেনী", "খাগড়াছড়ি", "লক্ষ্মীপুর", "নোয়াখালী", "রাঙ্গামাটি"], 
+            "সিলেট": ["সিলেট", "মৌলভীবাজার", "হবিগঞ্জ", "সুনামগঞ্জ"], 
+            "ময়মনসিংহ": ["ময়মনসিংহ", "জামালপুর", "শেরপুর", "নেত্রকোনা"],
+            "রাজশাহী": ["রাজশাহী", "বগুড়া", "জয়পুরহাট", "নওগাঁ", "নাটোর", "নবাবগঞ্জ", "পাবনা", "সিরাজগঞ্জ"],
+            "খুলনা": ["খুলনা", "বাগেরহাট", "চুয়াডাঙ্গা", "যশোর", "ঝিনাইদহ", "কুষ্টিয়া", "মাগুরা", "মেহেরপুর", "নড়াইল", "সাতক্ষীরা"],
+            "বরিশাল": ["বরিশাল", "বরগুনা", "ভোলা", "ঝালকাঠি", "পটুয়াখালী", "পিরোজপুর"],
+            "রংপুর": ["রংপুর", "দিনাজপুর", "গাইবান্ধা", "কুড়িগ্রাম", "লালমনিরহাট", "নীলফামারী", "পঞ্চগড়", "ঠাকুরগাঁও"]
+        };
+        
+        window.updateDistricts = () => {
+            const div = document.getElementById('mDiv').value;
+            const distSelect = document.getElementById('mDist');
+            distSelect.innerHTML = '<option value="">জেলা বেছে নিন</option>';
+            if(dists[div]) dists[div].forEach(d => distSelect.innerHTML += `<option value="${d}">${d}</option>`);
+        };
+
+        document.getElementById('pInput').addEventListener('change', async (e) => {
+            const f = e.target.files[0]; if(!f) return;
+            const reader = new FileReader(); reader.onload=(ev)=>{ b64=ev.target.result; document.getElementById('pImg').src=ev.target.result; document.getElementById('pImg').style.display="block"; }; reader.readAsDataURL(f);
+            const fd = new FormData(); fd.append("file", f); fd.append("upload_preset", "pending-management-afcmbd");
+            try { const res = await fetch(`https://api.cloudinary.com/v1_1/dd0dgwdkc/upload`, {method:"POST", body:fd}); const d=await res.json(); imgUrl=d.secure_url; } catch(e){ alert("ছবি সার্ভারে দিতে সমস্যা হয়েছে!"); }
+        });
+
+        // পিডিএফে "আবেদনপত্র" লেখা থাকবে
+        function getPdfLayout(d, regId) {
+            return `<div style="width:794px; min-height:1122px; background:#fff; padding:60px; font-family:'Noto Sans Bengali',sans-serif; color:#000; box-sizing:border-box; position:relative;">
+                <div style="border:5px double #15803d; padding:40px; min-height:1000px; position:relative; background: #fff;">
+                    <div style="text-align:center; border-bottom:3px solid #15803d; padding-bottom:20px; margin-bottom:40px;">
+                        <img src="https://res.cloudinary.com/ddvprmv9g/image/upload/v1777644601/gu7xxpbkokyrx9wgifsn.jpg" crossorigin="anonymous" style="width:100px; margin-bottom:15px;">
+                        <h1 style="margin:0; font-size:40px; color:#064e3b;">আল হুফফাজ শিক্ষাবোর্ড বাংলাদেশ</h1>
+                        <p style="margin:5px 0; font-size:18px; color:#475569; font-weight:bold;">গাজীপুর, ঢাকা, বাংলাদেশ</p>
+                        <div style="background:#15803d; color:#fff; display:inline-block; padding:10px 40px; border-radius:50px; font-weight:bold; font-size:22px; margin-top:20px;">মাদরাসা নিবন্ধন আবেদনপত্র</div>
+                    </div>
+                    <div style="position:absolute; top:50px; right:50px; width:120px; height:150px; border:2px solid #15803d; border-radius:8px; overflow:hidden;">
+                        ${b64 ? `<img src="${b64}" style="width:100%; height:100%; object-fit:cover;">` : ''}
+                    </div>
+                    
+                    <div style="display:flex; justify-content:space-between; margin-bottom: 25px; font-weight: bold; font-size: 16px;">
+                        <span>আবেদন আইডি: ${regId}</span>
+                        <span>তারিখ: ${new Date().toLocaleDateString('bn-BD')}</span>
+                    </div>
+
+                    <table style="width:100%; border-collapse:collapse; font-size:18px; margin-top:20px;">
+                        <tr style="background:#f0fdf4;"><td style="padding:15px; width:220px; font-weight:bold; color:#064e3b;">মাদরাসার নাম</td><td>: <b>${d.mName}</b></td></tr>
+                        <tr><td style="padding:15px; font-weight:bold; color:#064e3b;">মাদরাসার ধরন</td><td>: ${d.mType}</td></tr>
+                        <tr style="background:#f0fdf4;"><td style="padding:15px; font-weight:bold; color:#064e3b;">মুহতামিম</td><td>: ${d.mPrincipal}</td></tr>
+                        <tr><td style="padding:15px; font-weight:bold; color:#064e3b;">শিক্ষা স্তর</td><td>: ${d.mLevel}</td></tr>
+                        <tr style="background:#f0fdf4;"><td style="padding:15px; font-weight:bold; color:#064e3b;">জনবল ও অবকাঠামো</td><td>: শিক্ষক: ${d.tCount} জন, ছাত্র: ${d.sCount} জন (${d.mOwner})</td></tr>
+                        <tr><td style="padding:15px; font-weight:bold; color:#064e3b;">অবস্থান</td><td>: ${d.mVillage}, ${d.mThana}, ${d.mDist}, ${d.mDiv}</td></tr>
+                        <tr style="background:#f0fdf4;"><td style="padding:15px; font-weight:bold; color:#064e3b;">মোবাইল নম্বর</td><td>: <b>${d.mPhone}</b></td></tr>
+                    </table>
+                    
+                    <div style="margin-top:50px; border:1px solid #cbd5e1; padding:25px; border-radius:15px; background:#fafafa; text-align:justify; line-height: 1.6;">
+                        <b>ঘোষণা:</b> অত্র মাদরাসা কর্তৃপক্ষ আল হুফফাজ শিক্ষাবোর্ড বাংলাদেশ-এর সকল নিয়ম ও সিলেবাস মেনে শিক্ষা কার্যক্রম পরিচালনা করতে অঙ্গীকারাবদ্ধ। আমাদের এই আবেদন যাচাই-বাছাই করে অনুমোদন দেওয়ার জন্য অনুরোধ করছি।
+                    </div>
+                    
+                    <div style="position:absolute; bottom:60px; left:40px; right:40px; display:flex; justify-content:space-between; text-align:center; font-weight:bold;">
+                        <div style="width:180px; border-top:2px solid #000; padding-top:10px;">আবেদনকারীর স্বাক্ষর</div>
+                        <div style="width:180px; border-top:2px solid #000; padding-top:10px;">বোর্ড কর্তৃপক্ষের স্বাক্ষর</div>
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        document.getElementById('regForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const regId = "AHFB-" + new Date().getFullYear().toString().substr(-2) + "-" + Math.floor(1000 + Math.random() * 9000);
+            const data = { mName: document.getElementById('mName').value, mType: document.getElementById('mType').value, mLevel: document.getElementById('mLevel').value, mPrincipal: document.getElementById('mPrincipal').value, mDiv: document.getElementById('mDiv').value, mDist: document.getElementById('mDist').value, mThana: document.getElementById('mThana').value, mVillage: document.getElementById('mVillage').value, mOwner: document.getElementById('mOwner').value, tCount: document.getElementById('tCount').value, sCount: document.getElementById('sCount').value, mPhone: document.getElementById('mPhone').value, photoUrl: imgUrl, regId: regId };
+            
+            document.getElementById('loaderOverlay').style.display='flex';
+            let p=0; const pEl=document.getElementById('pNum');
+            const timer=setInterval(()=>{ if(p<95){ p+=Math.floor(Math.random()*5)+1; pEl.innerText=p; } }, 150);
+
+            try {
+                // ১. ডাটাবেজে সেভ
+                await addDoc(collection(db, "madrasa_registrations"), { ...data, status: 'pending', timestamp: serverTimestamp() });
+                
+                // ২. সাদা পিডিএফ সমস্যার সমাধান (স্ক্রিনের বাইরে ব্লক করে রেন্ডার করা)
+                const renderBox = document.getElementById('pdf-render-box');
+                renderBox.style.display = 'block'; 
+                renderBox.innerHTML = getPdfLayout(data, regId);
+                
+                await new Promise(r => setTimeout(r, 1000));
+                
+                // ৩. PDF ডাউনলোড
+                const canvas = await html2canvas(renderBox.firstChild, { scale: 2, useCORS: true, windowWidth: 794 });
+                const { jsPDF } = window.jspdf; const pdf = new jsPDF('p','pt','a4');
+                
+                const imgData = canvas.toDataURL('image/jpeg', 0.95);
+                const pageW = pdf.internal.pageSize.getWidth();
+                const pageH = pdf.internal.pageSize.getHeight();
+                let imgW = pageW; let imgH = (canvas.height * pageW) / canvas.width;
+                
+                if (imgH > pageH) {
+                     const ratio = pageH / imgH; imgH = pageH; imgW = imgW * ratio;
+                     const marginX = (pageW - imgW) / 2; pdf.addImage(imgData, 'JPEG', marginX, 0, imgW, imgH);
+                } else { pdf.addImage(imgData, 'JPEG', 0, 0, imgW, imgH); }
+                
+                pdf.save(`Application_${data.mName}_${regId}.pdf`);
+                
+                renderBox.style.display = 'none'; // আবার লুকিয়ে ফেলা
+                clearInterval(timer); pEl.innerText="100";
+                
+                // ৪. সাকসেস মেসেজ
+                document.getElementById('loaderOverlay').style.display='none';
+                document.getElementById('finalRegId').innerText = "ট্র্যাকিং আইডি: " + regId;
+                document.getElementById('successOverlay').style.display='flex';
+                setTimeout(()=> document.getElementById('successCard').classList.add('show'), 100);
+                
+            } catch(e) { alert("Error: " + e.message); document.getElementById('loaderOverlay').style.display='none'; clearInterval(timer); }
+        });
+    </script>
 </body>
 </html>
