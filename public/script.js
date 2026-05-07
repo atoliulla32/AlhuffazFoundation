@@ -16,7 +16,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // স্লাইড মেনু ওপেন/ক্লোজ ফাংশন
 function toggleMenu() {
-    document.getElementById("navLinks").classList.toggle("active");
+    const navLinks = document.getElementById("navLinks");
+    const menuToggle = document.querySelector('.menu-toggle'); // Button element target
+    navLinks.classList.toggle("active");
+    menuToggle.classList.toggle("active"); // Put active on the button too!
 }
 
 // ড্রপডাউন মেনু টগল ফাংশন
