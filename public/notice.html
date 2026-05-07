@@ -32,21 +32,34 @@
         .search-box:focus { border-color: #15803d; background: #fff; box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.1); }
         .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 16px; }
 
-        .compact-list { display: flex; flex-direction: column; gap: 10px; }
-        .compact-item { display: flex; align-items: center; justify-content: space-between; background: white; padding: 12px 20px; border-radius: 8px; border: 1px solid #e2e8f0; border-left: 4px solid #15803d; transition: 0.2s; gap: 15px; }
+        /* লিস্ট এবং বাটন ডিজাইন */
+        .compact-list { display: flex; flex-direction: column; gap: 12px; }
+        .compact-item { display: flex; align-items: center; justify-content: space-between; background: white; padding: 15px 20px; border-radius: 10px; border: 1px solid #e2e8f0; border-left: 5px solid #15803d; transition: 0.2s; gap: 15px; }
         .compact-item:hover { background: #f8fafc; transform: translateX(4px); box-shadow: 0 4px 10px rgba(0,0,0,0.03); border-color: #cbd5e1;}
+        
         .ci-left { display: flex; align-items: center; gap: 15px; flex-grow: 1; overflow: hidden; cursor: pointer; }
-        .ci-date { font-size: 13px; color: #166534; font-weight: 700; background: #f0fdf4; padding: 4px 12px; border-radius: 20px; border: 1px solid #bbf7d0; white-space: nowrap; }
-        .ci-title { font-size: 15px; font-weight: 600; color: #1e293b; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: 0.2s;}
+        .ci-date { font-size: 13px; color: #166534; font-weight: 700; background: #f0fdf4; padding: 5px 12px; border-radius: 20px; border: 1px solid #bbf7d0; white-space: nowrap; }
+        .ci-title { font-size: 16px; font-weight: 600; color: #1e293b; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: 0.2s;}
         .compact-item:hover .ci-title { color: #15803d; }
-        .ci-btn { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; padding: 6px 14px; border-radius: 6px; font-size: 13px; font-weight: bold; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
-        .ci-btn:hover { background: #166534; color: white; border-color: #166534; }
+        
+        /* নতুন বাটন গ্রুপ */
+        .action-group { display: flex; gap: 10px; flex-shrink: 0; }
+        .ci-btn { border: 1px solid transparent; padding: 8px 15px; border-radius: 6px; font-size: 13px; font-weight: bold; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 6px; }
+        
+        /* প্রিভিউ বাটন */
+        .btn-preview { background: #f1f5f9; color: #334155; border-color: #cbd5e1; }
+        .btn-preview:hover { background: #334155; color: white; border-color: #334155; }
+        
+        /* ডাউনলোড বাটন */
+        .btn-download { background: #f0fdf4; color: #166534; border-color: #bbf7d0; }
+        .btn-download:hover { background: #166534; color: white; border-color: #166534; }
 
-        @media(max-width: 600px) {
+        @media(max-width: 650px) {
             .compact-item { flex-direction: column; align-items: flex-start; padding: 15px; gap: 12px;}
             .ci-left { flex-direction: column; align-items: flex-start; gap: 8px; width: 100%;}
             .ci-title { white-space: normal; line-height: 1.4;}
-            .ci-btn { width: 100%; justify-content: center; padding: 10px; background: #f8fafc; border-color: #cbd5e1;}
+            .action-group { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+            .ci-btn { justify-content: center; padding: 10px; }
         }
 
         /* Preview Modal */
@@ -57,7 +70,6 @@
         .pdf-actions { padding: 15px 20px; background: #f1f5f9; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; }
         .pdf-content { padding: 40px; overflow-y: auto; background: white; }
         
-        /* প্রফেশনাল প্যাড ডিজাইন (শুধু প্রিভিউ এর জন্য) */
         .pad-header { border-bottom: 3px double #166534; padding-bottom: 15px; margin-bottom: 20px; display: flex; align-items: center; gap: 15px; justify-content: center;}
         .pad-logo { width: 70px; height: 70px; flex-shrink: 0; }
         .pad-title-container { text-align: center; }
@@ -110,7 +122,7 @@
         <div class="pdf-box">
             <div class="pdf-actions">
                 <button onclick="closePdf()" style="background:#e2e8f0; color:#475569; border:none; padding:8px 15px; border-radius:6px; font-weight:bold; cursor:pointer;">❌ বন্ধ করুন</button>
-                <button id="downloadBtnModal" style="background:#166534; color:white; border:none; padding:8px 15px; border-radius:6px; font-weight:bold; cursor:pointer;"><i class="fas fa-download"></i> সরাসরি PDF ডাউনলোড</button>
+                <button id="downloadBtnModal" style="background:#166534; color:white; border:none; padding:8px 15px; border-radius:6px; font-weight:bold; cursor:pointer;"><i class="fas fa-download"></i> PDF ডাউনলোড</button>
             </div>
             
             <div class="pdf-content">
@@ -123,7 +135,7 @@
                 </div>
 
                 <div style="display: flex; justify-content: space-between; margin-bottom: 25px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">
-                    <span style="font-weight: bold; color: #1e293b; font-size: 14px;">স্মারক নং: AHFB/26/....</span>
+                    <span style="font-weight: bold; color: #1e293b; font-size: 14px;">স্মারক নং: <span id="mSmk"></span></span>
                     <span style="font-weight: bold; color: #1e293b; font-size: 14px;">তারিখ: <span id="mDate"></span></span>
                 </div>
 
@@ -177,7 +189,6 @@
         const archiveList = document.getElementById('archive-list');
         const loader = document.getElementById('loader');
         let allNotices = []; 
-        let currentActiveNoticeId = null;
 
         db.collection("notices").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
             loader.style.display = 'none';
@@ -197,6 +208,8 @@
             snapshot.forEach((doc) => {
                 const notice = doc.data();
                 notice.id = doc.id;
+                // রেন্ডম স্মারক নম্বর জেনারেট করে নোটিশের সাথে সেভ করে রাখছি (যাতে প্রিভিউ ও ডাউনলোডে একই দেখায়)
+                notice.smk = `AHFB/26/${Math.floor(Math.random() * 900) + 100}`;
                 allNotices.push(notice);
 
                 if(notice.isLive) {
@@ -227,7 +240,11 @@
                             <span class="ci-date">${notice.date}</span>
                             <h3 class="ci-title" title="${notice.title}">${notice.title}</h3>
                         </div>
-                        <button class="ci-btn" style="background:#f0fdf4; color:#166534; border-color:#bbf7d0;" onclick="downloadDirectPDF('${notice.id}')"><i class="fas fa-download"></i> PDF</button>
+                        
+                        <div class="action-group">
+                            <button class="ci-btn btn-preview" onclick="openPdfPreview('${notice.id}')"><i class="fas fa-eye"></i> প্রিভিউ</button>
+                            <button class="ci-btn btn-download" onclick="downloadDirectPDF('${notice.id}')"><i class="fas fa-download"></i> PDF</button>
+                        </div>
                     </div>
                 `;
             });
@@ -242,16 +259,16 @@
             renderArchiveList(filteredNotices);
         }
 
-        // শুধু প্রিভিউ দেখার জন্য
+        // প্রিভিউ দেখার জন্য
         function openPdfPreview(id) {
             const notice = allNotices.find(n => n.id === id);
             if(notice) {
-                currentActiveNoticeId = id;
                 document.getElementById('mTitle').innerText = notice.title;
                 document.getElementById('mDate').innerText = notice.date;
+                document.getElementById('mSmk').innerText = notice.smk;
                 document.getElementById('mDesc').innerText = notice.description;
                 
-                // ডাউনলোড বাটনকে বলে দিচ্ছি কোন আইডির পিডিএফ নামাতে হবে
+                // প্রিভিউ বক্সের ভেতরের ডাউনলোড বাটন
                 document.getElementById('downloadBtnModal').onclick = function() { downloadDirectPDF(id); };
 
                 const modal = document.getElementById('pdfModal');
@@ -266,17 +283,15 @@
             setTimeout(() => modal.style.display = 'none', 300);
         }
 
-        // ম্যাজিক: সরাসরি আল্ট্রা-এইচডি PDF ডাউনলোড (অ্যাডমিন প্যানেলের মতো)
+        // সরাসরি আল্ট্রা-এইচডি PDF ডাউনলোড
         async function downloadDirectPDF(id) {
             const notice = allNotices.find(n => n.id === id);
             if(!notice) return;
 
-            // প্রসেসিং স্ক্রিন চালু করা
             document.getElementById('pdfProcessing').style.display = 'flex';
             
             const container = document.getElementById('hidden-pdf-container');
             
-            // A4 সাইজের (794x1122) নিখুঁত প্যাড ডিজাইন
             container.innerHTML = `
                 <div style="width: 794px; height: 1122px; box-sizing: border-box; padding: 60px; background: #ffffff; font-family: 'Noto Sans Bengali', sans-serif; color: #000; line-height: 1.5; position: relative;">
                     
@@ -289,7 +304,7 @@
                     </div>
 
                     <div style="display: flex; justify-content: space-between; margin-bottom: 40px; border-bottom: 1px solid #e2e8f0; padding-bottom: 15px; font-size: 16px;">
-                        <span style="font-weight: bold; color: #1e293b;">স্মারক নং: AHFB/26/${Math.floor(Math.random() * 900) + 100}</span>
+                        <span style="font-weight: bold; color: #1e293b;">স্মারক নং: ${notice.smk}</span>
                         <span style="font-weight: bold; color: #1e293b;">তারিখ: ${notice.date}</span>
                     </div>
 
@@ -319,12 +334,10 @@
             `;
 
             try {
-                // লোগো লোড হওয়ার জন্য একটু অপেক্ষা
                 await new Promise(resolve => setTimeout(resolve, 800));
 
-                // html2canvas দিয়ে ছবি বানানো
                 const canvas = await html2canvas(container.firstElementChild, { 
-                    scale: 3, // এইচডি কোয়ালিটি
+                    scale: 3, 
                     useCORS: true, 
                     allowTaint: true,
                     windowWidth: 794, 
@@ -333,12 +346,11 @@
                 
                 const imgData = canvas.toDataURL('image/png'); 
                 const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF('p', 'pt', 'a4'); // A4 সাইজ
+                const pdf = new jsPDF('p', 'pt', 'a4'); 
                 
                 const pageW = pdf.internal.pageSize.getWidth();
                 const pageH = pdf.internal.pageSize.getHeight();
                 
-                // পিডিএফে ছবি যুক্ত করে সেভ করা
                 pdf.addImage(imgData, 'PNG', 0, 0, pageW, pageH);
                 pdf.save(`Notice_${notice.title.substring(0, 15)}.pdf`);
                 
@@ -346,7 +358,6 @@
                 alert("PDF ডাউনলোড করতে সমস্যা হয়েছে!"); 
             }
             
-            // কাজ শেষ হলে প্রসেসিং স্ক্রিন বন্ধ করা
             document.getElementById('pdfProcessing').style.display = 'none';
             container.innerHTML = ''; 
         }
