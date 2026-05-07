@@ -8,73 +8,40 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
     <style>
-        /* লোডার ডিজাইন */
         .loader-container { text-align: center; padding: 40px 0; color: #15803d; }
         .spinner { border: 4px solid rgba(21, 128, 61, 0.2); border-left-color: #15803d; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 15px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
-        /* প্রিমিয়াম ডিজিটাল কালো বোর্ড (আপনার পছন্দের ডিজাইন) */
-        .digital-board {
-            background: linear-gradient(to right, #0f172a, #1e293b);
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-            border: 1px solid #334155;
-            margin-top: 20px;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-        }
-        .board-badge {
-            background: #b91c1c; 
-            color: white;
-            padding: 15px 20px;
-            font-weight: 700;
-            font-size: 15px;
-            white-space: nowrap;
-            z-index: 2;
-            box-shadow: 5px 0 15px rgba(0,0,0,0.5);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .marquee-wrapper {
-            flex-grow: 1;
-            padding: 0 15px;
-            overflow: hidden;
-        }
-        .marquee-text {
-            color: #f8fafc;
-            font-size: 16px;
-            font-weight: 500;
-        }
+        /* কালো বোর্ড */
+        .digital-board { background: linear-gradient(to right, #0f172a, #1e293b); border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); border: 1px solid #334155; margin-top: 20px; display: flex; align-items: center; width: 100%; box-sizing: border-box; }
+        .board-badge { background: #b91c1c; color: white; padding: 15px 20px; font-weight: 700; font-size: 15px; white-space: nowrap; z-index: 2; box-shadow: 5px 0 15px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 8px; flex-shrink: 0;}
+        .marquee-wrapper { flex-grow: 1; padding: 0 15px; overflow: hidden; width: 100%; min-width: 0; }
+        .marquee-text { color: #f8fafc; font-size: 16px; font-weight: 500; display: inline-block; padding-top: 5px;}
         .marquee-text span.date { color: #facc15; font-weight: 600; margin-right: 10px; }
         .marquee-text span.divider { color: #64748b; margin: 0 15px; }
 
-        /* প্রফেশনাল আর্কাইভ সেকশন ও ফিল্টার */
         .archive-section { margin-top: 50px; }
         .archive-title { font-size: 22px; color: #166534; border-bottom: 2px solid #166534; padding-bottom: 10px; margin-bottom: 20px; }
         
-        /* সার্চ বক্স ডিজাইন */
         .filter-container { margin-bottom: 25px; position: relative; }
         .search-box { width: 100%; padding: 12px 20px 12px 45px; border: 1px solid #cbd5e1; border-radius: 30px; font-size: 15px; outline: none; transition: 0.3s; box-sizing: border-box; background: #f8fafc; font-family: inherit;}
         .search-box:focus { border-color: #15803d; background: #fff; box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.1); }
         .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 16px; }
 
-        /* কমপ্যাক্ট লিস্ট ডিজাইন */
         .compact-list { display: flex; flex-direction: column; gap: 10px; }
         .compact-item { display: flex; align-items: center; justify-content: space-between; background: white; padding: 12px 20px; border-radius: 8px; border: 1px solid #e2e8f0; border-left: 4px solid #15803d; transition: 0.2s; gap: 15px; }
         .compact-item:hover { background: #f8fafc; transform: translateX(4px); box-shadow: 0 4px 10px rgba(0,0,0,0.03); border-color: #cbd5e1;}
-        
         .ci-left { display: flex; align-items: center; gap: 15px; flex-grow: 1; overflow: hidden; cursor: pointer; }
         .ci-date { font-size: 13px; color: #166534; font-weight: 700; background: #f0fdf4; padding: 4px 12px; border-radius: 20px; border: 1px solid #bbf7d0; white-space: nowrap; }
         .ci-title { font-size: 15px; font-weight: 600; color: #1e293b; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: 0.2s;}
         .compact-item:hover .ci-title { color: #15803d; }
-        
         .ci-btn { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; padding: 6px 14px; border-radius: 6px; font-size: 13px; font-weight: bold; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
         .ci-btn:hover { background: #166534; color: white; border-color: #166534; }
 
-        /* মোবাইল রেস্পন্সিভ */
         @media(max-width: 600px) {
             .compact-item { flex-direction: column; align-items: flex-start; padding: 15px; gap: 12px;}
             .ci-left { flex-direction: column; align-items: flex-start; gap: 8px; width: 100%;}
@@ -82,23 +49,29 @@
             .ci-btn { width: 100%; justify-content: center; padding: 10px; background: #f8fafc; border-color: #cbd5e1;}
         }
 
-        /* PDF View Modal (আগের মতোই) */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(5px); z-index: 2000; display: none; justify-content: center; align-items: center; opacity: 0; transition: 0.3s; padding: 20px; box-sizing: border-box; }
+        /* Preview Modal */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(5px); z-index: 2000; display: none; justify-content: center; align-items: center; opacity: 0; transition: 0.3s; padding: 15px; box-sizing: border-box; }
         .modal-overlay.show { opacity: 1; }
-        .pdf-box { background: white; border-radius: 10px; width: 100%; max-width: 700px; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; transform: translateY(20px); transition: 0.3s; box-shadow: 0 25px 50px rgba(0,0,0,0.25); }
+        .pdf-box { background: white; border-radius: 10px; width: 100%; max-width: 750px; max-height: 95vh; display: flex; flex-direction: column; overflow: hidden; transform: translateY(20px); transition: 0.3s; box-shadow: 0 25px 50px rgba(0,0,0,0.25); }
         .modal-overlay.show .pdf-box { transform: translateY(0); }
-        
         .pdf-actions { padding: 15px 20px; background: #f1f5f9; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; }
         .pdf-content { padding: 40px; overflow-y: auto; background: white; }
         
-        /* প্রিন্ট করার জন্য CSS ম্যাজিক */
-        @media print {
-            body * { visibility: hidden; }
-            #pdf-print-area, #pdf-print-area * { visibility: visible; }
-            #pdf-print-area { position: absolute; left: 0; top: 0; width: 100%; padding: 0; }
-            .pdf-actions { display: none; }
-            .pdf-content { padding: 20px; border: none; box-shadow: none; }
+        /* প্রফেশনাল প্যাড ডিজাইন (শুধু প্রিভিউ এর জন্য) */
+        .pad-header { border-bottom: 3px double #166534; padding-bottom: 15px; margin-bottom: 20px; display: flex; align-items: center; gap: 15px; justify-content: center;}
+        .pad-logo { width: 70px; height: 70px; flex-shrink: 0; }
+        .pad-title-container { text-align: center; }
+        .pad-main-title { color: #166534; margin: 0 0 5px 0; font-size: 26px; font-weight: bold; white-space: nowrap; }
+        .pad-sub-title { margin: 0; color: #475569; font-size: 15px; font-weight: 600; }
+        
+        @media(max-width: 500px) {
+            .pad-main-title { font-size: 18px; }
+            .pad-logo { width: 50px; height: 50px; }
+            .pdf-content { padding: 20px; }
         }
+
+        /* PDF Processing Overlay */
+        #pdfProcessing { display: none; position: fixed; inset: 0; background: rgba(255,255,255,0.9); z-index: 9999; justify-content: center; align-items: center; flex-direction: column; }
     </style>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -111,58 +84,79 @@
     <div class="container" style="margin-bottom: 80px; max-width: 900px;">
         
         <div class="digital-board" id="liveBoard" style="display: none;">
-            <div class="board-badge">
-                <i class="fas fa-bell" style="animation: ring 2s infinite;"></i> সর্বশেষ
-            </div>
+            <div class="board-badge"><i class="fas fa-bell" style="animation: ring 2s infinite;"></i> সর্বশেষ</div>
             <div class="marquee-wrapper">
-                <marquee behavior="scroll" direction="left" scrollamount="4" onmouseover="this.stop();" onmouseout="this.start();">
-                    <div class="marquee-text" id="marquee-content">
-                        </div>
+                <marquee width="100%" behavior="scroll" direction="left" scrollamount="5" onmouseover="this.stop();" onmouseout="this.start();">
+                    <span class="marquee-text" id="marquee-content"></span>
                 </marquee>
             </div>
         </div>
 
         <div id="loader" class="loader-container">
-            <div class="spinner"></div>
-            <p style="font-weight: bold;">বিজ্ঞপ্তি লোড হচ্ছে...</p>
+            <div class="spinner"></div><p style="font-weight: bold;">বিজ্ঞপ্তি লোড হচ্ছে...</p>
         </div>
 
         <div class="archive-section" id="archiveSection" style="display: none;">
             <h3 class="archive-title">সকল বিজ্ঞপ্তি (আর্কাইভ)</h3>
-            
             <div class="filter-container">
                 <i class="fas fa-search search-icon"></i>
                 <input type="text" id="searchInput" class="search-box" placeholder="বিজ্ঞপ্তির শিরোনাম বা তারিখ দিয়ে খুঁজুন..." oninput="filterNotices()">
             </div>
-
-            <div id="archive-list" class="compact-list">
-                </div>
+            <div id="archive-list" class="compact-list"></div>
         </div>
-
     </div>
 
     <div class="modal-overlay" id="pdfModal">
         <div class="pdf-box">
             <div class="pdf-actions">
                 <button onclick="closePdf()" style="background:#e2e8f0; color:#475569; border:none; padding:8px 15px; border-radius:6px; font-weight:bold; cursor:pointer;">❌ বন্ধ করুন</button>
-                <button onclick="window.print()" style="background:#166534; color:white; border:none; padding:8px 15px; border-radius:6px; font-weight:bold; cursor:pointer;"><i class="fas fa-file-pdf"></i> সেভ / প্রিন্ট (PDF)</button>
+                <button id="downloadBtnModal" style="background:#166534; color:white; border:none; padding:8px 15px; border-radius:6px; font-weight:bold; cursor:pointer;"><i class="fas fa-download"></i> সরাসরি PDF ডাউনলোড</button>
             </div>
             
-            <div class="pdf-content" id="pdf-print-area">
-                <div style="text-align: center; border-bottom: 2px solid #166534; padding-bottom: 15px; margin-bottom: 20px;">
-                    <h2 style="color: #166534; margin: 0 0 5px 0; font-size: 24px;">আল হুফফাজ ফাউন্ডেশন বাংলাদেশ</h2>
-                    <p style="margin: 0; color: #475569; font-size: 14px;">অফিসিয়াল বিজ্ঞপ্তি</p>
+            <div class="pdf-content">
+                <div class="pad-header">
+                    <img src="https://res.cloudinary.com/ddvprmv9g/image/upload/v1777644601/gu7xxpbkokyrx9wgifsn.jpg" crossorigin="anonymous" class="pad-logo">
+                    <div class="pad-title-container">
+                        <h2 class="pad-main-title">আল হুফফাজ ফাউন্ডেশন বাংলাদেশ</h2>
+                        <p class="pad-sub-title">কুরআনের আলোয় আলোকিত হোক বিশ্বময়</p>
+                    </div>
                 </div>
-                <p style="text-align: right; color: #1e293b; font-weight: bold; margin-bottom: 20px;">তারিখ: <span id="mDate"></span></p>
-                <h3 id="mTitle" style="color: #1e293b; font-size: 20px; margin-bottom: 20px; line-height: 1.4;"></h3>
-                <p id="mDesc" style="color: #334155; font-size: 15px; line-height: 1.8; white-space: pre-wrap; text-align: justify;"></p>
-                <div style="margin-top: 50px; text-align: right;">
-                    <p style="margin: 0; font-weight: bold; color: #1e293b;">কর্তৃপক্ষ</p>
-                    <p style="margin: 0; color: #64748b; font-size: 14px;">আল হুফফাজ ফাউন্ডেশন</p>
+
+                <div style="display: flex; justify-content: space-between; margin-bottom: 25px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">
+                    <span style="font-weight: bold; color: #1e293b; font-size: 14px;">স্মারক নং: AHFB/26/....</span>
+                    <span style="font-weight: bold; color: #1e293b; font-size: 14px;">তারিখ: <span id="mDate"></span></span>
+                </div>
+
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <span style="background: #166534; color: white; padding: 6px 25px; border-radius: 20px; font-weight: bold; font-size: 15px;">অফিসিয়াল বিজ্ঞপ্তি</span>
+                </div>
+
+                <h3 id="mTitle" style="color: #1e293b; font-size: 20px; margin-bottom: 20px; line-height: 1.5; text-align: center;"></h3>
+                <div style="min-height: 150px;">
+                    <p id="mDesc" style="color: #1e293b; font-size: 15px; line-height: 1.8; white-space: pre-wrap; text-align: justify;"></p>
+                </div>
+                
+                <div style="margin-top: 50px; display: flex; justify-content: space-between;">
+                    <div style="text-align: center;">
+                        <div style="border-bottom: 1px dashed #1e293b; width: 100px; margin-bottom: 5px;"></div>
+                        <p style="margin: 0; font-weight: bold; color: #1e293b;">স্বাক্ষর</p>
+                        <p style="margin: 0; color: #64748b; font-size: 13px;">মহাসচিব</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="border-bottom: 1px dashed #1e293b; width: 100px; margin-bottom: 5px;"></div>
+                        <p style="margin: 0; font-weight: bold; color: #1e293b;">স্বাক্ষর</p>
+                        <p style="margin: 0; color: #64748b; font-size: 13px;">চেয়ারম্যান</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <div id="pdfProcessing">
+        <div class="spinner"></div>
+        <h3 style="color:#166534;">PDF তৈরি হচ্ছে, দয়া করে অপেক্ষা করুন...</h3>
+    </div>
+    <div id="hidden-pdf-container" style="position: absolute; left: -9999px; top: 0; width: 794px; background: white; z-index: -1;"></div>
 
     <div id="footer-placeholder"></div>
     <script src="script.js"></script>
@@ -182,10 +176,9 @@
         const marqueeContent = document.getElementById('marquee-content');
         const archiveList = document.getElementById('archive-list');
         const loader = document.getElementById('loader');
-
         let allNotices = []; 
+        let currentActiveNoticeId = null;
 
-        // লাইভ ডাটাবেজ কানেকশন
         db.collection("notices").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
             loader.style.display = 'none';
             document.getElementById('liveBoard').style.display = 'flex';
@@ -193,6 +186,7 @@
             
             marqueeContent.innerHTML = '';
             allNotices = [];
+            let liveNoticesCount = 0;
             
             if (snapshot.empty) {
                 marqueeContent.innerHTML = 'বর্তমানে কোনো নতুন বিজ্ঞপ্তি নেই।';
@@ -200,47 +194,45 @@
                 return;
             }
 
-            let isFirst = true;
-
             snapshot.forEach((doc) => {
                 const notice = doc.data();
                 notice.id = doc.id;
                 allNotices.push(notice);
 
-                // কালো বোর্ডে লেটেস্ট নোটিশ স্ক্রল করবে
-                if(isFirst) {
+                if(notice.isLive) {
                     marqueeContent.innerHTML += `<span class="date">[${notice.date}]</span> ${notice.title} <span class="divider">•</span> `;
-                    isFirst = false; 
+                    liveNoticesCount++;
                 }
             });
 
-            renderArchiveList(allNotices); // লিস্ট রেন্ডার করা
+            if(liveNoticesCount === 0) {
+                marqueeContent.innerHTML = 'বর্তমানে কোনো ব্রেকিং বিজ্ঞপ্তি নেই। নিচের আর্কাইভ থেকে সকল বিজ্ঞপ্তি পড়ুন।';
+            }
+
+            renderArchiveList(allNotices); 
         }, (error) => {
             loader.innerHTML = '<p style="color:red; text-align:center;">ইন্টারনেট সংযোগ চেক করুন!</p>';
         });
 
-        // আর্কাইভ লিস্ট তৈরি করার ফাংশন
         function renderArchiveList(notices) {
             archiveList.innerHTML = '';
             if(notices.length === 0) {
                 archiveList.innerHTML = '<p style="color:#64748b; text-align:center; padding:20px;">আপনার খোঁজা বিজ্ঞপ্তিটি পাওয়া যায়নি।</p>';
                 return;
             }
-            
             notices.forEach(notice => {
                 archiveList.innerHTML += `
                     <div class="compact-item">
-                        <div class="ci-left" onclick="openPdf('${notice.id}')">
+                        <div class="ci-left" onclick="openPdfPreview('${notice.id}')">
                             <span class="ci-date">${notice.date}</span>
                             <h3 class="ci-title" title="${notice.title}">${notice.title}</h3>
                         </div>
-                        <button class="ci-btn" onclick="openPdf('${notice.id}')"><i class="fas fa-file-pdf"></i> বিস্তারিত</button>
+                        <button class="ci-btn" style="background:#f0fdf4; color:#166534; border-color:#bbf7d0;" onclick="downloadDirectPDF('${notice.id}')"><i class="fas fa-download"></i> PDF</button>
                     </div>
                 `;
             });
         }
 
-        // সার্চ ও ফিল্টার ফাংশন
         function filterNotices() {
             const searchText = document.getElementById('searchInput').value.toLowerCase();
             const filteredNotices = allNotices.filter(notice => 
@@ -250,14 +242,18 @@
             renderArchiveList(filteredNotices);
         }
 
-        // PDF পপ-আপ ওপেন করার ফাংশন
-        function openPdf(id) {
+        // শুধু প্রিভিউ দেখার জন্য
+        function openPdfPreview(id) {
             const notice = allNotices.find(n => n.id === id);
             if(notice) {
+                currentActiveNoticeId = id;
                 document.getElementById('mTitle').innerText = notice.title;
                 document.getElementById('mDate').innerText = notice.date;
                 document.getElementById('mDesc').innerText = notice.description;
                 
+                // ডাউনলোড বাটনকে বলে দিচ্ছি কোন আইডির পিডিএফ নামাতে হবে
+                document.getElementById('downloadBtnModal').onclick = function() { downloadDirectPDF(id); };
+
                 const modal = document.getElementById('pdfModal');
                 modal.style.display = 'flex';
                 setTimeout(() => modal.classList.add('show'), 10);
@@ -268,6 +264,91 @@
             const modal = document.getElementById('pdfModal');
             modal.classList.remove('show');
             setTimeout(() => modal.style.display = 'none', 300);
+        }
+
+        // ম্যাজিক: সরাসরি আল্ট্রা-এইচডি PDF ডাউনলোড (অ্যাডমিন প্যানেলের মতো)
+        async function downloadDirectPDF(id) {
+            const notice = allNotices.find(n => n.id === id);
+            if(!notice) return;
+
+            // প্রসেসিং স্ক্রিন চালু করা
+            document.getElementById('pdfProcessing').style.display = 'flex';
+            
+            const container = document.getElementById('hidden-pdf-container');
+            
+            // A4 সাইজের (794x1122) নিখুঁত প্যাড ডিজাইন
+            container.innerHTML = `
+                <div style="width: 794px; height: 1122px; box-sizing: border-box; padding: 60px; background: #ffffff; font-family: 'Noto Sans Bengali', sans-serif; color: #000; line-height: 1.5; position: relative;">
+                    
+                    <div style="border-bottom: 3px double #166534; padding-bottom: 20px; margin-bottom: 30px; display: flex; align-items: center; justify-content: center; gap: 20px;">
+                        <img src="https://res.cloudinary.com/ddvprmv9g/image/upload/v1777644601/gu7xxpbkokyrx9wgifsn.jpg" crossorigin="anonymous" style="width: 80px; height: 80px;">
+                        <div style="text-align: center;">
+                            <h2 style="color: #166534; margin: 0 0 5px 0; font-size: 32px; font-weight: bold;">আল হুফফাজ ফাউন্ডেশন বাংলাদেশ</h2>
+                            <p style="margin: 0; color: #475569; font-size: 18px; font-weight: 600;">কুরআনের আলোয় আলোকিত হোক বিশ্বময়</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 40px; border-bottom: 1px solid #e2e8f0; padding-bottom: 15px; font-size: 16px;">
+                        <span style="font-weight: bold; color: #1e293b;">স্মারক নং: AHFB/26/${Math.floor(Math.random() * 900) + 100}</span>
+                        <span style="font-weight: bold; color: #1e293b;">তারিখ: ${notice.date}</span>
+                    </div>
+
+                    <div style="text-align: center; margin-bottom: 40px;">
+                        <span style="background: #166534; color: white; padding: 10px 40px; border-radius: 30px; font-weight: bold; font-size: 20px;">অফিসিয়াল বিজ্ঞপ্তি</span>
+                    </div>
+
+                    <h3 style="color: #1e293b; font-size: 26px; margin-bottom: 30px; line-height: 1.5; text-align: center;">${notice.title}</h3>
+                    
+                    <div style="min-height: 400px;">
+                        <p style="color: #1e293b; font-size: 18px; line-height: 1.8; white-space: pre-wrap; text-align: justify;">${notice.description}</p>
+                    </div>
+
+                    <div style="position: absolute; bottom: 80px; left: 60px; right: 60px; display: flex; justify-content: space-between;">
+                        <div style="text-align: center;">
+                            <div style="border-bottom: 1px dashed #1e293b; width: 150px; margin-bottom: 5px;"></div>
+                            <p style="margin: 0; font-weight: bold; color: #1e293b; font-size: 16px;">স্বাক্ষর</p>
+                            <p style="margin: 0; color: #64748b; font-size: 14px;">মহাসচিব</p>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="border-bottom: 1px dashed #1e293b; width: 150px; margin-bottom: 5px;"></div>
+                            <p style="margin: 0; font-weight: bold; color: #1e293b; font-size: 16px;">স্বাক্ষর</p>
+                            <p style="margin: 0; color: #64748b; font-size: 14px;">চেয়ারম্যান</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            try {
+                // লোগো লোড হওয়ার জন্য একটু অপেক্ষা
+                await new Promise(resolve => setTimeout(resolve, 800));
+
+                // html2canvas দিয়ে ছবি বানানো
+                const canvas = await html2canvas(container.firstElementChild, { 
+                    scale: 3, // এইচডি কোয়ালিটি
+                    useCORS: true, 
+                    allowTaint: true,
+                    windowWidth: 794, 
+                    logging: false
+                });
+                
+                const imgData = canvas.toDataURL('image/png'); 
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'pt', 'a4'); // A4 সাইজ
+                
+                const pageW = pdf.internal.pageSize.getWidth();
+                const pageH = pdf.internal.pageSize.getHeight();
+                
+                // পিডিএফে ছবি যুক্ত করে সেভ করা
+                pdf.addImage(imgData, 'PNG', 0, 0, pageW, pageH);
+                pdf.save(`Notice_${notice.title.substring(0, 15)}.pdf`);
+                
+            } catch(e) { 
+                alert("PDF ডাউনলোড করতে সমস্যা হয়েছে!"); 
+            }
+            
+            // কাজ শেষ হলে প্রসেসিং স্ক্রিন বন্ধ করা
+            document.getElementById('pdfProcessing').style.display = 'none';
+            container.innerHTML = ''; 
         }
 
         const style = document.createElement('style');
