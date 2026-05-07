@@ -125,7 +125,7 @@
             background: linear-gradient(rgba(21, 128, 61, 0.8), rgba(15, 23, 42, 0.9)), url('https://images.unsplash.com/photo-1584281723351-95ad9970422c?auto=format&fit=crop&w=1600&q=80');
             background-size: cover;
             background-position: center;
-            height: 60vh;
+            height: 35vh; /* পরিবর্তন: উচ্চতা কমিয়ে সবুজ জায়গা ছোট করা হয়েছে */
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -194,26 +194,14 @@
             gap: 40px;
         }
 
-        .footer-col h4 { color: white; margin-bottom: 20px; }
+        .footer-col h4 { color: white; margin-bottom: 20px; font-size: 18px; border-bottom: 2px solid var(--primary); display: inline-block; padding-bottom: 5px; }
+        .footer-col p { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .footer-col i { color: var(--accent); }
+        
         .footer-links { list-style: none; padding: 0; }
         .footer-links li { margin-bottom: 10px; }
-        .footer-links a { color: #94a3b8; text-decoration: none; }
-        .footer-links a:hover { color: var(--accent); }
-
-        .social-icons { display: flex; gap: 15px; margin-top: 15px; }
-        .social-icons a { 
-            color: white; 
-            font-size: 20px; 
-            transition: 0.3s; 
-            background: #1e293b;
-            width: 40px;
-            height: 40px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-        }
-        .social-icons a:hover { background: var(--primary); color: white; }
+        .footer-links a { color: #94a3b8; text-decoration: none; transition: 0.3s; }
+        .footer-links a:hover { color: var(--accent); padding-left: 5px; }
 
         .footer-bottom {
             text-align: center;
@@ -227,7 +215,7 @@
         .menu-toggle { display: none; font-size: 24px; cursor: pointer; color: var(--primary); }
 
         @media (max-width: 1024px) {
-            .nav-links { display: none; flex-direction: column; position: absolute; top: 70px; left: 0; width: 100%; background: white; padding: 20px; box-shadow: var(--shadow); z-index: 1000; }
+            .nav-links { display: none; flex-direction: column; position: absolute; top: 70px; left: auto; right: 0; width: 75%; background: white; padding: 20px; box-shadow: var(--shadow); z-index: 1000; } /* পরিবর্তন: দিক পরিবর্তন করে ডান দিক থেকে খোলার ব্যবস্থা করা হয়েছে */
             .nav-links.active { display: flex; }
             .dropdown-menu { position: static; box-shadow: none; border-left: 2px solid var(--primary); margin-left: 10px; display: none; }
             .dropdown.active .dropdown-menu { display: block; }
@@ -331,29 +319,36 @@
     <footer>
         <div class="footer-grid">
             <div class="footer-col">
-                <h4>ফাউন্ডেশন তথ্য</h4>
-                <p>কুরআনের খেদমতে নিবেদিত একটি প্রতিষ্ঠান। আমরা বিশ্বাস করি বিশুদ্ধ কুরআন শিক্ষাই জাতির প্রকৃত মুক্তি।</p>
-                <div class="social-icons">
-                    <a href="https://www.facebook.com/profile.php?id=61579231990412" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                    <a href="https://youtube.com/@huffazulquran-ju8dk?si=KxaoWaFMnEXE7IXQ" target="_blank"><i class="fab fa-youtube"></i></a>
-                </div>
-            </div>
-            <div class="footer-col">
-                <h4>কুইক লিংক</h4>
-                <ul class="footer-links">
-                    <li><a href="about.html">আমাদের সম্পর্কে</a></li>
-                    <li><a href="plan.html">ভবিষ্যত পরিকল্পনা</a></li>
-                    <li><a href="board.html">হিফজ শিক্ষা বোর্ড</a></li>
-                    <li><a href="notice.html">বিজ্ঞপ্তি</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>অফিস ঠিকানা</h4>
-                <p><i class="fas fa-location-dot"></i> প্রধান কার্যালয়, গাজীপুর, ঢাকা।</p>
+                <h4>যোগাযোগের ঠিকানা</h4>
+                <p><i class="fas fa-map-marker-alt"></i> প্রধান কার্যালয়, গাজীপুর, ঢাকা।</p>
                 <p><i class="fas fa-phone"></i> +৮৮০ ১৯০০-০০০০০০</p>
                 <p><i class="fas fa-envelope"></i> info@alhuffaz.org</p>
             </div>
+            
+            <div class="footer-col">
+                <h4>গুরুত্বপূর্ণ লিংক</h4>
+                <ul class="footer-links">
+                    <li><a href="about.html"><i class="fas fa-angle-right"></i> আমাদের সম্পর্কে</a></li>
+                    <li><a href="plan.html"><i class="fas fa-angle-right"></i> ভবিষ্যত পরিকল্পনা</a></li>
+                    <li><a href="board.html"><i class="fas fa-angle-right"></i> হিফজ শিক্ষা বোর্ড</a></li>
+                    <li><a href="notice.html"><i class="fas fa-angle-right"></i> বিজ্ঞপ্তি</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h4>সোশ্যাল মিডিয়া</h4>
+                <p style="margin-bottom: 15px; align-items: start;">আমাদের কার্যক্রমের নিয়মিত আপডেট পেতে সোশ্যাল মিডিয়ায় যুক্ত থাকুন:</p>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                    <a href="https://www.facebook.com/profile.php?id=61579231990412" target="_blank" style="color: #fff; background: #3b5998; padding: 10px 15px; border-radius: 5px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                        <i class="fab fa-facebook-f"></i> Facebook
+                    </a>
+                    <a href="https://youtube.com/@huffazulquran-ju8dk?si=KxaoWaFMnEXE7IXQ" target="_blank" style="color: #fff; background: #ff0000; padding: 10px 15px; border-radius: 5px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                        <i class="fab fa-youtube"></i> YouTube
+                    </a>
+                </div>
+            </div>
         </div>
+        
         <div class="footer-bottom">
             &copy; ২০২৬ আল হুফফাজ ফাউন্ডেশন বাংলাদেশ। সর্বস্বত্ব সংরক্ষিত।
         </div>
