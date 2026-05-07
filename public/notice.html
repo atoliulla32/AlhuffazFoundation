@@ -16,7 +16,6 @@
         .spinner { border: 4px solid rgba(21, 128, 61, 0.2); border-left-color: #15803d; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 15px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
-        /* কালো বোর্ড */
         .digital-board { background: linear-gradient(to right, #0f172a, #1e293b); border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); border: 1px solid #334155; margin-top: 20px; display: flex; align-items: center; width: 100%; box-sizing: border-box; }
         .board-badge { background: #b91c1c; color: white; padding: 15px 20px; font-weight: 700; font-size: 15px; white-space: nowrap; z-index: 2; box-shadow: 5px 0 15px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 8px; flex-shrink: 0;}
         .marquee-wrapper { flex-grow: 1; padding: 0 15px; overflow: hidden; width: 100%; min-width: 0; }
@@ -56,7 +55,6 @@
             .ci-btn { justify-content: center; padding: 10px; }
         }
 
-        /* ক্লিন প্রিভিউ মডেল (Clean Preview Modal) */
         .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(5px); z-index: 2000; display: none; justify-content: center; align-items: center; opacity: 0; transition: 0.3s; padding: 15px; box-sizing: border-box; }
         .modal-overlay.show { opacity: 1; }
         .pdf-box { background: white; border-radius: 12px; width: 100%; max-width: 650px; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; transform: translateY(20px); transition: 0.3s; box-shadow: 0 25px 50px rgba(0,0,0,0.25); }
@@ -64,7 +62,6 @@
         .pdf-actions { padding: 15px 20px; background: #f8fafc; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; }
         .pdf-content { padding: 30px; overflow-y: auto; background: white; }
 
-        /* PDF Processing Overlay */
         #pdfProcessing { display: none; position: fixed; inset: 0; background: rgba(255,255,255,0.95); z-index: 9999; justify-content: center; align-items: center; flex-direction: column; }
     </style>
 
@@ -112,7 +109,6 @@
                 <div style="margin-bottom: 25px; padding-bottom: 10px; border-bottom: 1px solid #e2e8f0; font-size: 14px; color: #64748b; font-weight: bold;">
                     📅 তারিখ: <span id="mDate"></span> &nbsp; | &nbsp; 📝 স্মারক নং: <span id="mSmk"></span>
                 </div>
-                
                 <div style="min-height: 150px;">
                     <p id="mDesc" style="color: #334155; font-size: 16px; line-height: 1.8; white-space: pre-wrap; text-align: justify; margin: 0;"></p>
                 </div>
@@ -164,7 +160,9 @@
             snapshot.forEach((doc) => {
                 const notice = doc.data();
                 notice.id = doc.id;
-                notice.smk = `AHFB/26/${Math.floor(Math.random() * 900) + 100}`;
+                // এখন আর এখানে রেন্ডম জেনারেট হচ্ছে না। ডাটাবেজ থেকে `notice.smk` টানছে।
+                // যদি পুরনো নোটিশে না থাকে, তাহলে ডিফল্ট হিসেবে N/A দেখাবে।
+                notice.smk = notice.smk || "AHFB/00/000"; 
                 allNotices.push(notice);
 
                 if(notice.isLive) {
@@ -213,7 +211,6 @@
             renderArchiveList(filteredNotices);
         }
 
-        // প্রিভিউ ওপেন করার ক্লিন ফাংশন
         function openPdfPreview(id) {
             const notice = allNotices.find(n => n.id === id);
             if(notice) {
@@ -236,16 +233,13 @@
             setTimeout(() => modal.style.display = 'none', 300);
         }
 
-        // সিগনেচারমুক্ত সরাসরি আল্ট্রা-এইচডি PDF ডাউনলোড
         async function downloadDirectPDF(id) {
             const notice = allNotices.find(n => n.id === id);
             if(!notice) return;
 
             document.getElementById('pdfProcessing').style.display = 'flex';
-            
             const container = document.getElementById('hidden-pdf-container');
             
-            // সিগনেচার বাদ দিয়ে প্যাড ডিজাইন
             container.innerHTML = `
                 <div style="width: 794px; height: 1122px; box-sizing: border-box; padding: 60px; background: #ffffff; font-family: 'Noto Sans Bengali', sans-serif; color: #000; line-height: 1.5; position: relative;">
                     
@@ -313,4 +307,4 @@
         document.head.appendChild(style);
     </script>
 </body>
-    </html>
+</html>
