@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>লক্ষ্য ও উদ্দেশ্য | আল হুফফাজ ফাউন্ডেশন</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root { --primary: #15803d; --bg-soft: #f8fafc; --text-main: #1e293b; }
+        body { font-family: 'Noto Sans Bengali', sans-serif; background: var(--bg-soft); margin: 0; padding: 0; color: var(--text-main); line-height: 1.8; overflow-x: hidden;}
+        
+        header { background: #fff; padding: 10px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .logo-section { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .logo-section img { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--primary); }
+        .logo-text h1 { font-size: 18px; color: #166534; font-weight: 700; margin: 0; line-height: 1.2;}
+        
+        .nav-links { display: flex; gap: 20px; list-style: none; margin: 0; padding: 0; }
+        .nav-links li { position: relative; }
+        .nav-links a { text-decoration: none; color: var(--text-main); font-weight: 600; font-size: 15px; padding: 10px 5px; display: block;}
+        .dropdown-menu { display: none; position: absolute; top: 100%; left: 0; background: #fff; min-width: 220px; box-shadow: 0 10px 15px rgba(0,0,0,0.1); border-radius: 5px; padding: 10px 0; z-index: 1000;}
+        @media (min-width: 1025px) { .dropdown:hover .dropdown-menu { display: block; } }
+        .dropdown-menu a { padding: 8px 20px; border-bottom: 1px solid #f1f5f9; font-weight: 400; }
+        
+        .page-header { background: var(--primary); color: white; text-align: center; padding: 40px 20px; margin-bottom: 40px; }
+        .page-header h2 { font-size: 28px; margin: 0; }
+        .content-box { max-width: 1000px; margin: 0 auto 60px; padding: 30px; background: #fff; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        
+        .mission-list { list-style: none; padding: 0; }
+        .mission-list li { background: #f0fdf4; margin-bottom: 15px; padding: 15px 20px; border-left: 4px solid var(--primary); border-radius: 5px; font-size: 16px; }
+
+        .menu-toggle { display: none; font-size: 24px; cursor: pointer; color: var(--primary); }
+
+        @media (max-width: 1024px) {
+            .nav-links { position: fixed; top: 70px; right: -100%; width: 280px; height: calc(100vh - 70px); background: white; flex-direction: column; padding: 20px; box-shadow: -5px 0 15px rgba(0,0,0,0.1); transition: right 0.4s ease-in-out; z-index: 1000; overflow-y: auto; display: flex; margin: 0;}
+            .nav-links.active { right: 0; }
+            .dropdown-menu { position: static; box-shadow: none; border-left: 2px solid var(--primary); margin-left: 10px; display: none; }
+            .dropdown.active .dropdown-menu { display: block; }
+            .menu-toggle { display: block; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo-section">
+                <img src="https://res.cloudinary.com/ddvprmv9g/image/upload/v1777644601/gu7xxpbkokyrx9wgifsn.jpg" alt="Logo">
+                <div class="logo-text"><h1>আল হুফফাজ <br><small style="font-weight: 400; color: #64748b; font-size: 13px;">ফাউন্ডেশন বাংলাদেশ</small></h1></div>
+            </a>
+            <div class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
+
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">প্রথম পাতা</a></li>
+                <li class="dropdown">
+                    <a href="#" onclick="toggleDropdown(event, this.parentElement)">পরিচিতি <i class="fas fa-caret-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="about.html">আমাদের সম্পর্কে</a></li>
+                        <li><a href="mission.html" style="color: var(--primary);">লক্ষ্য ও উদ্দেশ্য</a></li>
+                        <li><a href="plan.html">ভবিষ্যত পরিকল্পনা</a></li>
+                        <li><a href="committee.html">কর্মকর্তাবৃন্দ</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" onclick="toggleDropdown(event, this.parentElement)">প্রকল্প <i class="fas fa-caret-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="board.html">হিফজ শিক্ষা বোর্ড</a></li>
+                        <li><a href="competition.html">জাতীয় হিফজুল কুরআন প্রতিযোগিতা</a></li>
+                        <li><a href="training.html">হিফজ শিক্ষক প্রশিক্ষণ কোর্স</a></li>
+                    </ul>
+                </li>
+                <li><a href="gallery.html">ছবির গ্যালারি</a></li>
+                <li><a href="audio.html">অডিও লাইব্রেরী</a></li>
+                <li><a href="notice.html">বিজ্ঞপ্তি</a></li>
+                <li><a href="contact.html">যোগাযোগ</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <div class="page-header">
+        <h2>আমাদের লক্ষ্য ও উদ্দেশ্য</h2>
+    </div>
+
+    <div class="content-box">
+        <h3 style="color: var(--primary); margin-bottom: 20px;">যে মহান উদ্দেশ্য নিয়ে আমাদের পথচলা:</h3>
+        <ul class="mission-list">
+            <li><i class="fas fa-check-circle" style="color: var(--primary); margin-right: 10px;"></i> সারা দেশের হিফজ মাদরাসাগুলোর শিক্ষা ব্যবস্থাকে একটি সুনির্দিষ্ট নীতিমালার আওতায় আনা।</li>
+            <li><i class="fas fa-check-circle" style="color: var(--primary); margin-right: 10px;"></i> কুরআনের হাফেজদের তিলাওয়াতের মান আন্তর্জাতিক পর্যায়ে উন্নীত করার জন্য প্রশিক্ষণ দেওয়া।</li>
+            <li><i class="fas fa-check-circle" style="color: var(--primary); margin-right: 10px;"></i> হিফজ বিভাগের শিক্ষকদের জন্য আধুনিক পাঠদান পদ্ধতির উপর বিশেষ কর্মশালা আয়োজন করা।</li>
+            <li><i class="fas fa-check-circle" style="color: var(--primary); margin-right: 10px;"></i> অসহায় ও দরিদ্র হাফেজে কুরআনদের আর্থিকভাবে সহযোগিতা করা।</li>
+            <li><i class="fas fa-check-circle" style="color: var(--primary); margin-right: 10px;"></i> সমাজে কুরআনের আলো ছড়িয়ে দিতে দেশব্যাপী হিফজুল কুরআন প্রতিযোগিতার আয়োজন করা।</li>
+        </ul>
+    </div>
+
+    <script>
+        function toggleMenu() { document.getElementById("navLinks").classList.toggle("active"); }
+        function toggleDropdown(event, element) {
+            if (window.innerWidth <= 1024) {
+                event.preventDefault();
+                element.classList.toggle("active");
+            }
+        }
+    </script>
+</body>
+</html>
