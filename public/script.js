@@ -14,12 +14,24 @@ document.addEventListener("DOMContentLoaded", function() {
     loadHTML("footer-placeholder", "footer.html");
 });
 
-// স্লাইড মেনু ওপেন/ক্লোজ ফাংশন
+// স্লাইড মেনু ওপেন/ক্লোজ এবং আইকন পরিবর্তন ফাংশন
 function toggleMenu() {
-    const navLinks = document.getElementById("navLinks");
-    const menuToggle = document.querySelector('.menu-toggle'); // Button element target
+    var navLinks = document.getElementById("navLinks");
+    var menuIcon = document.getElementById("menu-icon");
+    
+    // মেনু খুলবে বা বন্ধ হবে
     navLinks.classList.toggle("active");
-    menuToggle.classList.toggle("active"); // Put active on the button too!
+    
+    // আইকন পরিবর্তন (৩ দাগ থেকে লাল X)
+    if (navLinks.classList.contains("active")) {
+        menuIcon.classList.remove("fa-bars");
+        menuIcon.classList.add("fa-times");
+        menuIcon.style.color = "red";
+    } else {
+        menuIcon.classList.remove("fa-times");
+        menuIcon.classList.add("fa-bars");
+        menuIcon.style.color = "#15803d";
+    }
 }
 
 // ড্রপডাউন মেনু টগল ফাংশন
