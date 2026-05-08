@@ -23,11 +23,11 @@
         .form-wrapper { max-width: 900px; margin: 40px auto 80px; padding: 0 15px; }
         .reg-box { background: #fff; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.08); overflow: hidden; border: 3px solid var(--primary); }
         
-        .form-header { background: linear-gradient(135deg, var(--primary), #146c43); color: #fff; padding: 35px 20px; text-align: center; border-bottom: 5px solid var(--gold); }
-        .form-header h1 { margin: 0 0 10px; font-size: 32px; font-weight: 800; color: var(--gold); }
-        .form-header p { margin: 0; font-size: 16px; opacity: 0.9; }
+        /* সিম্পল ফর্ম হেডার */
+        .form-header { padding: 30px 20px 15px; text-align: center; border-bottom: 2px dashed #cbd5e1; margin-bottom: 25px; background: #fff; }
+        .form-header h1 { margin: 0; font-size: 28px; font-weight: 800; color: var(--primary); }
 
-        .main-form { padding: 35px 30px; }
+        .main-form { padding: 10px 30px 35px; }
 
         .photo-widget { background: #f0fdf4; border: 2px dashed var(--primary); border-radius: 15px; padding: 25px; text-align: center; cursor: pointer; transition: 0.3s; width: 220px; margin: 0 auto 35px; position: relative; outline: none; }
         .photo-widget:hover, .photo-widget:focus { background: #dcfce7; }
@@ -81,8 +81,8 @@
 
         @media (max-width: 768px) {
             .grid-2 { grid-template-columns: 1fr; gap: 15px; }
-            .form-header h1 { font-size: 24px; }
-            .main-form { padding: 25px 20px; }
+            .form-header h1 { font-size: 22px; }
+            .main-form { padding: 10px 20px 25px; }
             .dob-wrapper { gap: 5px; }
             input, select { padding: 12px; }
         }
@@ -117,9 +117,9 @@
 
     <div class="form-wrapper">
         <div class="reg-box">
+            
             <div class="form-header">
-                <h1>হিফজুল কুরআন প্রতিযোগিতা</h1>
-                <p>আল হুফফাজ ফাউন্ডেশন বাংলাদেশ</p>
+                <h1>প্রতিযোগিতার আবেদন ফরম</h1>
             </div>
 
             <form class="main-form" id="compForm">
@@ -386,7 +386,7 @@
             }
         };
 
-        const dists = { "ঢাকা": ["ঢাকা", "ফরিদপুর", "গাজীপুর", "গোপালগঞ্জ", "কিশোরগঞ্জ", "মাদারীপুর", "মানিকগঞ্জ", "মুন্সীগঞ্জ", "নারায়ণগঞ্জ", "নরসিংদী", "রাজবাড়ী", "শরীয়তপুর", "টাঙ্গাইল"], "চট্টগ্রাম": ["চট্টগ্রাম", "বান্দরবান", "ব্রাহ্মণবাড়িয়া", "চাঁদপুর", "কুমিল্লা", "কক্সবাজার", "ফেনী", "খাগড়াছড়ি", "লক্ষ্মীপুর", "নোয়াখালী", "রাঙ্গামাটি"], "সিলেট": ["সিলেট", "মৌলভীবাজার", "হবিগঞ্জ", "সুনামগঞ্জ"], "ময়মনসিংহ": ["ময়মনসিংহ", "জামালপুর", "শেরপুর", "নেত্রকোনা"], "রাজশাহী": ["রাজশাহী", "বগুড়া", "জয়পুরহাট", "নওগাঁ", "নাটোর", "নবাবগঞ্জ", "পাবনা", "সিরাজগঞ্জ"], "খুলনা": ["খুলনা", "বাগেরহাট", "চুয়াডাঙ্গা", "যশোর", "ঝিনাইদহ", "কুষ্টিয়া", "মাগুরা", "মেহেরপুর", "নড়াইল", "সাতক্ষীরা"], "বরিশাল": ["বরিশাল", "বরগুনা", "ভোলা", "ঝালকাঠি", "পটুয়াখালী", "পিরোজপুর"], "রংপুর": ["রংপুর", "দিনাজপুর", "গাইবান্ধা", "কুড়িগ্রাম", "লালমনিরহাট", "নীলফামারী", "পঞ্চগড়", "ঠাকুরগাঁও"] };
+        const dists = { "ঢাকা": ["ঢাকা", "ফরিদপুর", "গাজীপুর", "গোপালগঞ্জ", "কিশোরগঞ্জ", "মাদারীপুর", "মানিকগঞ্জ", "মুন্সীগঞ্জ", "নারায়ণগঞ্জ", "নরসিংদী", "রাজবাড়ী", "শরীয়তপুর", "टाঙ্গাইল"], "চট্টগ্রাম": ["চট্টগ্রাম", "বান্দরবান", "ব্রাহ্মণবাড়িয়া", "চাঁদপুর", "কুমিল্লা", "কক্সবাজার", "ফেনী", "খাগড়াছড়ি", "লক্ষ্মীপুর", "নোয়াখালী", "রাঙ্গামাটি"], "সিলেট": ["সিলেট", "মৌলভীবাজার", "হবিগঞ্জ", "সুনামগঞ্জ"], "ময়মনসিংহ": ["ময়মনসিংহ", "জামালপুর", "শেরপুর", "নেত্রকোনা"], "রাজশাহী": ["রাজশাহী", "বগুড়া", "জয়পুরহাট", "নওগাঁ", "নাটোর", "নবাবগঞ্জ", "পাবনা", "সিরাজগঞ্জ"], "খুলনা": ["খুলনা", "বাগেরহাট", "চুয়াডাঙ্গা", "যশোর", "ঝিনাইদহ", "কুষ্টিয়া", "মাগুরা", "মেহেরপুর", "নড়াইল", "সাতক্ষীরা"], "বরিশাল": ["বরিশাল", "বরগুনা", "ভোলা", "ঝালকাঠি", "পটুয়াখালী", "পিরোজপুর"], "রংপুর": ["রংপুর", "দিনাজপুর", "গাইবান্ধা", "কুড়িগ্রাম", "লালমনিরহাট", "নীলফামারী", "পঞ্চগড়", "ঠাকুরগাঁও"] };
         window.updateDistricts = () => {
             const div = document.getElementById('cDiv').value; const distSelect = document.getElementById('cDist');
             distSelect.innerHTML = '<option value="">জেলা বেছে নিন</option>';
