@@ -1,1 +1,568 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>প্রতিযোগিতা রেজিস্ট্রেশন | আল হুফফাজ</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
+    <style>
+        :root { 
+            --primary: #0f5132; --secondary: #003366; --accent: #d32f2f; 
+            --gold: #ffb300; --bg: #f8fafc; --text: #1e293b;
+        }
+
+        body { font-family: 'Noto Sans Bengali', sans-serif; background: var(--bg); margin: 0; color: var(--text); overflow-x: hidden; }
+
+        .form-wrapper { max-width: 900px; margin: 40px auto 80px; padding: 0 15px; }
+        .reg-box { background: #fff; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.08); overflow: hidden; border: 3px solid var(--primary); }
+        
+        .form-header { background: linear-gradient(135deg, var(--primary), #146c43); color: #fff; padding: 35px 20px; text-align: center; border-bottom: 5px solid var(--gold); }
+        .form-header h1 { margin: 0 0 10px; font-size: 32px; font-weight: 800; color: var(--gold); }
+        .form-header p { margin: 0; font-size: 16px; opacity: 0.9; }
+
+        .main-form { padding: 35px 30px; }
+
+        .photo-widget { background: #f0fdf4; border: 2px dashed var(--primary); border-radius: 15px; padding: 25px; text-align: center; cursor: pointer; transition: 0.3s; width: 220px; margin: 0 auto 35px; position: relative; outline: none; }
+        .photo-widget:hover, .photo-widget:focus { background: #dcfce7; }
+        .photo-preview-circle { width: 110px; height: 110px; background: #fff; border-radius: 10px; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 40px; color: var(--primary); overflow: hidden; border: 2px solid #cbd5e1; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .photo-preview-circle img { width: 100%; height: 100%; object-fit: cover; display: none; }
+        .photo-text { font-size: 14px; font-weight: 700; color: var(--secondary); }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        .form-group { display: flex; flex-direction: column; gap: 8px; position: relative; }
+        label { font-size: 14px; font-weight: 700; color: #475569; }
+        
+        input, select { padding: 14px 15px; border: 2px solid #e2e8f0; border-radius: 10px; font-family: inherit; font-size: 15px; background: #f8fafc; transition: 0.3s; color: var(--text); outline: none; width: 100%; box-sizing: border-box;}
+        input:focus, select:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 4px rgba(15, 81, 50, 0.1); }
+
+        .dob-wrapper { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+        .age-display { background: #eff6ff; border: 1px dashed #3b82f6; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold; color: #1d4ed8; margin-top: 10px; font-size: 16px; }
+        .age-warning { background: #fef2f2; color: #b91c1c; padding: 12px; border-radius: 8px; border: 1px solid #fca5a5; font-size: 14px; font-weight: 600; margin-top: 10px; display: none; animation: shake 0.5s; line-height: 1.5; }
+        
+        @keyframes shake { 0%, 100% {transform: translateX(0);} 25% {transform: translateX(-5px);} 75% {transform: translateX(5px);} }
+
+        /* Error and Guide System */
+        .active-focus { border: 2px solid var(--gold) !important; background-color: #fffbeb !important; box-shadow: 0 0 12px rgba(255, 179, 0, 0.4) !important; transition: 0.3s; }
+        .pulse-guide { animation: pulseGuide 2s infinite; border: 2px solid var(--primary) !important; background-color: #f0fdf4 !important; }
+        @keyframes pulseGuide { 0% { box-shadow: 0 0 0 0 rgba(15, 81, 50, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(15, 81, 50, 0); } 100% { box-shadow: 0 0 0 0 rgba(15, 81, 50, 0); } }
+
+        .error-border { border-color: #ef4444 !important; background: #fef2f2 !important; box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important; }
+
+        .app-tooltip { position: absolute; background: linear-gradient(135deg, #0f5132, #146c43); color: #ffffff; padding: 12px 18px; border-radius: 8px; font-size: 14px; font-weight: 600; pointer-events: none; z-index: 100000; box-shadow: 0 8px 20px rgba(15, 81, 50, 0.4); opacity: 0; visibility: hidden; transition: opacity 0.3s ease; max-width: 280px; line-height: 1.5; }
+        .app-tooltip.show { opacity: 1; visibility: visible; }
+        .app-tooltip::after { content: ''; position: absolute; top: 100%; left: 20px; border-width: 8px; border-style: solid; border-color: #146c43 transparent transparent transparent; }
+
+        .terms-section { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 15px; padding: 25px; margin: 30px 0; border-top: 4px solid var(--primary); }
+        .terms-title { font-size: 16px; font-weight: 800; color: var(--primary); margin: 0 0 15px; border-bottom: 1px dashed #cbd5e1; padding-bottom: 10px; }
+        .terms-list { list-style: none; padding: 0; margin: 0 0 20px 0; font-size: 14px; line-height: 1.6; color: #475569; }
+        .terms-list li { margin-bottom: 8px; padding-left: 20px; position: relative; }
+        .terms-list li::before { content: "✓"; position: absolute; left: 0; color: var(--accent); font-weight: bold; }
+        
+        .accept-box label { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 15px; color: #1e293b; font-weight: 700; background: #e0f2fe; padding: 15px; border-radius: 8px; border: 1px solid #bae6fd; transition: 0.3s; }
+        .accept-box label:hover { background: #dbeafe; }
+        .accept-box input[type="checkbox"] { width: 22px; height: 22px; margin-top: 1px; accent-color: var(--primary); cursor: pointer; }
+
+        .btn-submit { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; border: none; padding: 20px; font-size: 20px; font-weight: 800; width: 100%; border-radius: 12px; cursor: pointer; transition: 0.4s; box-shadow: 0 10px 25px rgba(15, 81, 50, 0.3); display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .btn-submit:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(15, 81, 50, 0.4); }
+
+        .overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.9); z-index: 99999; display: none; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
+        .loader-spinner { width: 70px; height: 70px; border: 5px solid rgba(255,255,255,0.2); border-top-color: var(--gold); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .success-box { background: #fff; width: 90%; max-width: 450px; padding: 40px 30px; border-radius: 20px; text-align: center; transform: scale(0.9); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0; }
+        .success-box.show { transform: scale(1); opacity: 1; }
+
+        @media (max-width: 768px) {
+            .grid-2 { grid-template-columns: 1fr; gap: 15px; }
+            .form-header h1 { font-size: 24px; }
+            .main-form { padding: 25px 20px; }
+            .dob-wrapper { gap: 5px; }
+            input, select { padding: 12px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="header-placeholder"></div>
+    <div id="appTooltip" class="app-tooltip"></div>
+
+    <div class="overlay" id="loaderOverlay">
+        <div class="loader-spinner"></div>
+        <h2 style="color:#fff; margin-top:20px; font-weight:400;">আবেদন প্রসেস হচ্ছে...</h2>
+        <div style="color:var(--gold); font-size:24px; font-weight:bold; margin-top:10px;"><span id="progressText">0</span>%</div>
+        <p style="color:#cbd5e1; font-size:14px; margin-top:5px;">HD PDF তৈরি হচ্ছে, অপেক্ষা করুন</p>
+    </div>
+
+    <div class="overlay" id="successOverlay">
+        <div class="success-box" id="successBox">
+            <div style="font-size: 60px; color: #10b981; margin-bottom: 15px;"><i class="fas fa-check-circle"></i></div>
+            <h2 style="color: var(--primary); margin: 0 0 10px;">আলহামদুলিল্লাহ!</h2>
+            <p style="font-size: 15px; color: #475569; line-height: 1.6; margin-bottom: 20px;">
+                আপনার আবেদন সফলভাবে সাবমিট হয়েছে। <b>তবে পেমেন্ট পাওয়া সাপেক্ষে তা চূড়ান্তভাবে গ্রহণ করা হবে।</b> যাচাই-বাছাই শেষে আপনাকে কনফার্ম করা হবে।
+            </p>
+            <div style="background: #f8fafc; border: 1px dashed var(--secondary); padding: 15px; border-radius: 10px; margin-bottom: 25px;">
+                <p style="margin: 0; font-size: 13px; color: #64748b;">রেজিস্ট্রেশন আইডি:</p>
+                <h3 id="finalRegId" style="margin: 5px 0 0; color: var(--accent); font-family: 'Poppins', sans-serif;">AHFB-XXXXX</h3>
+            </div>
+            <button class="btn-submit" style="padding: 15px; font-size: 18px;" onclick="location.reload()">ঠিক আছে, জাজাকাল্লাহ</button>
+        </div>
+    </div>
+
+    <div class="form-wrapper">
+        <div class="reg-box">
+            <div class="form-header">
+                <h1>হিফজুল কুরআন প্রতিযোগিতা</h1>
+                <p>আল হুফফাজ ফাউন্ডেশন বাংলাদেশ</p>
+            </div>
+
+            <form class="main-form" id="compForm">
+                
+                <div class="photo-widget" id="photoWidget" data-guide="photo" tabindex="0" onclick="document.getElementById('pInput').click()">
+                    <div class="photo-preview-circle">
+                        <i class="fas fa-camera" id="pIcon"></i>
+                        <img id="pImg">
+                    </div>
+                    <div class="photo-text" id="pText">প্রতিযোগীর ছবি দিন<br><span style="font-size:12px; font-weight:normal; color:#64748b;">(পাসপোর্ট সাইজ)</span></div>
+                    <input type="file" id="pInput" accept="image/*" style="display:none;">
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>প্রতিযোগীর নাম (বাংলায়) <span style="color:red">*</span></label>
+                        <input type="text" id="cName" data-guide="cName" placeholder="জন্মনিবন্ধন অনুযায়ী নাম লিখুন">
+                    </div>
+                    <div class="form-group">
+                        <label>মোবাইল নম্বর (সচল) <span style="color:red">*</span></label>
+                        <input type="tel" id="cPhone" data-guide="cPhone" maxlength="11" placeholder="০১৭XXXXXXXX" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>পিতার নাম <span style="color:red">*</span></label>
+                        <input type="text" id="cFName" data-guide="cFName" placeholder="পিতার সম্পূর্ণ নাম লিখুন">
+                    </div>
+                    <div class="form-group">
+                        <label>মাতার নাম (ঐচ্ছিক)</label>
+                        <input type="text" id="cMName" data-guide="cMName" placeholder="মাতার সম্পূর্ণ নাম লিখুন (বাধ্যতামূলক নয়)">
+                    </div>
+                </div>
+
+                <div class="grid-2" style="background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 20px;">
+                    <div class="form-group">
+                        <label>প্রতিযোগিতার গ্রুপ সিলেক্ট করুন <span style="color:red">*</span></label>
+                        <select id="cGroup" data-guide="cGroup" onchange="handleGroupChange()">
+                            <option value="">-- গ্রুপ নির্বাচন করুন --</option>
+                            <option value="5_para">৫ পারা গ্রুপ (সর্বোচ্চ ১৩ বছর)</option>
+                            <option value="10_para">১০ পারা গ্রুপ (সর্বোচ্চ ১৫ বছর)</option>
+                            <option value="husne_saot">হুসনে সওত (সর্বোচ্চ ১৮ বছর)</option>
+                        </select>
+                        
+                        <div id="paraRangeGroup" style="display:none; margin-top: 15px; background: #e0f2fe; padding: 15px; border-radius: 10px; border: 1px dashed #0284c7;">
+                            <label style="color: #0369a1; margin-bottom: 5px; display: block;">ধারাবাহিক পারা নির্বাচন করুন <span style="color:red">*</span></label>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <select id="paraStart" onchange="calculateEndPara()" style="flex:1;"><option value="">কততম হতে</option></select>
+                                <span style="font-weight: bold; color: #0284c7;">থেকে</span>
+                                <input type="text" id="paraEnd" placeholder="অটোমেটিক আসবে" style="flex:1; background-color: #cbd5e1; font-weight:bold; color:#0f172a; pointer-events: none;" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" data-guide="cDOB" tabindex="0">
+                        <label>জন্ম তারিখ (ডাইনামিক ক্যালেন্ডার) <span style="color:red">*</span></label>
+                        <div class="dob-wrapper">
+                            <select id="dobY"><option value="">বছর</option></select>
+                            <select id="dobM"><option value="">মাস</option></select>
+                            <select id="dobD"><option value="">দিন</option></select>
+                        </div>
+                        <input type="number" id="customYear" placeholder="সাল লিখুন (যেমন: ২০০০)" style="display:none; margin-top: 10px;">
+                        
+                        <div class="age-display" id="ageDisplay" style="display:none;">বয়স: <span>০</span></div>
+                        <div class="age-warning" id="ageWarning"></div>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label>মাদরাসা/প্রতিষ্ঠানের নাম <span style="color:red">*</span></label>
+                    <input type="text" id="cMadrasa" data-guide="cMadrasa" placeholder="যে মাদরাসা থেকে অংশগ্রহণ করছেন">
+                </div>
+
+                <div class="grid-2" data-guide="cLocation" tabindex="0">
+                    <div class="form-group">
+                        <label>বিভাগ <span style="color:red">*</span></label>
+                        <select id="cDiv" onchange="updateDistricts()">
+                            <option value="">বিভাগ সিলেক্ট করুন</option>
+                            <option value="ঢাকা">ঢাকা</option><option value="চট্টগ্রাম">চট্টগ্রাম</option>
+                            <option value="রাজশাহী">রাজশাহী</option><option value="সিলেট">সিলেট</option>
+                            <option value="খুলনা">খুলনা</option><option value="বরিশাল">বরিশাল</option>
+                            <option value="রংপুর">রংপুর</option><option value="ময়মনসিংহ">ময়মনসিংহ</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>জেলা <span style="color:red">*</span></label>
+                        <select id="cDist"><option value="">প্রথমে বিভাগ বেছে নিন</option></select>
+                    </div>
+                </div>
+
+                <div class="terms-section">
+                    <div class="terms-title">প্রতিযোগিতার শর্তাবলী</div>
+                    <ul class="terms-list">
+                        <li>হুসনে সওত গ্রুপে নাজেরা, হিফজ, কিতাব খানা ও জেনারেল ছাত্ররা অংশ গ্রহণ করতে পারবে।</li>
+                        <li>যে সকল প্রতিযোগী আন্তর্জাতিক প্রতিযোগিতায় অংশগ্রহণ করেছে তারা অংশগ্রহণ করতে পারবে না।</li>
+                        <li>একই প্রতিযোগী একাধিক জেলায় অডিশন দিতে পারবে না।</li>
+                        <li>সম্মানিত বিচারকমণ্ডলীর রায়-ই চূড়ান্ত বলে বিবেচিত হবে।</li>
+                        <li>শৃঙ্খলার পরিপন্থী কোনো কাজ করলে আবেদন সরাসরি বাতিল হবে।</li>
+                    </ul>
+                    <div class="accept-box">
+                        <label>
+                            <input type="checkbox" id="termsCheck">
+                            আমি উপরোক্ত সকল নিয়মাবলী পড়েছি এবং আমার দেওয়া সকল তথ্য সম্পূর্ণ সত্য।
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit" id="submitBtn">
+                    <i class="fas fa-paper-plane"></i> আবেদন সাবমিট করুন
+                </button>
+
+            </form>
+        </div>
+    </div>
+
+    <div id="pdf-box" style="position:absolute; left:-9999px; top:0; width:794px; background:#fff; display:none;"></div>
+    <div id="footer-placeholder"></div>
+    <script src="script.js"></script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        
+        const firebaseConfig = { apiKey: "AIzaSyAjv9u2Qn3EdVxNKBMcT1ezHp-5NitucT0", authDomain: "foundation-ntc.firebaseapp.com", projectId: "foundation-ntc", storageBucket: "foundation-ntc.firebasestorage.app", messagingSenderId: "940836724866", appId: "1:940836724866:web:b93b489374f410be02949b" };
+        const app = initializeApp(firebaseConfig); const db = getFirestore(app);
+
+        // Tooltips
+        const fieldGuides = {
+            'photo': '📸 <b>ছবি আপলোড:</b> প্রতিযোগীর পরিষ্কার একটি পাসপোর্ট সাইজের ছবি দিন।',
+            'cName': '👤 <b>নাম:</b> জন্মনিবন্ধন অনুযায়ী প্রতিযোগীর সঠিক নাম লিখুন।',
+            'cPhone': '📞 <b>মোবাইল নম্বর:</b> একটি সচল ১১ ডিজিটের মোবাইল নম্বর দিন।',
+            'cFName': '👨 <b>পিতার নাম:</b> প্রতিযোগীর পিতার সম্পূর্ণ নাম লিখুন।',
+            'cMName': '👩 <b>মাতার নাম (ঐচ্ছিক):</b> এটি বাধ্যতামূলক নয়, চাইলে ফাঁকা রাখতে পারেন।',
+            'cGroup': '🏆 <b>গ্রুপ নির্বাচন:</b> প্রতিযোগী যে গ্রুপে অংশ নিতে ইচ্ছুক তা নির্বাচন করুন।',
+            'cDOB': '📅 <b>জন্ম তারিখ:</b> সাল, মাস ও দিন সিলেক্ট করুন। সাল লিস্টে না থাকলে "অন্যান্য" সিলেক্ট করে লিখে দিন।',
+            'cMadrasa': '🏫 <b>মাদরাসা:</b> প্রতিযোগী বর্তমানে যে মাদরাসায় পড়ছে তার নাম দিন।',
+            'cLocation': '📍 <b>অবস্থান:</b> আপনার মাদরাসাটি যে জেলায় অবস্থিত তা নির্বাচন করুন।'
+        };
+
+        const tooltip = document.getElementById('appTooltip');
+        let currentActiveGuide = null;
+
+        function showGuide(el, textId) {
+            if(!el || !fieldGuides[textId]) return;
+            if(currentActiveGuide) currentActiveGuide.classList.remove('pulse-guide');
+            el.classList.add('pulse-guide'); currentActiveGuide = el;
+            tooltip.innerHTML = fieldGuides[textId]; tooltip.classList.add('show');
+            const rect = el.getBoundingClientRect();
+            let topPos = window.scrollY + rect.top - tooltip.offsetHeight - 15;
+            if(topPos < window.scrollY) topPos = window.scrollY + rect.bottom + 10;
+            let leftPos = rect.left; if(leftPos + 280 > window.innerWidth) leftPos = window.innerWidth - 290;
+            tooltip.style.top = topPos + 'px'; tooltip.style.left = Math.max(10, leftPos) + 'px';
+        }
+        function hideGuide() { tooltip.classList.remove('show'); if(currentActiveGuide) currentActiveGuide.classList.remove('pulse-guide'); currentActiveGuide = null; }
+
+        document.body.addEventListener('focusin', e => {
+            document.querySelectorAll('.active-focus').forEach(el => el.classList.remove('active-focus'));
+            let target = e.target;
+            if(['INPUT', 'SELECT'].includes(target.tagName) || target.tabIndex === 0) {
+                if (target.type !== 'checkbox') target.classList.add('active-focus');
+                let guide = target.getAttribute('data-guide') || (target.closest('[data-guide]') ? target.closest('[data-guide]').getAttribute('data-guide') : null);
+                if(guide) showGuide(target.closest('[data-guide]') || target, guide);
+            }
+        });
+        document.body.addEventListener('focusout', e => { if(e.target.classList) e.target.classList.remove('active-focus'); hideGuide(); });
+        
+        document.addEventListener('input', e => { 
+            hideGuide(); 
+            if(e.target.classList) e.target.classList.remove('active-focus', 'error-border'); 
+            if(e.target.id === 'termsCheck') e.target.parentElement.style.color = '#1e293b';
+        });
+        document.addEventListener('change', e => { 
+            hideGuide(); 
+            if(e.target.classList) e.target.classList.remove('active-focus', 'error-border'); 
+            if(e.target.id === 'termsCheck') e.target.parentElement.style.color = '#1e293b';
+        });
+
+        // Dynamic Date of Birth Setup
+        const dSel = document.getElementById('dobD'), mSel = document.getElementById('dobM'), ySel = document.getElementById('dobY'), cYear = document.getElementById('customYear');
+        const currYear = new Date().getFullYear();
+        for(let i=currYear; i>=currYear-18; i--) ySel.innerHTML += `<option value="${i}">${i}</option>`;
+        ySel.innerHTML += `<option value="custom">অন্যান্য (নিজে লিখুন)</option>`;
+        
+        const months = ["জানুয়ারি","ফেব্রুয়ারি","মার্চ","এপ্রিল","মে","জুন","জুলাই","আগস্ট","সেপ্টেম্বর","অক্টোবর","নভেম্বর","ডিসেম্বর"];
+        months.forEach((m, i) => mSel.innerHTML += `<option value="${i+1}">${m}</option>`);
+
+        window.updateDays = () => {
+            if(ySel.value === 'custom') { cYear.style.display = 'block'; } else { cYear.style.display = 'none'; cYear.value = ''; }
+            let y = ySel.value === 'custom' ? parseInt(cYear.value) : parseInt(ySel.value);
+            const m = parseInt(mSel.value);
+            const currentDay = dSel.value;
+            dSel.innerHTML = '<option value="">দিন</option>';
+            if (!m) return;
+            let safeY = y || currYear;
+            let daysInMonth = new Date(safeY, m, 0).getDate();
+            for(let i=1; i<=daysInMonth; i++) dSel.innerHTML += `<option value="${i}">${i}</option>`;
+            if (currentDay && currentDay <= daysInMonth) dSel.value = currentDay;
+            window.calculateAge();
+        };
+
+        mSel.addEventListener('change', window.updateDays); 
+        ySel.addEventListener('change', window.updateDays);
+        cYear.addEventListener('input', window.updateDays);
+        dSel.addEventListener('change', () => window.calculateAge());
+        document.getElementById('cGroup').addEventListener('change', () => window.calculateAge());
+
+        window.calculateAge = () => {
+            const d = dSel.value, m = mSel.value, grp = document.getElementById('cGroup').value;
+            let yStr = ySel.value === 'custom' ? cYear.value : ySel.value;
+            const ageDisp = document.getElementById('ageDisplay'), warnBox = document.getElementById('ageWarning');
+            
+            if(d && m && yStr && yStr.length >= 4) {
+                let y = parseInt(yStr);
+                const dob = new Date(y, m-1, d); const today = new Date();
+                let age = today.getFullYear() - dob.getFullYear();
+                if(today.getMonth() < dob.getMonth() || (today.getMonth() === dob.getMonth() && today.getDate() < dob.getDate())) age--;
+                
+                ageDisp.style.display = 'block'; ageDisp.querySelector('span').innerText = age + " বছর";
+                
+                let limit = 100;
+                if(grp === '5_para') limit = 13; else if(grp === '10_para') limit = 15; else if(grp === 'husne_saot') limit = 18;
+
+                if(grp && age > limit) {
+                    warnBox.style.display = 'block';
+                    warnBox.innerHTML = `⚠️ <b>সতর্কতা:</b> আপনার নির্বাচিত গ্রুপের জন্য সর্বোচ্চ বয়স ${limit} বছর, কিন্তু আপনার বয়স ${age} বছর! আপনি আবেদন সাবমিট করতে পারবেন, তবে কর্তৃপক্ষ এটি যাচাই করবে।`;
+                } else { warnBox.style.display = 'none'; }
+            } else { ageDisp.style.display = 'none'; warnBox.style.display = 'none'; }
+        };
+
+        window.handleGroupChange = () => {
+            const val = document.getElementById('cGroup').value;
+            const paraGroup = document.getElementById('paraRangeGroup');
+            const pStart = document.getElementById('paraStart');
+            
+            if(val === '5_para' || val === '10_para') {
+                paraGroup.style.display = 'block';
+                paraGroup.style.animation = 'none';
+                setTimeout(() => paraGroup.style.animation = 'pulseGlow 1s ease', 50);
+                
+                pStart.innerHTML = '<option value="">কততম হতে</option>';
+                for(let i=1; i<=30; i++) { pStart.innerHTML += `<option value="${i}">${i}</option>`; }
+                document.getElementById('paraEnd').value = '';
+            } else {
+                paraGroup.style.display = 'none';
+                pStart.value = '';
+                document.getElementById('paraEnd').value = '';
+            }
+            window.calculateAge();
+        };
+
+        window.calculateEndPara = () => {
+            const val = document.getElementById('cGroup').value;
+            const startStr = document.getElementById('paraStart').value;
+            const pEnd = document.getElementById('paraEnd');
+            if(startStr && val) {
+                const start = parseInt(startStr);
+                let range = val === '5_para' ? 4 : 9;
+                let end = start + range;
+                if(end > 30) end = 30;
+                pEnd.value = end;
+            } else {
+                pEnd.value = "";
+            }
+        };
+
+        const dists = { "ঢাকা": ["ঢাকা", "ফরিদপুর", "গাজীপুর", "গোপালগঞ্জ", "কিশোরগঞ্জ", "মাদারীপুর", "মানিকগঞ্জ", "মুন্সীগঞ্জ", "নারায়ণগঞ্জ", "নরসিংদী", "রাজবাড়ী", "শরীয়তপুর", "টাঙ্গাইল"], "চট্টগ্রাম": ["চট্টগ্রাম", "বান্দরবান", "ব্রাহ্মণবাড়িয়া", "চাঁদপুর", "কুমিল্লা", "কক্সবাজার", "ফেনী", "খাগড়াছড়ি", "লক্ষ্মীপুর", "নোয়াখালী", "রাঙ্গামাটি"], "সিলেট": ["সিলেট", "মৌলভীবাজার", "হবিগঞ্জ", "সুনামগঞ্জ"], "ময়মনসিংহ": ["ময়মনসিংহ", "জামালপুর", "শেরপুর", "নেত্রকোনা"], "রাজশাহী": ["রাজশাহী", "বগুড়া", "জয়পুরহাট", "নওগাঁ", "নাটোর", "নবাবগঞ্জ", "পাবনা", "সিরাজগঞ্জ"], "খুলনা": ["খুলনা", "বাগেরহাট", "চুয়াডাঙ্গা", "যশোর", "ঝিনাইদহ", "কুষ্টিয়া", "মাগুরা", "মেহেরপুর", "নড়াইল", "সাতক্ষীরা"], "বরিশাল": ["বরিশাল", "বরগুনা", "ভোলা", "ঝালকাঠি", "পটুয়াখালী", "পিরোজপুর"], "রংপুর": ["রংপুর", "দিনাজপুর", "গাইবান্ধা", "কুড়িগ্রাম", "লালমনিরহাট", "নীলফামারী", "পঞ্চগড়", "ঠাকুরগাঁও"] };
+        window.updateDistricts = () => {
+            const div = document.getElementById('cDiv').value; const distSelect = document.getElementById('cDist');
+            distSelect.innerHTML = '<option value="">জেলা বেছে নিন</option>';
+            if(dists[div]) dists[div].forEach(d => distSelect.innerHTML += `<option value="${d}">${d}</option>`);
+        };
+
+        let imgUrl = "", b64 = "";
+        document.getElementById('pInput').addEventListener('change', async (e) => {
+            const f = e.target.files[0]; if(!f) return;
+            document.getElementById('photoWidget').classList.remove('error-border');
+            const reader = new FileReader(); reader.onload=(ev)=>{ b64=ev.target.result; document.getElementById('pImg').src=b64; document.getElementById('pImg').style.display="block"; document.getElementById('pIcon').style.display="none"; }; reader.readAsDataURL(f);
+            document.getElementById('pText').innerHTML = "আপলোড হচ্ছে... <i class='fas fa-spinner fa-spin'></i>";
+            const fd = new FormData(); fd.append("file", f); fd.append("upload_preset", "pending-management-afcmbd");
+            try { const res = await fetch(`https://api.cloudinary.com/v1_1/dd0dgwdkc/upload`, {method:"POST", body:fd}); const d=await res.json(); imgUrl=d.secure_url; document.getElementById('pText').innerHTML = "ছবি যুক্ত হয়েছে <i class='fas fa-check-circle' style='color:#10b981;'></i>"; } 
+            catch(e){ alert("ছবি আপলোড ব্যর্থ!"); document.getElementById('pText').innerHTML = "আবার চেষ্টা করুন"; }
+        });
+
+        function getPdfHtml(d) {
+            let paraText = "";
+            if(d.group === '5_para' || d.group === '10_para') paraText = ` (পারা: ${d.paraStart} হতে ${d.paraEnd})`;
+            const grpName = (d.group === '5_para' ? '৫ পারা গ্রুপ' : (d.group === '10_para' ? '১০ পারা গ্রুপ' : 'হুসনে সওত')) + paraText;
+            
+            const pPhoto = imgUrl ? `<img src="${imgUrl}" crossorigin="anonymous" style="width:100%; height:100%; object-fit:cover; border-radius:6px;">` : `<div style="text-align:center; padding-top:40px; color:#94a3b8;">ছবি নেই</div>`;
+            
+            return `
+            <div id="exportPdfArea" style="width:794px; min-height:1122px; background:#fff; padding:40px; font-family:'Noto Sans Bengali',sans-serif; color:#000; box-sizing:border-box;">
+                
+                <div style="border:4px solid #0f5132; padding:30px; border-radius:15px; position:relative;">
+                    <div style="position:absolute; top:150px; left:100px; opacity:0.04; transform:rotate(-30deg); font-size:60px; font-weight:bold; color:#0f5132; pointer-events:none; white-space:nowrap;">AL HUFFAZ FOUNDATION</div>
+                    
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:3px solid #ffb300; padding-bottom:15px; margin-bottom:20px;">
+                        <div style="width:80px;"><img src="https://res.cloudinary.com/ddvprmv9g/image/upload/v1777644601/gu7xxpbkokyrx9wgifsn.jpg" crossorigin="anonymous" style="width:100%;"></div>
+                        <div style="flex-grow:1; text-align:center;">
+                            <h1 style="margin:0 0 5px 0; font-size:28px; color:#0f5132;">জাতীয় হিফজুল কুরআন প্রতিযোগিতা</h1>
+                            <p style="margin:0; font-size:15px; font-weight:bold; color:#475569;">আয়োজনে: আল হুফফাজ ফাউন্ডেশন বাংলাদেশ</p>
+                            <div style="background:#0f5132; color:#fff; display:inline-block; padding:5px 20px; border-radius:50px; font-size:14px; margin-top:10px; font-weight:bold;">অফিসিয়াল রেজিস্ট্রেশন কপি</div>
+                        </div>
+                        <div style="width:90px; height:110px; border:2px solid #0f5132; border-radius:6px; overflow:hidden; background:#f8fafc;">${pPhoto}</div>
+                    </div>
+                    
+                    <div style="display:flex; justify-content:space-between; margin-bottom:15px; font-weight:bold; font-size:14px; background:#f1f5f9; padding:10px; border-radius:8px;">
+                        <span>রেজিঃ আইডি: <span style="color:#d32f2f;">${d.regId}</span></span>
+                        <span>আবেদনের তারিখ: ${new Date().toLocaleDateString('bn-BD')}</span>
+                    </div>
+
+                    <table style="width:100%; border-collapse:collapse; font-size:16px;">
+                        <tr><td style="padding:10px; border:1px solid #cbd5e1; width:180px; font-weight:bold; background:#f8fafc;">প্রতিযোগীর নাম</td><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; color:#003366;">${d.name}</td></tr>
+                        <tr><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; background:#f8fafc;">পিতার নাম</td><td style="padding:10px; border:1px solid #cbd5e1;">${d.fName}</td></tr>
+                        <tr><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; background:#f8fafc;">মাতার নাম</td><td style="padding:10px; border:1px solid #cbd5e1;">${d.mName || 'প্রযোজ্য নয়'}</td></tr>
+                        <tr><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; background:#f8fafc;">জন্ম তারিখ ও বয়স</td><td style="padding:10px; border:1px solid #cbd5e1;">${d.dob} <span style="font-weight:bold; color:#d32f2f;">(${d.age} বছর)</span></td></tr>
+                        <tr><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; background:#f8fafc;">মাদরাসার নাম</td><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold;">${d.madrasa}</td></tr>
+                        <tr><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; background:#f8fafc;">ঠিকানা (জেলা ও বিভাগ)</td><td style="padding:10px; border:1px solid #cbd5e1;">${d.dist}, ${d.div}</td></tr>
+                        <tr><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; background:#f8fafc;">মোবাইল নম্বর</td><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; color:#d32f2f;">${d.phone}</td></tr>
+                        <tr><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; background:#f8fafc; color:#0f5132;">নির্বাচিত গ্রুপ</td><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; font-size:18px; color:#0f5132;">${grpName}</td></tr>
+                    </table>
+                    
+                    <div style="margin-top:20px; font-size:13px; text-align:justify; color:#475569;">
+                        <b>অঙ্গীকারনামা:</b> আমি আল হুফফাজ ফাউন্ডেশন বাংলাদেশ আয়োজিত প্রতিযোগিতার সকল নিয়মাবলী মেনে নিয়েছি। আমার দেওয়া তথ্য সম্পূর্ণ সত্য। 
+                    </div>
+                </div>
+
+                <div style="text-align:center; margin:25px 0; color:#64748b; font-size:14px; position:relative;">
+                    <hr style="border-top:2px dashed #94a3b8; margin:0; position:absolute; top:50%; left:0; width:100%; z-index:-1;">
+                    <span style="background:#fff; padding:0 15px;"><i class="fas fa-cut"></i> প্রবেশপত্র আলাদা করার জন্য এখান থেকে কাটুন</span>
+                </div>
+
+                <div style="border:3px solid #0f5132; padding:20px; border-radius:15px; position:relative; background:#f0fdf4;">
+                    <div style="position:absolute; top:50px; left:120px; opacity:0.04; transform:rotate(-20deg); font-size:60px; font-weight:bold; color:#0f5132; pointer-events:none; white-space:nowrap;">AL HUFFAZ FOUNDATION</div>
+                    
+                    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px dashed #0f5132; padding-bottom:15px; margin-bottom:15px;">
+                        <div style="width:70px;"><img src="https://res.cloudinary.com/ddvprmv9g/image/upload/v1777644601/gu7xxpbkokyrx9wgifsn.jpg" crossorigin="anonymous" style="width:100%;"></div>
+                        <div style="flex-grow:1; text-align:center;">
+                            <h2 style="margin:0 0 5px 0; color:#d32f2f; font-size:24px;">প্রবেশপত্র (Admit Card)</h2>
+                            <h3 style="margin:0 0 5px 0; font-size:20px; color:#0f5132;">জাতীয় হিফজুল কুরআন প্রতিযোগিতা</h3>
+                            <p style="margin:0; font-size:14px; font-weight:bold; color:#475569;">আয়োজনে: আল হুফফাজ ফাউন্ডেশন বাংলাদেশ</p>
+                        </div>
+                        <div style="width:80px; height:100px; border:2px solid #0f5132; background:#fff; border-radius:6px; overflow:hidden;">${pPhoto}</div>
+                    </div>
+                    
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <table style="width:100%; font-size:16px; font-weight:bold;">
+                            <tr><td style="padding:5px; color:#475569; width:110px;">নাম:</td><td style="padding:5px; color:#003366;">${d.name}</td></tr>
+                            <tr><td style="padding:5px; color:#475569;">মাদরাসা:</td><td style="padding:5px;">${d.madrasa}</td></tr>
+                            <tr><td style="padding:5px; color:#475569;">রেজিঃ আইডি:</td><td style="padding:5px; color:#d32f2f;">${d.regId}</td></tr>
+                            <tr><td style="padding:5px; color:#475569;">জন্ম তারিখ:</td><td style="padding:5px;">${d.dob} <span style="color:#d32f2f;">(${d.age} বছর)</span></td></tr>
+                            <tr><td style="padding:5px; color:#475569;">গ্রুপ:</td><td style="padding:5px; color:#0f5132;">${grpName}</td></tr>
+                        </table>
+                    </div>
+                    
+                    <div style="display:flex; justify-content:space-between; margin-top:25px; font-size:14px; font-weight:bold; text-align:center;">
+                        <div style="width:150px; border-top:1px solid #000; padding-top:5px;">প্রতিযোগীর স্বাক্ষর</div>
+                        <div style="width:150px; border-top:1px solid #000; padding-top:5px;">কর্তৃপক্ষের স্বাক্ষর</div>
+                    </div>
+                </div>
+                
+            </div>`;
+        }
+
+        document.getElementById('compForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            let reqFields = ['cName', 'cPhone', 'cFName', 'cGroup', 'cMadrasa', 'cDiv', 'cDist', 'dobD', 'dobM', 'dobY'];
+            if(document.getElementById('paraRangeGroup').style.display === 'block') { reqFields.push('paraStart'); }
+            
+            let firstErr = null;
+            if(!imgUrl) { document.getElementById('photoWidget').classList.add('error-border'); firstErr = document.getElementById('photoWidget'); }
+            
+            reqFields.forEach(id => {
+                const el = document.getElementById(id);
+                if(!el.value.trim()) { el.classList.add('error-border'); if(!firstErr) firstErr = el; }
+            });
+
+            if(ySel.value === 'custom' && !cYear.value.trim()) { cYear.classList.add('error-border'); if(!firstErr) firstErr = cYear; }
+
+            if(!document.getElementById('termsCheck').checked) { document.getElementById('termsCheck').parentElement.style.color = 'red'; if(!firstErr) firstErr = document.getElementById('termsCheck').parentElement; }
+            if(document.getElementById('cPhone').value.length !== 11) { document.getElementById('cPhone').classList.add('error-border'); if(!firstErr) firstErr = document.getElementById('cPhone'); alert("মোবাইল নম্বর ১১ ডিজিটের হতে হবে!"); }
+
+            if(firstErr) {
+                firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                if(firstErr !== document.getElementById('cPhone')) alert("দয়া করে লাল চিহ্নিত ঘরগুলো সঠিকভাবে পূরণ করুন।");
+                return;
+            }
+
+            const randomCode = Math.floor(10000 + Math.random() * 90000);
+            const regId = "AHFB-" + randomCode;
+            
+            let y = ySel.value === 'custom' ? parseInt(cYear.value) : parseInt(ySel.value);
+            const dDay = parseInt(dSel.value), dMonth = parseInt(mSel.value);
+            let calcAge = 0;
+            if(dDay && dMonth && y) {
+                const dobDate = new Date(y, dMonth-1, dDay); const today = new Date();
+                calcAge = today.getFullYear() - dobDate.getFullYear();
+                if(today.getMonth() < dobDate.getMonth() || (today.getMonth() === dobDate.getMonth() && today.getDate() < dobDate.getDate())) calcAge--;
+            }
+
+            const data = {
+                name: document.getElementById('cName').value, phone: document.getElementById('cPhone').value,
+                fName: document.getElementById('cFName').value, mName: document.getElementById('cMName').value,
+                group: document.getElementById('cGroup').value, dob: `${dDay}/${dMonth}/${y}`, age: calcAge,
+                paraStart: document.getElementById('paraStart').value || '', paraEnd: document.getElementById('paraEnd').value || '',
+                madrasa: document.getElementById('cMadrasa').value, div: document.getElementById('cDiv').value,
+                dist: document.getElementById('cDist').value, photoUrl: imgUrl, regId: regId
+            };
+
+            const loader = document.getElementById('loaderOverlay'), pText = document.getElementById('progressText');
+            loader.style.display = 'flex'; let p = 0; const t = setInterval(() => { if(p<90) { p+=Math.floor(Math.random()*8)+1; pText.innerText=p; } }, 200);
+
+            try {
+                await addDoc(collection(db, "competition_registrations"), { ...data, status: 'pending', timestamp: serverTimestamp() });
+                
+                const renderBox = document.getElementById('pdf-box'); renderBox.style.display = 'block'; renderBox.innerHTML = getPdfHtml(data);
+                
+                const imgs = renderBox.getElementsByTagName('img');
+                await Promise.all(Array.from(imgs).map(img => { if (img.complete) return Promise.resolve(); return new Promise(r => { img.onload=r; img.onerror=r; }); }));
+                await new Promise(r => setTimeout(r, 800));
+
+                const exportArea = document.getElementById('exportPdfArea');
+                const canvas = await html2canvas(exportArea, {scale: 4, useCORS: true, allowTaint: true, windowWidth: 794});
+                const { jsPDF } = window.jspdf; const pdf = new jsPDF('p','pt','a4');
+                const imgData = canvas.toDataURL('image/jpeg', 1.0);
+                const pageW = pdf.internal.pageSize.getWidth(); const pageH = pdf.internal.pageSize.getHeight();
+                let imgW = pageW, imgH = (canvas.height * pageW) / canvas.width;
+                if (imgH > pageH) { const r = pageH/imgH; imgH = pageH; imgW *= r; pdf.addImage(imgData, 'JPEG', (pageW-imgW)/2, 0, imgW, imgH); } 
+                else { pdf.addImage(imgData, 'JPEG', 0, 0, imgW, imgH); }
+                
+                pdf.save(`Registration_${data.name}_${regId}.pdf`); renderBox.style.display = 'none';
+                clearInterval(t); pText.innerText = "100";
+                
+                setTimeout(() => { 
+                    loader.style.display = 'none'; document.getElementById('finalRegId').innerText = regId; 
+                    const sucLay = document.getElementById('successOverlay'); sucLay.style.display = 'flex'; 
+                    setTimeout(()=> document.getElementById('successBox').classList.add('show'), 50); 
+                }, 500);
+
+            } catch(e) { clearInterval(t); loader.style.display = 'none'; alert("সার্ভার এরর: " + e.message); }
+        });
+    </script>
+</body>
+</html>
