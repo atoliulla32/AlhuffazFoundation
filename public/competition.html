@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>হিফজুল কুরআন প্রতিযোগিতা | আল হুফফাজ</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        :root { 
+            --primary: #0f5132; 
+            --secondary: #003366; 
+            --accent: #d32f2f; 
+            --gold: #ffb300; 
+            --bg-body: #f8fafc;
+        }
+
+        body { font-family: 'Noto Sans Bengali', sans-serif; background: var(--bg-body); margin: 0; padding: 0; overflow-x: hidden; }
+
+        .poster-wrapper { padding: 40px 10px 80px; display: flex; justify-content: center; }
+        
+        .digital-poster {
+            max-width: 950px; width: 100%; background: #fff; border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1); overflow: hidden;
+            border: 5px solid var(--primary); position: relative; box-sizing: border-box;
+        }
+
+        /* Title Area */
+        .poster-title-area {
+            text-align: center; padding: 40px 15px 20px;
+            background: #fff; border-bottom: 2px dashed #e2e8f0;
+        }
+        .poster-title-area h1 { font-size: 38px; font-weight: 800; color: var(--primary); margin: 0 0 10px; line-height: 1.3; }
+        .poster-title-area p { font-size: 16px; color: #64748b; margin: 0; font-weight: 600; }
+
+        /* Responsive Animated Button */
+        .btn-top-wrapper { text-align: center; margin: 25px 15px; display: flex; justify-content: center;}
+        .btn-register-top {
+            background: linear-gradient(135deg, var(--accent), #b91c1c); color: #fff;
+            padding: 16px 30px; font-size: 20px; font-weight: 800; border-radius: 50px;
+            display: inline-flex; justify-content: center; align-items: center; gap: 10px; text-decoration: none;
+            box-shadow: 0 10px 25px rgba(211, 47, 47, 0.4);
+            animation: pulseGlow 1.5s infinite; border: 2px solid #fff;
+            max-width: 100%; box-sizing: border-box; text-align: center; white-space: normal;
+        }
+        @keyframes pulseGlow {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(211, 47, 47, 0.7); }
+            50% { transform: scale(1.03); box-shadow: 0 0 0 15px rgba(211, 47, 47, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(211, 47, 47, 0); }
+        }
+
+        .poster-body { padding: 30px 25px; background: #fff; }
+        
+        /* Intro & Benefits Section */
+        .intro-benefits {
+            background: #f8fafc; border-left: 6px solid var(--gold); padding: 25px;
+            border-radius: 12px; margin-bottom: 35px; box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+            border-top: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0;
+        }
+        .intro-benefits h3 { font-size: 20px; color: var(--primary); margin: 0 0 12px 0; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+        .intro-benefits p { font-size: 15px; color: #334155; line-height: 1.8; margin: 0; text-align: justify; font-weight: 500;}
+
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+
+        .info-box { background: #fff; border-radius: 15px; padding: 25px 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.04); border: 1px solid #e2e8f0; border-top: 5px solid var(--primary); margin-bottom: 30px; position: relative; }
+        .box-label { background: var(--secondary); color: #fff; display: inline-block; padding: 6px 20px; border-radius: 50px; font-size: 16px; font-weight: 700; margin: -42px 0 20px; border: 3px solid #fff; }
+
+        .group-table { width: 100%; border-collapse: collapse; text-align: center; font-weight: bold; font-size: 16px; }
+        .group-table td { border: 2px solid #f1f5f9; padding: 12px; }
+        .group-table tr:nth-child(odd) td:first-child { background: #f0fdf4; color: var(--primary); }
+        .group-table tr:nth-child(even) td:first-child { background: #f8fafc; color: var(--secondary); }
+        .group-table td:last-child { color: var(--accent); }
+
+        .rules-list { list-style: none; padding: 0; margin: 0; font-size: 15px; line-height: 1.8; color: #334155; font-weight: 500;}
+        .rules-list li { margin-bottom: 15px; padding-left: 28px; position: relative; text-align: justify; }
+        .rules-list li::before { content: "➤"; position: absolute; left: 0; top: 1px; color: var(--accent); font-weight: bold; font-size: 18px; }
+
+        .prize-item { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; padding-bottom: 12px; border-bottom: 1px dashed #e2e8f0; }
+        .prize-item:last-child { border-bottom: none; }
+        .prize-icon { font-size: 30px; width: 45px; text-align: center; }
+        .prize-text { font-size: 16px; font-weight: 700; color: #1e293b; }
+
+        .venue-notice { text-align: center; padding: 25px; background: #f0fdf4; border-radius: 15px; border: 2px dashed var(--primary); margin-top: 10px; }
+        .venue-notice h4 { color: var(--primary); font-size: 20px; margin: 0 0 10px; font-weight: 800; }
+        .venue-notice p { font-size: 15px; color: #475569; margin: 0; line-height: 1.6; font-weight: 500;}
+
+        @media (max-width: 768px) {
+            .content-grid { grid-template-columns: 1fr; gap: 20px; }
+            .poster-title-area h1 { font-size: 26px; }
+            .poster-title-area p { font-size: 14px; }
+            .btn-register-top { font-size: 16px; padding: 14px 20px; width: 100%; }
+            .poster-wrapper { padding: 20px 10px 60px; }
+            .poster-body { padding: 25px 15px; }
+            .intro-benefits { padding: 20px 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="header-placeholder"></div>
+
+    <div class="poster-wrapper">
+        <div class="digital-poster">
+            
+            <div class="poster-title-area">
+                <p>আল হুফফাজ ফাউন্ডেশন বাংলাদেশ কর্তৃক আয়োজিত</p>
+                <h1>জাতীয় হিফজুল কুরআন প্রতিযোগিতা</h1>
+                <div style="width: 100px; height: 5px; background: var(--gold); margin: 15px auto; border-radius: 10px;"></div>
+            </div>
+
+            <div class="btn-top-wrapper">
+                <a href="competition_reg.html" class="btn-register-top">
+                    <i class="fas fa-edit"></i> অনলাইনে আবেদন করুন
+                </a>
+            </div>
+
+            <div class="poster-body">
+                
+                <div class="intro-benefits">
+                    <h3><i class="fas fa-bullseye" style="color: var(--accent);"></i> লক্ষ্য ও উপকারিতা</h3>
+                    <p>কুরআনের পাখিদের সুপ্ত প্রতিভা বিকাশ এবং বিশ্বমঞ্চের জন্য প্রস্তুত করার লক্ষ্যে আমাদের এই আয়োজন। এর মাধ্যমে শিক্ষার্থীরা প্রতিযোগিতামূলক পরিবেশে নিজেদের তিলাওয়াত ও মুখস্থশক্তি যাচাইয়ের সুযোগ পাবে। এই মেধা-ভিত্তিক অংশগ্রহণ তাদের আত্মবিশ্বাস বৃদ্ধি করবে, তিলাওয়াতে জড়তা দূর করবে এবং আকর্ষণীয় সম্মাননা ও পুরস্কার তাদের হিফজ শিক্ষায় আরও বেশি মনোযোগী হতে উৎসাহিত করবে।</p>
+                </div>
+
+                <div class="content-grid">
+                    
+                    <div class="left-col">
+                        <div class="info-box">
+                            <div class="box-label">অংশগ্রহণের গ্রুপ সমূহ</div>
+                            <table class="group-table">
+                                <tr><td>৫ পারা গ্রুপ</td><td>সর্বোচ্চ ১৩ বছর</td></tr>
+                                <tr><td>১০ পারা গ্রুপ</td><td>সর্বোচ্চ ১৫ বছর</td></tr>
+                                <tr><td>হুসনে সওত</td><td>সর্বোচ্চ ১৮ বছর</td></tr>
+                            </table>
+                        </div>
+
+                        <div class="info-box" style="border-top-color: var(--accent); margin-bottom: 0;">
+                            <div class="box-label" style="background: var(--accent);">নিয়মাবলী ও শর্তসমূহ</div>
+                            <ul class="rules-list">
+                                <li>হুসনে সওত গ্রুপে নাজেরা, হিফজ, কিতাব খানা ও জেনারেল ছাত্ররা অংশ গ্রহণ করতে পারবে।</li>
+                                <li>যে সকল প্রতিযোগী আন্তর্জাতিক প্রতিযোগিতায় অংশগ্রহণ করেছে তারা অংশগ্রহণ করতে পারবে না।</li>
+                                <li>সম্মানিত বিচারকমণ্ডলীর রায়-ই চূড়ান্ত বলে বিবেচিত হবে।</li>
+                                <li>একই প্রতিযোগী একাধিক জেলায় অডিশন দিতে পারবে না।</li>
+                                <li>শৃঙ্খলার পরিপন্থী কোনো কাজ করলে আবেদন সরাসরি বাতিল হবে।</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="right-col">
+                        <div class="info-box" style="border-top-color: var(--gold);">
+                            <div class="box-label" style="background: #b45309;">সেরা পুরস্কারসমূহ</div>
+                            <div class="prize-item">
+                                <div class="prize-icon"><i class="fas fa-gem" style="color: #00bcd4;"></i></div>
+                                <div class="prize-text">১ম পুরস্কার: হীরাপদক</div>
+                            </div>
+                            <div class="prize-item">
+                                <div class="prize-icon"><i class="fas fa-trophy" style="color: #fbbf24;"></i></div>
+                                <div class="prize-text">২য় পুরস্কার: স্বর্ণপদক</div>
+                            </div>
+                            <div class="prize-item">
+                                <div class="prize-icon"><i class="fas fa-medal" style="color: #94a3b8;"></i></div>
+                                <div class="prize-text">৩য় পুরস্কার: রৌপ্যপদক</div>
+                            </div>
+                            <p style="font-size: 14px; text-align: center; color: var(--secondary); font-weight: bold; background: #f1f5f9; padding: 10px; border-radius: 8px; margin-top: 15px; margin-bottom: 0;">সহ ১ম থেকে ৩০তম স্থান পর্যন্ত রয়েছে আকর্ষণীয় পুরস্কার!</p>
+                        </div>
+
+                        <div class="info-box" style="margin-bottom: 0;">
+                            <div class="box-label">জেলা পর্যায়ের মূল্যায়ন</div>
+                            <ul class="rules-list" style="font-weight: 600; color: var(--primary);">
+                                <li style="padding-left: 20px;">✦ ১ম থেকে ৭ম স্থান পর্যন্ত আকর্ষণীয় ক্রেস্ট</li>
+                                <li style="padding-left: 20px;">✦ ১ম থেকে ১৫তম পর্যন্ত জেলা সার্টিফিকেট</li>
+                                <li style="padding-left: 20px;">✦ ১ম থেকে ১৫তম স্থান পর্যন্ত YES কার্ড</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="venue-notice">
+                    <h4><i class="fas fa-info-circle"></i> অডিশন সংক্রান্ত তথ্য</h4>
+                    <p>সারা দেশব্যাপী জেলা পর্যায়ে আমাদের প্রাথমিক অডিশন অনুষ্ঠিত হবে। অনলাইনে আবেদন সম্পন্ন করার পর আপনার নিজ জেলার অডিশনের স্থান ও সময় এসএমএস-এর মাধ্যমে জানিয়ে দেওয়া হবে।</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
