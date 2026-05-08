@@ -107,6 +107,9 @@
             <p style="font-size: 15px; color: #475569; line-height: 1.6; margin-bottom: 20px;">
                 আপনার আবেদন সফলভাবে সাবমিট হয়েছে। <b>তবে পেমেন্ট পাওয়া সাপেক্ষে তা চূড়ান্তভাবে গ্রহণ করা হবে।</b> যাচাই-বাছাই শেষে আপনাকে কনফার্ম করা হবে।
             </p>
+            
+            <div id="payStatusMsg" style="padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; font-weight: 600; display:none;"></div>
+
             <div style="background: #f8fafc; border: 1px dashed var(--secondary); padding: 15px; border-radius: 10px; margin-bottom: 25px;">
                 <p style="margin: 0; font-size: 13px; color: #64748b;">রেজিস্ট্রেশন আইডি:</p>
                 <h3 id="finalRegId" style="margin: 5px 0 0; color: var(--accent); font-family: 'Poppins', sans-serif;">AHFB-XXXXX</h3>
@@ -118,6 +121,15 @@
     <div class="form-wrapper">
         <div class="reg-box">
             
+            <div class="pay-banner" style="background: linear-gradient(135deg, #0284c7, #0369a1); color: #fff; padding: 25px; text-align: center; border-bottom: 4px solid #ffb300;">
+                <h3 id="dbPayTitle" style="margin: 0 0 10px; font-size: 20px; font-weight: 700;">ফি প্রদান করুন (বিকাশ/ন নগদ/রকেট পার্সোনাল)</h3>
+                <div class="pay-number-box" style="display: inline-flex; align-items: center; background: rgba(255,255,255,0.15); padding: 8px 25px; border-radius: 50px; font-size: 24px; font-weight: 800; font-family: 'Poppins', sans-serif; border: 2px dashed rgba(255,255,255,0.4); margin-bottom: 12px;">
+                    <span id="dbPayNumber">লোড হচ্ছে...</span>
+                    <button class="copy-btn" onclick="copyNumber()" style="background: #ffb300; color: #000; border: none; padding: 6px 18px; border-radius: 50px; margin-left: 20px; font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.3s;"><i class="fas fa-copy"></i> কপি করুন</button>
+                </div>
+                <p class="pay-desc" id="dbPayDesc" style="font-size: 15px; opacity: 0.95; margin: 0; line-height: 1.5;">উপরোক্ত নাম্বারে সেন্ড মানি করে ফর্মের নিচে আপনার TrxID টি সাবমিট করুন।</p>
+            </div>
+
             <div class="form-header">
                 <h1>প্রতিযোগিতার আবেদন ফরম</h1>
             </div>
@@ -168,9 +180,9 @@
                         <div id="paraRangeGroup" style="display:none; margin-top: 15px; background: #e0f2fe; padding: 15px; border-radius: 10px; border: 1px dashed #0284c7;">
                             <label style="color: #0369a1; margin-bottom: 5px; display: block;">ধারাবাহিক পারা নির্বাচন করুন <span style="color:red">*</span></label>
                             <div style="display: flex; gap: 10px; align-items: center;">
-                                <select id="paraStart" onchange="calculateEndPara()" style="flex:1;"><option value="">কততম হতে</option></select>
+                                <select id="paraStart" onchange="calculateEndPara()" style="flex:1;"><option value="">শুরু পারা</option></select>
                                 <span style="font-weight: bold; color: #0284c7;">থেকে</span>
-                                <input type="text" id="paraEnd" placeholder="অটোমেটিক আসবে" style="flex:1; background-color: #cbd5e1; font-weight:bold; color:#0f172a; pointer-events: none;" readonly>
+                                <input type="text" id="paraEnd" placeholder="অটোমেটিক" style="flex:1; background-color: #cbd5e1; font-weight:bold; color:#0f172a; pointer-events: none;" readonly>
                             </div>
                         </div>
                     </div>
@@ -211,6 +223,24 @@
                     </div>
                 </div>
 
+                <div class="payment-section" style="background: #f8fafc; padding: 25px; border-radius: 12px; border: 2px solid #cbd5e1; margin: 30px 0;">
+                    <h3 style="margin: 0 0 10px 0; color: #0f5132; font-size: 18px;"><i class="fas fa-wallet"></i> ফি প্রদান ভেরিফিকেশন (১৫০ টাকা/জন)</h3>
+                    <p style="color: #475569; font-size: 14px; margin-bottom: 15px; line-height: 1.5;">
+                        💡 আপনি একাধিক শিক্ষার্থীর টাকা একসাথে পাঠিয়ে থাকলে, শুধুমাত্র <b>TrxID</b> দিলেই সিস্টেম লাইভ হিসাব করে নেবে আপনার আর কতজনের ফর্ম পূরণ করা বাকি আছে।
+                    </p>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>TrxID অথবা যে নাম্বার থেকে টাকা পাঠিয়েছেন</label>
+                            <input type="text" id="pTrxId" placeholder="বিকাশ/নগদ TrxID লিখুন">
+                        </div>
+                        <div class="form-group">
+                            <label>প্রতি জনের ফি (টাকা)</label>
+                            <input type="number" id="pAmount" placeholder="150" value="150" readonly style="background: #e2e8f0; font-weight: bold; color: #0f5132;">
+                        </div>
+                    </div>
+                    <div id="livePayStatus" style="margin-top: 15px; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 600; display: none; text-align: center;"></div>
+                </div>
+
                 <div class="terms-section">
                     <div class="terms-title">প্রতিযোগিতার শর্তাবলী</div>
                     <ul class="terms-list">
@@ -243,9 +273,88 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
         
         const firebaseConfig = { apiKey: "AIzaSyAjv9u2Qn3EdVxNKBMcT1ezHp-5NitucT0", authDomain: "foundation-ntc.firebaseapp.com", projectId: "foundation-ntc", storageBucket: "foundation-ntc.firebasestorage.app", messagingSenderId: "940836724866", appId: "1:940836724866:web:b93b489374f410be02949b" };
         const app = initializeApp(firebaseConfig); const db = getFirestore(app);
+
+        // Payment Database Configuration
+        const paymentConfig = { apiKey: "AIzaSyBX5fenTzBsZ5Jxhe-8hsmC4cYE4wIWedk", authDomain: "varify-payment.firebaseapp.com", databaseURL: "https://varify-payment-default-rtdb.asia-southeast1.firebasedatabase.app", projectId: "varify-payment", storageBucket: "varify-payment.firebasestorage.app" };
+        const paymentApp = initializeApp(paymentConfig, "PaymentApp");
+        const rtdb = getDatabase(paymentApp);
+
+        // --- Load Dynamic Payment Details from DB ---
+        async function loadPaymentSettings() {
+            try {
+                const snap = await get(ref(rtdb, 'Settings/PaymentInfo'));
+                if(snap.exists()) {
+                    const data = snap.val();
+                    if(data.number) document.getElementById('dbPayNumber').innerText = data.number;
+                    if(data.title) document.getElementById('dbPayTitle').innerText = data.title;
+                    if(data.desc) document.getElementById('dbPayDesc').innerText = data.desc;
+                } else { document.getElementById('dbPayNumber').innerText = "017XXXXXXXX"; }
+            } catch(e) { document.getElementById('dbPayNumber').innerText = "017XXXXXXXX"; }
+        }
+        loadPaymentSettings();
+
+        // Copy Number Function
+        window.copyNumber = function() {
+            const num = document.getElementById('dbPayNumber').innerText;
+            navigator.clipboard.writeText(num);
+            const btn = document.querySelector('.copy-btn');
+            btn.innerHTML = '<i class="fas fa-check"></i> কপি হয়েছে';
+            btn.style.background = '#10b981'; btn.style.color = '#fff';
+            setTimeout(() => { btn.innerHTML = '<i class="fas fa-copy"></i> কপি করুন'; btn.style.background = '#ffb300'; btn.style.color = '#000'; }, 2000);
+        }
+
+        // --- Live TrxID Tracking Logic ---
+        let typingTimer;
+        document.getElementById('pTrxId').addEventListener('input', function() {
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(checkLivePayment, 800);
+        });
+
+        async function checkLivePayment() {
+            const trx = document.getElementById('pTrxId').value.trim().toUpperCase();
+            const statusDiv = document.getElementById('livePayStatus');
+            if(trx.length < 8) { statusDiv.style.display = 'none'; return; }
+            
+            statusDiv.style.display = 'block';
+            statusDiv.style.background = '#e0f2fe'; statusDiv.style.color = '#0369a1'; statusDiv.style.border = '1px solid #bae6fd';
+            statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ডাটাবেজ যাচাই করা হচ্ছে...';
+
+            try {
+                const snap = await get(ref(rtdb, 'Payments'));
+                let found = null;
+                snap.forEach(child => {
+                    const data = child.val();
+                    const dbTrxId = String(data.trxId || "").trim().toUpperCase();
+                    const phoneMatch = (data.fullMessage || "").match(/01[3-9][0-9]{8}/);
+                    const dbPhone = phoneMatch ? phoneMatch[0] : "";
+                    if(dbTrxId === trx || dbPhone === trx) { found = {key: child.key, ...data}; }
+                });
+
+                if(found) {
+                    let dbAmt = parseFloat(String(found.amount).replace(/,/g,''));
+                    let maxAllowed = Math.floor(dbAmt / 150); if(maxAllowed < 1) maxAllowed = 1;
+                    let used = parseInt(found.usedCount || "0");
+                    let rem = maxAllowed - used;
+
+                    if(rem > 0) {
+                        statusDiv.style.background = '#dcfce7'; statusDiv.style.color = '#166534'; statusDiv.style.border = '1px solid #86efac';
+                        statusDiv.innerHTML = `✅ <b>পেমেন্ট পাওয়া গেছে!</b> মোট জমা: ৳${dbAmt}। (লিমিট: ${maxAllowed} জন, ব্যবহৃত: ${used} জন, <b>বাকি সুযোগ: ${rem} জন</b>)`;
+                    } else {
+                        statusDiv.style.background = '#fef2f2'; statusDiv.style.color = '#b91c1c'; statusDiv.style.border = '1px solid #fca5a5';
+                        statusDiv.innerHTML = `❌ <b>লিমিট শেষ!</b> এই TrxID দিয়ে মোট ${maxAllowed} জনের সবার ফর্ম পূরণ হয়ে গেছে।`;
+                    }
+                } else {
+                    statusDiv.style.background = '#fef2f2'; statusDiv.style.color = '#b91c1c'; statusDiv.style.border = '1px solid #fca5a5';
+                    statusDiv.innerHTML = `⚠️ <b>TrxID পাওয়া যায়নি!</b> তথ্যটি ভুল, অথবা পেমেন্ট এখনো আপডেট হয়নি।`;
+                }
+            } catch(e) {
+                statusDiv.innerHTML = `⚠️ সার্ভার সমস্যা!`;
+            }
+        }
 
         // Tooltips
         const fieldGuides = {
@@ -360,7 +469,7 @@
                 paraGroup.style.animation = 'none';
                 setTimeout(() => paraGroup.style.animation = 'pulseGlow 1s ease', 50);
                 
-                pStart.innerHTML = '<option value="">কততম হতে</option>';
+                pStart.innerHTML = '<option value="">শুরু পারা</option>';
                 for(let i=1; i<=30; i++) { pStart.innerHTML += `<option value="${i}">${i}</option>`; }
                 document.getElementById('paraEnd').value = '';
             } else {
@@ -386,7 +495,7 @@
             }
         };
 
-        const dists = { "ঢাকা": ["ঢাকা", "ফরিদপুর", "গাজীপুর", "গোপালগঞ্জ", "কিশোরগঞ্জ", "মাদারীপুর", "মানিকগঞ্জ", "মুন্সীগঞ্জ", "নারায়ণগঞ্জ", "নরসিংদী", "রাজবাড়ী", "শরীয়তপুর", "टाঙ্গাইল"], "চট্টগ্রাম": ["চট্টগ্রাম", "বান্দরবান", "ব্রাহ্মণবাড়িয়া", "চাঁদপুর", "কুমিল্লা", "কক্সবাজার", "ফেনী", "খাগড়াছড়ি", "লক্ষ্মীপুর", "নোয়াখালী", "রাঙ্গামাটি"], "সিলেট": ["সিলেট", "মৌলভীবাজার", "হবিগঞ্জ", "সুনামগঞ্জ"], "ময়মনসিংহ": ["ময়মনসিংহ", "জামালপুর", "শেরপুর", "নেত্রকোনা"], "রাজশাহী": ["রাজশাহী", "বগুড়া", "জয়পুরহাট", "নওগাঁ", "নাটোর", "নবাবগঞ্জ", "পাবনা", "সিরাজগঞ্জ"], "খুলনা": ["খুলনা", "বাগেরহাট", "চুয়াডাঙ্গা", "যশোর", "ঝিনাইদহ", "কুষ্টিয়া", "মাগুরা", "মেহেরপুর", "নড়াইল", "সাতক্ষীরা"], "বরিশাল": ["বরিশাল", "বরগুনা", "ভোলা", "ঝালকাঠি", "পটুয়াখালী", "পিরোজপুর"], "রংপুর": ["রংপুর", "দিনাজপুর", "গাইবান্ধা", "কুড়িগ্রাম", "লালমনিরহাট", "নীলফামারী", "পঞ্চগড়", "ঠাকুরগাঁও"] };
+        const dists = { "ঢাকা": ["ঢাকা", "ফরিদপুর", "গাজীপুর", "গোপালগঞ্জ", "কিশোরগঞ্জ", "মাদারীপুর", "মানিকগঞ্জ", "মুন্সীগঞ্জ", "নারায়ণগঞ্জ", "নরসিংদী", "রাজবাড়ী", "শরীয়তপুর", "টাঙ্গাইল"], "চট্টগ্রাম": ["চট্টগ্রাম", "বান্দরবান", "ব্রাহ্মণবাড়িয়া", "চাঁদপুর", "কুমিল্লা", "কক্সবাজার", "ফেনী", "খাগড়াছড়ি", "লক্ষ্মীপুর", "নোয়াখালী", "রাঙ্গামাটি"], "সিলেট": ["সিলেট", "মৌলভীবাজার", "হবিগঞ্জ", "সুনামগঞ্জ"], "ময়মনসিংহ": ["ময়মনসিংহ", "জামালপুর", "শেরপুর", "নেত্রকোনা"], "রাজশাহী": ["রাজশাহী", "বগুড়া", "জয়পুরহাট", "নওগাঁ", "নাটোর", "নবাবগঞ্জ", "পাবনা", "সিরাজগঞ্জ"], "খুলনা": ["খুলনা", "বাগেরহাট", "চুয়াডাঙ্গা", "যশোর", "ঝিনাইদহ", "কুষ্টিয়া", "মাগুরা", "মেহেরপুর", "নড়াইল", "সাতক্ষীরা"], "বরিশাল": ["বরিশাল", "বরগুনা", "ভোলা", "ঝালকাঠি", "পটুয়াখালী", "পিরোজপুর"], "রংপুর": ["রংপুর", "দিনাজপুর", "গাইবান্ধা", "কুড়িগ্রাম", "লালমনিরহাট", "নীলফামারী", "পঞ্চগড়", "ঠাকুরগাঁও"] };
         window.updateDistricts = () => {
             const div = document.getElementById('cDiv').value; const distSelect = document.getElementById('cDist');
             distSelect.innerHTML = '<option value="">জেলা বেছে নিন</option>';
@@ -410,6 +519,7 @@
             const grpName = (d.group === '5_para' ? '৫ পারা গ্রুপ' : (d.group === '10_para' ? '১০ পারা গ্রুপ' : 'হুসনে সওত')) + paraText;
             
             const pPhoto = imgUrl ? `<img src="${imgUrl}" crossorigin="anonymous" style="width:100%; height:100%; object-fit:cover; border-radius:6px;">` : `<div style="text-align:center; padding-top:40px; color:#94a3b8;">ছবি নেই</div>`;
+            const payBadge = d.paymentStatus === 'verified' ? '<span style="color:#10b981;">পরিশোধিত (Verified)</span>' : '<span style="color:#ef4444;">অপরিশোধিত (Unpaid)</span>';
             
             return `
             <div id="exportPdfArea" style="width:794px; min-height:1122px; background:#fff; padding:40px; font-family:'Noto Sans Bengali',sans-serif; color:#000; box-sizing:border-box;">
@@ -440,6 +550,7 @@
                         <tr><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; background:#f8fafc;">মাদরাসার নাম</td><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold;">${d.madrasa}</td></tr>
                         <tr><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; background:#f8fafc;">ঠিকানা (জেলা ও বিভাগ)</td><td style="padding:10px; border:1px solid #cbd5e1;">${d.dist}, ${d.div}</td></tr>
                         <tr><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; background:#f8fafc;">মোবাইল নম্বর</td><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; color:#d32f2f;">${d.phone}</td></tr>
+                        <tr><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; background:#f8fafc; color:#0f5132;">পেমেন্ট স্ট্যাটাস</td><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; font-size:16px;">${payBadge}</td></tr>
                         <tr><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; background:#f8fafc; color:#0f5132;">নির্বাচিত গ্রুপ</td><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; font-size:18px; color:#0f5132;">${grpName}</td></tr>
                     </table>
                     
@@ -510,6 +621,50 @@
                 return;
             }
 
+            const loader = document.getElementById('loaderOverlay'), pText = document.getElementById('progressText');
+            loader.style.display = 'flex'; 
+
+            // Payment Verification Logic
+            const trxInput = document.getElementById('pTrxId').value.trim().toUpperCase();
+            let paymentStatus = 'unpaid';
+            let payMsg = "⚠️ <b>পেমেন্ট তথ্য দেওয়া হয়নি:</b> ফর্মটি 'Unpaid' হিসেবে ডাটাবেজে জমা হয়েছে।";
+            let msgBg = "#fef2f2", msgCol = "#b91c1c", msgBdr = "#fca5a5";
+
+            if (trxInput.length >= 8) {
+                pText.innerText = "যাচাই";
+                try {
+                    const snap = await get(ref(rtdb, 'Payments'));
+                    let matchedKey = null; let paymentData = null;
+                    snap.forEach(child => {
+                        const data = child.val();
+                        const dbTrxId = String(data.trxId || "").trim().toUpperCase();
+                        const phoneMatch = (data.fullMessage || "").match(/01[3-9][0-9]{8}/);
+                        const dbPhone = phoneMatch ? phoneMatch[0] : "";
+                        if(dbTrxId === trxInput || dbPhone === trxInput) { matchedKey = child.key; paymentData = data; }
+                    });
+
+                    if (matchedKey) {
+                        let dbAmt = parseFloat(String(paymentData.amount).replace(/,/g,''));
+                        let maxAllowed = Math.floor(dbAmt / 150); if(maxAllowed < 1) maxAllowed = 1;
+                        let usedCount = parseInt(paymentData.usedCount || "0");
+
+                        if (paymentData.status === "used" || usedCount >= maxAllowed) {
+                            payMsg = `❌ <b>লিমিট শেষ:</b> এই TrxID দিয়ে সর্বোচ্চ যতোজনের ফর্ম পূরণ করার কথা, তা আগেই পূরণ করা হয়েছে।`;
+                        } else {
+                            usedCount++;
+                            let newStatus = (usedCount >= maxAllowed) ? "used" : "partial";
+                            await update(ref(rtdb, 'Payments/' + matchedKey), { status: newStatus, usedCount: usedCount });
+                            
+                            paymentStatus = 'verified';
+                            let remaining = maxAllowed - usedCount;
+                            msgBg = "#dcfce7"; msgCol = "#166534"; msgBdr = "#86efac";
+                            if (remaining > 0) payMsg = `✅ <b>পেমেন্ট সফল!</b> এই TrxID দিয়ে আপনি আর <b>${remaining}</b> জনের ফর্ম পূরণ করতে পারবেন।`;
+                            else payMsg = `✅ <b>পেমেন্ট সফল!</b> তবে এই TrxID এর লিমিট শেষ হয়ে গেছে।`;
+                        }
+                    } else { payMsg = `❌ <b>পেমেন্ট পাওয়া যায়নি:</b> আপনার দেওয়া TrxID টি ভুল।`; }
+                } catch(err) { payMsg = `⚠️ সার্ভার সমস্যার কারণে পেমেন্ট যাচাই করা যায়নি।`; }
+            }
+
             const randomCode = Math.floor(10000 + Math.random() * 90000);
             const regId = "AHFB-" + randomCode;
             
@@ -528,11 +683,10 @@
                 group: document.getElementById('cGroup').value, dob: `${dDay}/${dMonth}/${y}`, age: calcAge,
                 paraStart: document.getElementById('paraStart').value || '', paraEnd: document.getElementById('paraEnd').value || '',
                 madrasa: document.getElementById('cMadrasa').value, div: document.getElementById('cDiv').value,
-                dist: document.getElementById('cDist').value, photoUrl: imgUrl, regId: regId
+                dist: document.getElementById('cDist').value, photoUrl: imgUrl, regId: regId, paymentStatus: paymentStatus
             };
 
-            const loader = document.getElementById('loaderOverlay'), pText = document.getElementById('progressText');
-            loader.style.display = 'flex'; let p = 0; const t = setInterval(() => { if(p<90) { p+=Math.floor(Math.random()*8)+1; pText.innerText=p; } }, 200);
+            let p = 0; const t = setInterval(() => { if(p<90) { p+=Math.floor(Math.random()*8)+1; pText.innerText=p; } }, 200);
 
             try {
                 await addDoc(collection(db, "competition_registrations"), { ...data, status: 'pending', timestamp: serverTimestamp() });
@@ -547,16 +701,23 @@
                 const canvas = await html2canvas(exportArea, {scale: 4, useCORS: true, allowTaint: true, windowWidth: 794});
                 const { jsPDF } = window.jspdf; const pdf = new jsPDF('p','pt','a4');
                 const imgData = canvas.toDataURL('image/jpeg', 1.0);
-                const pageW = pdf.internal.pageSize.getWidth(); const pageH = pdf.internal.pageSize.getHeight();
-                let imgW = pageW, imgH = (canvas.height * pageW) / canvas.width;
-                if (imgH > pageH) { const r = pageH/imgH; imgH = pageH; imgW *= r; pdf.addImage(imgData, 'JPEG', (pageW-imgW)/2, 0, imgW, imgH); } 
-                else { pdf.addImage(imgData, 'JPEG', 0, 0, imgW, imgH); }
+                
+                // এখানে PDF সাইজ ফিক্স করা হয়েছে যেন A4 পেজে সম্পূর্ণ ফিট হয় কোনো বর্ডার ছাড়া
+                const pageW = pdf.internal.pageSize.getWidth(); 
+                const pageH = pdf.internal.pageSize.getHeight();
+                pdf.addImage(imgData, 'JPEG', 0, 0, pageW, pageH);
                 
                 pdf.save(`Registration_${data.name}_${regId}.pdf`); renderBox.style.display = 'none';
                 clearInterval(t); pText.innerText = "100";
                 
                 setTimeout(() => { 
                     loader.style.display = 'none'; document.getElementById('finalRegId').innerText = regId; 
+                    
+                    const pStatusDiv = document.getElementById('payStatusMsg');
+                    pStatusDiv.innerHTML = payMsg;
+                    pStatusDiv.style.background = msgBg; pStatusDiv.style.color = msgCol; pStatusDiv.style.border = `1px solid ${msgBdr}`;
+                    pStatusDiv.style.display = 'block';
+
                     const sucLay = document.getElementById('successOverlay'); sucLay.style.display = 'flex'; 
                     setTimeout(()=> document.getElementById('successBox').classList.add('show'), 50); 
                 }, 500);
