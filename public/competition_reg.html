@@ -689,7 +689,12 @@
             let p = 0; const t = setInterval(() => { if(p<90) { p+=Math.floor(Math.random()*8)+1; pText.innerText=p; } }, 200);
 
             try {
-                await addDoc(collection(db, "competition_registrations"), { ...data, status: 'pending', timestamp: serverTimestamp() });
+                // ================== এখানেই পরিবর্তন করা হয়েছে ==================
+                let grpLimit = data.group === '5_para' ? 12 : (data.group === '10_para' ? 15 : 18);
+                let finalStatus = (paymentStatus === 'verified' && calcAge <= grpLimit) ? 'approved' : 'pending';
+                
+                await addDoc(collection(db, "competition_registrations"), { ...data, status: finalStatus, timestamp: serverTimestamp() });
+                // ===============================================================
                 
                 const renderBox = document.getElementById('pdf-box'); renderBox.style.display = 'block'; renderBox.innerHTML = getPdfHtml(data);
                 
@@ -702,7 +707,6 @@
                 const { jsPDF } = window.jspdf; const pdf = new jsPDF('p','pt','a4');
                 const imgData = canvas.toDataURL('image/jpeg', 1.0);
                 
-                // এখানে PDF সাইজ ফিক্স করা হয়েছে যেন A4 পেজে সম্পূর্ণ ফিট হয় কোনো বর্ডার ছাড়া
                 const pageW = pdf.internal.pageSize.getWidth(); 
                 const pageH = pdf.internal.pageSize.getHeight();
                 pdf.addImage(imgData, 'JPEG', 0, 0, pageW, pageH);
