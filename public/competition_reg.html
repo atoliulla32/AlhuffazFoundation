@@ -27,7 +27,7 @@
 
         .main-form { padding: 10px 30px 35px; }
 
-        /* Copy Button Smooth Animation Fix */
+        /* Copy Button Smooth Animation */
         .copy-btn { 
             background: #ffb300; color: #000; border: none; padding: 5px 12px; border-radius: 50px; 
             margin-left: 12px; font-size: 12px; font-weight: bold; cursor: pointer; 
@@ -122,7 +122,7 @@
                     <h3 id="dbPayTitle" style="margin: 0; font-size: 15px; font-weight: 700;">ফি প্রদান করুন:</h3>
                     <div class="pay-number-box" style="display: inline-flex; align-items: center; background: rgba(255,255,255,0.15); padding: 4px 15px; border-radius: 50px; font-size: 18px; font-weight: 800; font-family: 'Poppins', sans-serif; border: 1px dashed rgba(255,255,255,0.4);">
                         <span id="dbPayNumber">লোড হচ্ছে...</span>
-                        <button class="copy-btn" onclick="copyNumber()"><i class="fas fa-copy"></i> কপি</button>
+                        <button type="button" class="copy-btn" onclick="copyNumber()"><i class="fas fa-copy"></i> কপি</button>
                     </div>
                 </div>
                 <p style="font-size: 13px; opacity: 0.95; margin: 0; line-height: 1.5; color: #e0f2fe;">
@@ -223,7 +223,7 @@
                     <div class="grid-2">
                         <div class="form-group">
                             <label>TrxID অথবা যে নাম্বার থেকে টাকা পাঠিয়েছেন</label>
-                            <input type="text" id="pTrxId" placeholder="বিকাশ/ন নগদ TrxID লিখুন">
+                            <input type="text" id="pTrxId" placeholder="বিকাশ/নগদ TrxID লিখুন">
                         </div>
                         <div class="form-group">
                             <label>প্রতি জনের ফি (টাকা)</label>
@@ -252,6 +252,9 @@
     </div>
 
     <div id="pdf-box" style="position:absolute; left:-9999px; top:0; width:794px; background:#fff; display:none;"></div>
+    <div id="footer-placeholder"></div>
+
+    <script src="script.js"></script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -312,7 +315,6 @@
                         statusDiv.innerHTML = `❌ <b>লিমিট শেষ!</b> এই TrxID দিয়ে মোট ${maxAllowed} জনের সবার ফর্ম পূরণ হয়ে গেছে।`;
                     }
                 } else {
-                    // NEW TEXT FOR UNVERIFIED TRXID
                     statusDiv.style.background = '#fffbeb'; statusDiv.style.color = '#b45309'; statusDiv.style.border = '1px solid #fcd34d';
                     statusDiv.innerHTML = `⚠️ <b>অটোমেটিক যাচাই সম্ভব হচ্ছে না!</b> এটি কর্তৃপক্ষের কাছে জমা থাকবে এবং ম্যানুয়ালি চেক করে আপনার পেমেন্ট নিশ্চিত করা হবে।`;
                 }
@@ -350,7 +352,6 @@
         };
         window.calculateEndPara = () => { const val = document.getElementById('cGroup').value; const startStr = document.getElementById('paraStart').value; const pEnd = document.getElementById('paraEnd'); if(startStr && val) { pEnd.value = Math.min(parseInt(startStr) + (val === '5_para' ? 4 : 9), 30); } else { pEnd.value = ""; } };
         
-        // FULL 64 DISTRICTS ADDED BACK
         const dists = { 
             "ঢাকা": ["ঢাকা", "ফরিদপুর", "গাজীপুর", "গোপালগঞ্জ", "কিশোরগঞ্জ", "মাদারীপুর", "মানিকগঞ্জ", "মুন্সীগঞ্জ", "নারায়ণগঞ্জ", "নরসিংদী", "রাজবাড়ী", "শরীয়তপুর", "টাঙ্গাইল"], 
             "চট্টগ্রাম": ["চট্টগ্রাম", "বান্দরবান", "ব্রাহ্মণবাড়িয়া", "চাঁদপুর", "কুমিল্লা", "কক্সবাজার", "ফেনী", "খাগড়াছড়ি", "লক্ষ্মীপুর", "নোয়াখালী", "রাঙ্গামাটি"], 
@@ -366,6 +367,7 @@
         let imgUrl = "";
         document.getElementById('pInput').addEventListener('change', async (e) => {
             const f = e.target.files[0]; if(!f) return;
+            document.getElementById('photoWidget').classList.remove('error-border');
             const reader = new FileReader(); reader.onload=(ev)=>{ document.getElementById('pImg').src=ev.target.result; document.getElementById('pImg').style.display="block"; document.getElementById('pIcon').style.display="none"; }; reader.readAsDataURL(f);
             document.getElementById('pText').innerHTML = "আপলোড হচ্ছে... <i class='fas fa-spinner fa-spin'></i>";
             const fd = new FormData(); fd.append("file", f); fd.append("upload_preset", "pending-management-afcmbd");
@@ -376,11 +378,17 @@
             let paraText = (d.group === '5_para' || d.group === '10_para') ? ` (পারা: ${d.paraStart} হতে ${d.paraEnd})` : "";
             const grpName = (d.group === '5_para' ? '৫ পারা' : (d.group === '10_para' ? '১০ পারা' : 'হুসনে সওত')) + paraText;
             const pPhoto = imgUrl ? `<img src="${imgUrl}" crossorigin="anonymous" style="width:100%; height:100%; object-fit:cover; border-radius:6px;">` : `<div style="text-align:center; padding-top:40px; color:#94a3b8;">ছবি নেই</div>`;
-            const payBadge = d.paymentStatus === 'verified' ? '<span style="color:#10b981;">পরিশোধিত (Verified)</span>' : '<span style="color:#ef4444;">অপরিশোধিত (Unpaid)</span>';
+            
+            let payBadge = '';
+            if(d.paymentStatus === 'verified') payBadge = '<span style="color:#10b981;">পরিশোধিত</span>';
+            else if(d.paymentStatus === 'pending') payBadge = '<span style="color:#f59e0b;">পেন্ডিং</span>';
+            else payBadge = '<span style="color:#ef4444;">অপরিশোধিত</span>';
             
             return `
             <div id="exportPdfArea" style="width:794px; min-height:1122px; background:#fff; padding:40px; font-family:'Noto Sans Bengali',sans-serif; color:#000; box-sizing:border-box;">
                 <div style="border:4px solid #0f5132; padding:30px; border-radius:15px; position:relative;">
+                    <div style="position:absolute; top:150px; left:100px; opacity:0.04; transform:rotate(-30deg); font-size:60px; font-weight:bold; color:#0f5132; pointer-events:none; white-space:nowrap;">AL HUFFAZ FOUNDATION</div>
+                    
                     <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:3px solid #ffb300; padding-bottom:15px; margin-bottom:20px;">
                         <div style="width:80px;"><img src="https://res.cloudinary.com/ddvprmv9g/image/upload/v1777644601/gu7xxpbkokyrx9wgifsn.jpg" crossorigin="anonymous" style="width:100%;"></div>
                         <div style="flex-grow:1; text-align:center;">
@@ -397,12 +405,13 @@
                     <table style="width:100%; border-collapse:collapse; font-size:16px;">
                         <tr><td style="padding:10px; border:1px solid #cbd5e1; width:180px; font-weight:bold; background:#f8fafc;">প্রতিযোগীর নাম</td><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; color:#003366;">${d.name}</td></tr>
                         <tr><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; background:#f8fafc;">পিতার নাম</td><td style="padding:10px; border:1px solid #cbd5e1;">${d.fName}</td></tr>
+                        <tr><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; background:#f8fafc;">মাতার নাম</td><td style="padding:10px; border:1px solid #cbd5e1;">${d.mName || 'প্রযোজ্য নয়'}</td></tr>
                         <tr><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; background:#f8fafc;">জন্ম তারিখ ও বয়স</td><td style="padding:10px; border:1px solid #cbd5e1;">${d.dob} <span style="font-weight:bold; color:#d32f2f;">(${d.age} বছর)</span></td></tr>
                         <tr><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; background:#f8fafc;">মাদরাসার নাম</td><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold;">${d.madrasa}</td></tr>
                         <tr><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; background:#f8fafc;">ঠিকানা (জেলা ও বিভাগ)</td><td style="padding:10px; border:1px solid #cbd5e1;">${d.dist}, ${d.div}</td></tr>
                         <tr><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; background:#f8fafc;">মোবাইল নম্বর</td><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; color:#d32f2f;">${d.phone}</td></tr>
-                        <tr><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; background:#f8fafc; color:#0f5132;">পেমেন্ট স্ট্যাটাস</td><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold;">${payBadge}</td></tr>
-                        <tr><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; background:#f8fafc; color:#0f5132;">নির্বাচিত গ্রুপ</td><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; color:#0f5132;">${grpName}</td></tr>
+                        <tr><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; background:#f8fafc; color:#0f5132;">পেমেন্ট স্ট্যাটাস</td><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; font-size:16px;">${payBadge}</td></tr>
+                        <tr><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; background:#f8fafc; color:#0f5132;">নির্বাচিত গ্রুপ</td><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; font-size:18px; color:#0f5132;">${grpName}</td></tr>
                     </table>
                 </div>
 
@@ -411,21 +420,33 @@
                     <span style="background:#fff; padding:0 15px;"><i class="fas fa-cut"></i> প্রবেশপত্র আলাদা করার জন্য এখান থেকে কাটুন</span>
                 </div>
 
-                <div style="border:3px solid #0f5132; padding:20px; border-radius:15px; background:#f0fdf4;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px dashed #0f5132; padding-bottom:15px; margin-bottom:15px;">
-                        <div style="width:70px;"><img src="https://res.cloudinary.com/ddvprmv9g/image/upload/v1777644601/gu7xxpbkokyrx9wgifsn.jpg" crossorigin="anonymous" style="width:100%;"></div>
-                        <div style="flex-grow:1; text-align:center;">
-                            <h2 style="margin:0 0 5px 0; color:#d32f2f; font-size:24px;">প্রবেশপত্র (Admit Card)</h2>
-                            <h3 style="margin:0 0 5px 0; font-size:20px; color:#0f5132;">জাতীয় হিফজুল কুরআন প্রতিযোগিতা</h3>
-                        </div>
-                        <div style="width:80px; height:100px; border:2px solid #0f5132; border-radius:6px; overflow:hidden;">${pPhoto}</div>
+                <div style="border:3px solid #0f5132; padding:20px; border-radius:15px; position:relative; background:#f0fdf4; overflow:hidden;">
+                    <div style="position:absolute; top:50px; left:120px; opacity:0.04; transform:rotate(-20deg); font-size:60px; font-weight:bold; color:#0f5132; pointer-events:none; white-space:nowrap;">AL HUFFAZ FOUNDATION</div>
+                    
+                    <div style="text-align:center; border-bottom:2px dashed #0f5132; padding-bottom:10px; margin-bottom:15px; position:relative;">
+                        <img src="https://res.cloudinary.com/ddvprmv9g/image/upload/v1777644601/gu7xxpbkokyrx9wgifsn.jpg" crossorigin="anonymous" style="position:absolute; left:0; top:0; width:70px;">
+                        <h2 style="margin:0 0 5px 0; color:#0f5132; font-size:22px; font-weight:bold;">জাতীয় হিফজুল কুরআন প্রতিযোগিতা</h2>
+                        <p style="margin:0 0 5px 0; font-size:14px; font-weight:bold; color:#475569;">আয়োজনে: আল হুফফাজ ফাউন্ডেশন বাংলাদেশ</p>
+                        <div style="background:#d32f2f; color:#fff; display:inline-block; padding:5px 15px; border-radius:20px; font-size:16px; font-weight:bold; margin-bottom:5px;">প্রবেশপত্র (Admit Card)</div>
+                        <div style="font-size:16px; font-weight:bold; color:#d32f2f;">রেজিঃ নম্বর: <span style="font-family:'Poppins',sans-serif;">${d.regId}</span></div>
+                        <div style="position:absolute; right:0; top:0; width:80px; height:100px; border:2px solid #0f5132; background:#fff; border-radius:6px; overflow:hidden;">${pPhoto}</div>
                     </div>
-                    <table style="width:100%; font-size:16px; font-weight:bold;">
-                        <tr><td style="padding:5px; color:#475569; width:110px;">নাম:</td><td style="padding:5px;">${d.name}</td></tr>
-                        <tr><td style="padding:5px; color:#475569;">মাদরাসা:</td><td style="padding:5px;">${d.madrasa}</td></tr>
-                        <tr><td style="padding:5px; color:#475569;">রেজিঃ আইডি:</td><td style="padding:5px; color:#d32f2f;">${d.regId}</td></tr>
-                        <tr><td style="padding:5px; color:#475569;">গ্রুপ:</td><td style="padding:5px; color:#0f5132;">${grpName}</td></tr>
+                    
+                    <table style="width:100%; font-size:15px; font-weight:bold;">
+                        <tr>
+                            <td style="padding:5px; width:50%;"><span style="color:#475569;">শিক্ষার্থীর নাম:</span> <span style="color:#003366;">${d.name}</span></td>
+                            <td style="padding:5px; width:50%;"><span style="color:#475569;">পিতার নাম:</span> <span>${d.fName}</span></td>
+                        </tr>
+                        <tr>
+                            <td style="padding:5px;"><span style="color:#475569;">মাদরাসার নাম:</span> <span>${d.madrasa}</span></td>
+                            <td style="padding:5px;"><span style="color:#475569;">ঠিকানা:</span> <span>${d.dist}, ${d.div}</span></td>
+                        </tr>
+                        <tr>
+                            <td style="padding:5px;"><span style="color:#475569;">জন্ম তারিখ ও বয়স:</span> <span>${d.dob} <span style="color:#d32f2f;">(${d.age} বছর)</span></span></td>
+                            <td style="padding:5px;"><span style="color:#475569;">গ্রুপ ও পারা:</span> <span style="color:#0f5132;">${grpName}</span></td>
+                        </tr>
                     </table>
+                    
                     <div style="display:flex; justify-content:space-between; margin-top:25px; font-weight:bold; text-align:center;">
                         <div style="width:150px; border-top:1px solid #000; padding-top:5px;">প্রতিযোগীর স্বাক্ষর</div>
                         <div style="width:150px; border-top:1px solid #000; padding-top:5px;">কর্তৃপক্ষের স্বাক্ষর</div>
@@ -463,8 +484,10 @@
                         let maxAllowed = Math.floor(dbAmt / 150); let usedCount = parseInt(paymentData.usedCount || "0");
                         if (dbAmt < 150) {
                             payMsg = `❌ <b>অপর্যাপ্ত ব্যালেন্স:</b> ফর্মের ফি ১৫০ টাকা, কিন্তু জমা হয়েছে মাত্র ৳${dbAmt}। ফর্মটি 'Unpaid' হিসেবে জমা হয়েছে।`;
+                            paymentStatus = 'unpaid';
                         } else if (paymentData.status === "used" || usedCount >= maxAllowed) {
                             payMsg = `❌ <b>লিমিট শেষ:</b> এই TrxID এর লিমিট শেষ হয়ে গেছে।`;
+                            paymentStatus = 'unpaid';
                         } else {
                             usedCount++; await update(ref(rtdb, 'Payments/' + matchedKey), { status: (usedCount >= maxAllowed) ? "used" : "partial", usedCount: usedCount });
                             paymentStatus = 'verified'; let rem = maxAllowed - usedCount;
@@ -472,16 +495,12 @@
                             payMsg = rem > 0 ? `✅ <b>পেমেন্ট সফল!</b> এই TrxID দিয়ে আপনি আর <b>${rem}</b> জনের ফর্ম পূরণ করতে পারবেন।` : `✅ <b>পেমেন্ট সফল!</b> তবে এই TrxID এর লিমিট শেষ।`;
                         }
                     } else {
-                        // NEW TEXT FOR UNVERIFIED TRXID ON SUBMIT
+                        paymentStatus = 'pending';
                         payMsg = `⚠️ <b>অটোমেটিক যাচাই সম্ভব হচ্ছে না!</b> আপনার ট্রানজেকশন তথ্যটি কর্তৃপক্ষের কাছে জমা হয়েছে। ম্যানুয়ালি চেক করে খুব শীঘ্রই আপনার পেমেন্ট নিশ্চিত করা হবে।`;
                         msgBg = "#fffbeb"; msgCol = "#b45309"; msgBdr = "#fcd34d";
                         
                         const newPendingRef = push(ref(rtdb, 'PendingOrders'));
-                        await set(newPendingRef, {
-                            providedInput: trxInput,
-                            providedAmount: 150,
-                            timestamp: new Date().toLocaleString('bn-BD')
-                        });
+                        await set(newPendingRef, { providedInput: trxInput, providedAmount: 150, timestamp: new Date().toLocaleString('bn-BD') });
                     }
                 } catch(err) { payMsg = `⚠️ সার্ভার সমস্যার কারণে পেমেন্ট যাচাই করা যায়নি।`; }
             }
@@ -490,7 +509,8 @@
             const dDay = parseInt(dSel.value), dMonth = parseInt(mSel.value), y = ySel.value === 'custom' ? parseInt(cYear.value) : parseInt(ySel.value);
             let calcAge = 0; if(dDay && dMonth && y) { const d = new Date(y, dMonth-1, dDay); const t = new Date(); calcAge = t.getFullYear() - d.getFullYear(); if(t.getMonth() < d.getMonth() || (t.getMonth() === d.getMonth() && t.getDate() < d.getDate())) calcAge--; }
 
-            const data = { name: document.getElementById('cName').value, phone: document.getElementById('cPhone').value, fName: document.getElementById('cFName').value, mName: document.getElementById('cMName').value, group: document.getElementById('cGroup').value, dob: `${dDay}/${dMonth}/${y}`, age: calcAge, paraStart: document.getElementById('paraStart').value || '', paraEnd: document.getElementById('paraEnd').value || '', madrasa: document.getElementById('cMadrasa').value, div: document.getElementById('cDiv').value, dist: document.getElementById('cDist').value, photoUrl: imgUrl, regId: regId, paymentStatus: paymentStatus };
+            // TRxId Added for Admin Tracking
+            const data = { name: document.getElementById('cName').value, phone: document.getElementById('cPhone').value, fName: document.getElementById('cFName').value, mName: document.getElementById('cMName').value, group: document.getElementById('cGroup').value, dob: `${dDay}/${dMonth}/${y}`, age: calcAge, paraStart: document.getElementById('paraStart').value || '', paraEnd: document.getElementById('paraEnd').value || '', madrasa: document.getElementById('cMadrasa').value, div: document.getElementById('cDiv').value, dist: document.getElementById('cDist').value, photoUrl: imgUrl, regId: regId, paymentStatus: paymentStatus, providedTrxId: trxInput };
 
             let p = 0; const t = setInterval(() => { if(p<90) { p+=Math.floor(Math.random()*8)+1; pText.innerText=p; } }, 200);
 
