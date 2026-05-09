@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>অ্যাডমিন ও প্রতিযোগিতা পোর্টাল | আল হুফফাজ</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { theme: { extend: { colors: { primary: '#0f5132', secondary: '#003366', accent: '#d32f2f', gold: '#ffb300' }, fontFamily: { bengali: ['"Noto Sans Bengali"', 'sans-serif'], poppins: ['Poppins', 'sans-serif'] } } } }
+    </script>
+
+    <style>
+        body { font-family: 'Noto Sans Bengali', sans-serif; background-color: #f1f5f9; color: #1e293b; }
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .loader-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.9); z-index: 99999; display: none; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        .spinner { width: 60px; height: 60px; border: 5px solid rgba(255,255,255,0.2); border-top-color: #ffb300; border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .preview-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 100000; display: none; flex-direction: column; align-items: center; padding: 20px 0; overflow-y: auto; overflow-x: hidden; backdrop-filter: blur(8px); }
+        .preview-container { width: 794px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.5); transform-origin: top center; transition: transform 0.2s; }
+        @media (max-width: 768px) { .desktop-table { display: none; } .mobile-grid { display: grid; gap: 1rem; } }
+        @media (min-width: 769px) { .mobile-grid { display: none; } }
+        input:focus, select:focus { outline: none; border-color: #0f5132; box-shadow: 0 0 0 3px rgba(15, 81, 50, 0.2); }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col">
+
+    <div class="loader-overlay" id="loader"><div class="spinner"></div><h2 id="loader-text" class="text-white mt-4 font-semibold text-lg">অপেক্ষা করুন...</h2></div>
+
+    <nav class="bg-primary text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3"><i class="fas fa-quran text-gold text-2xl"></i><h1 class="text-xl font-bold tracking-wide">আল হুফফাজ</h1></div>
+            <div class="flex gap-2 bg-white/10 p-1 rounded-lg">
+                <button onclick="switchTab('public')" id="tab-public" class="px-4 py-1.5 rounded-md text-sm font-semibold transition bg-white text-primary shadow">স্ট্যাটাস চেক</button>
+                <button onclick="switchTab('admin')" id="tab-admin" class="px-4 py-1.5 rounded-md text-sm font-semibold transition text-white hover:bg-white/20">অ্যাডমিন</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow p-4 sm:p-8 max-w-7xl mx-auto w-full">
+
+        <section id="public-section" class="max-w-xl mx-auto mt-10">
+            <div class="glass-card rounded-2xl p-6 sm:p-10 text-center border-t-4 border-t-primary">
+                <h2 class="text-2xl font-bold text-primary mb-2">আবেদনের অবস্থা জানুন</h2>
+                <p class="text-gray-500 text-sm mb-6">আপনার রেজিস্ট্রেশন আইডি দিয়ে সার্চ করুন এবং পেমেন্ট সম্পন্ন করুন।</p>
+                <div class="flex flex-col sm:flex-row gap-3 mb-6"><input type="text" id="searchRegId" placeholder="রেজিঃ আইডি (যেমন: AHFB-12345)" class="flex-grow p-3 border-2 border-gray-200 rounded-xl font-poppins font-bold uppercase text-center sm:text-left transition"><button onclick="checkPublicStatus()" class="bg-primary hover:bg-secondary text-white px-6 py-3 rounded-xl font-bold transition flex justify-center items-center gap-2 whitespace-nowrap"><i class="fas fa-search"></i> খুঁজুন</button></div>
+                <div id="public-result-box" class="hidden text-left border-2 border-gray-100 rounded-xl p-5 bg-gray-50">
+                    <div class="flex items-center gap-4 border-b border-gray-200 pb-4 mb-4"><img id="pub-img" src="" class="w-16 h-16 rounded-lg object-cover border border-gray-300"><div><h3 id="pub-name" class="font-bold text-lg text-gray-800"></h3><p id="pub-group" class="text-sm text-gray-500"></p></div></div>
+                    <div class="grid grid-cols-2 gap-4 mb-4 text-sm"><div class="bg-white p-3 rounded-lg border border-gray-100 shadow-sm"><span class="block text-gray-400 text-xs">পেমেন্ট স্ট্যাটাস</span><span id="pub-pay-status" class="font-bold"></span></div><div class="bg-white p-3 rounded-lg border border-gray-100 shadow-sm"><span class="block text-gray-400 text-xs">আবেদন স্ট্যাটাস</span><span id="pub-app-status" class="font-bold"></span></div></div>
+                    <div id="pub-payment-action" class="hidden bg-blue-50 p-4 rounded-lg border border-blue-200 mt-4">
+                        <h4 class="text-blue-800 font-bold mb-2 text-sm"><i class="fas fa-wallet"></i> পেমেন্ট ভেরিফাই করুন</h4>
+                        <div class="flex gap-2"><input type="text" id="pub-trxid" placeholder="TrxID বা মোবাইল নম্বর দিন" class="w-full p-2 border border-blue-300 rounded-lg text-sm font-poppins uppercase"><button onclick="verifyPublicPayment()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-bold transition">ভেরিফাই</button></div>
+                        <div id="pub-pay-msg" class="text-xs mt-2 font-semibold hidden"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="admin-section" class="hidden">
+            <div id="admin-login-box" class="max-w-sm mx-auto mt-20 glass-card rounded-2xl p-8 text-center border-t-4 border-t-accent">
+                <i class="fas fa-lock text-4xl text-gray-400 mb-4"></i><h2 class="text-xl font-bold text-gray-800 mb-4">অ্যাডমিন অ্যাক্সেস</h2>
+                <input type="email" id="admin-email" placeholder="অ্যাডমিন ইমেইল" class="w-full p-3 border-2 border-gray-200 rounded-xl text-center text-lg font-bold mb-3">
+                <input type="password" id="admin-pass" placeholder="পাসওয়ার্ড" class="w-full p-3 border-2 border-gray-200 rounded-xl text-center text-lg font-bold mb-4">
+                <button onclick="verifyAdmin()" class="w-full bg-accent hover:bg-red-800 text-white p-3 rounded-xl font-bold transition">লগইন করুন</button>
+                <p id="admin-err" class="text-red-500 text-sm mt-2 font-bold hidden">ভুল ইমেইল বা পাসওয়ার্ড!</p>
+            </div>
+
+            <div id="admin-dashboard" class="hidden">
+                <div class="flex flex-wrap gap-3 mb-6 border-b border-gray-200 pb-4 justify-between items-center sm:justify-start">
+                    <div class="flex gap-3">
+                        <button onclick="switchAdminTab('registrations')" id="btn-tab-reg" class="bg-primary text-white px-5 py-2.5 rounded-lg font-bold shadow transition"><i class="fas fa-list"></i> আবেদনকারী তালিকা</button>
+                        <button onclick="switchAdminTab('pending_payments')" id="btn-tab-pay" class="bg-white text-gray-700 border border-gray-300 px-5 py-2.5 rounded-lg font-bold hover:bg-gray-50 transition"><i class="fas fa-wallet"></i> ম্যানুয়াল পেমেন্ট চেক</button>
+                    </div>
+                    <button onclick="logoutAdmin()" class="bg-red-100 hover:bg-red-200 text-red-700 border border-red-300 px-4 py-2 rounded-lg font-bold transition flex items-center gap-2"><i class="fas fa-sign-out-alt"></i> লগআউট</button>
+                </div>
+
+                <div id="admin-registrations">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6"><div class="bg-white rounded-xl p-5 shadow-sm border-l-4 border-blue-500 flex items-center justify-between"><div><p class="text-gray-500 text-sm font-semibold">মোট আবেদন</p><h3 id="stat-total" class="text-2xl font-bold font-poppins">0</h3></div><div class="bg-blue-100 p-3 rounded-full text-blue-500"><i class="fas fa-users text-xl"></i></div></div><div class="bg-white rounded-xl p-5 shadow-sm border-l-4 border-green-500 flex items-center justify-between"><div><p class="text-gray-500 text-sm font-semibold">অ্যাপ্রুভড (Approved)</p><h3 id="stat-appr" class="text-2xl font-bold font-poppins">0</h3></div><div class="bg-green-100 p-3 rounded-full text-green-500"><i class="fas fa-check-circle text-xl"></i></div></div><div class="bg-white rounded-xl p-5 shadow-sm border-l-4 border-orange-500 flex items-center justify-between"><div><p class="text-gray-500 text-sm font-semibold">পেন্ডিং (Pending)</p><h3 id="stat-pend" class="text-2xl font-bold font-poppins">0</h3></div><div class="bg-orange-100 p-3 rounded-full text-orange-500"><i class="fas fa-clock text-xl"></i></div></div></div>
+
+                    <div class="bg-white rounded-xl p-4 shadow-sm mb-6 flex flex-wrap gap-3 border border-gray-100"><div class="relative flex-grow min-w-[200px]"><i class="fas fa-search absolute left-3 top-3.5 text-gray-400"></i><input type="text" id="filter-search" oninput="applyFilters()" placeholder="নাম, ফোন, মাদরাসা বা রেজিঃ আইডি..." class="w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg text-sm"></div><select id="filter-div" onchange="applyFilters()" class="border border-gray-200 rounded-lg px-2 py-2 text-sm flex-grow sm:flex-grow-0"><option value="">সব বিভাগ</option><option value="ঢাকা">ঢাকা</option><option value="চট্টগ্রাম">চট্টগ্রাম</option><option value="রাজশাহী">রাজশাহী</option><option value="সিলেট">সিলেট</option><option value="খুলনা">খুলনা</option><option value="বরিশাল">বরিশাল</option><option value="রংপুর">রংপুর</option><option value="ময়মনসিংহ">ময়মনসিংহ</option></select><select id="filter-dist" onchange="applyFilters()" class="border border-gray-200 rounded-lg px-2 py-2 text-sm flex-grow sm:flex-grow-0"><option value="">সব জেলা</option></select><select id="filter-group" onchange="applyFilters()" class="border border-gray-200 rounded-lg px-2 py-2 text-sm flex-grow sm:flex-grow-0"><option value="">সব গ্রুপ</option><option value="5_para">৫ পারা</option><option value="10_para">১০ পারা</option><option value="husne_saot">হুসনে সওত</option></select><select id="filter-age" onchange="applyFilters()" class="border border-gray-200 rounded-lg px-2 py-2 text-sm flex-grow sm:flex-grow-0"><option value="">সব বয়স</option><option value="valid">সঠিক বয়স</option><option value="invalid">বয়স সমস্যা</option></select><select id="filter-status" onchange="applyFilters()" class="border border-gray-200 rounded-lg px-2 py-2 text-sm flex-grow sm:flex-grow-0"><option value="">সব স্ট্যাটাস</option><option value="approved">Approved</option><option value="pending">Pending</option></select></div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden"><div class="overflow-x-auto desktop-table"><table class="w-full text-left border-collapse"><thead><tr class="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider border-b border-gray-200"><th class="p-4 font-bold">ছবি ও নাম</th><th class="p-4 font-bold">যোগাযোগ ও ঠিকানা</th><th class="p-4 font-bold">গ্রুপ ও বয়স</th><th class="p-4 font-bold">স্ট্যাটাস</th><th class="p-4 font-bold text-right">অ্যাকশন</th></tr></thead><tbody id="desktop-tbody" class="text-sm divide-y divide-gray-100"></tbody></table></div><div id="mobile-grid" class="mobile-grid p-4 bg-gray-50"></div><div id="no-data" class="hidden text-center py-10 text-gray-500"><i class="fas fa-box-open text-4xl mb-3 text-gray-300"></i><p>কোনো তথ্য পাওয়া যায়নি</p></div></div>
+                </div>
+
+                <div id="admin-pending-payments" class="hidden"><div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100"><h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-200 pb-3"><i class="fas fa-exclamation-circle text-orange-500"></i> ম্যানুয়াল পেমেন্ট যাচাইয়ের অপেক্ষায়</h3><p class="text-sm text-gray-500 mb-6">যে সকল শিক্ষার্থী পেমেন্ট করার পর সিস্টেম তা যাচাই করতে পারেনি, তাদের ডাটা এখানে জমা হয়েছে। এপ্রুভ করলে ডাটাগুলো সরাসরি মেইন লিস্টে যুক্ত হবে।</p><div id="pending-pay-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div></div></div>
+            </div>
+        </section>
+    </main>
+
+    <div id="previewModal" class="preview-modal"><div class="w-full max-w-[794px] flex justify-between items-center mb-4 px-4 sm:px-0"><h3 class="text-white text-xl font-bold"><i class="fas fa-eye text-gold"></i> পিডিএফ প্রিভিউ</h3><button onclick="closePreview()" class="bg-red-500 hover:bg-red-600 text-white w-10 h-10 rounded-full font-bold transition flex items-center justify-center text-lg"><i class="fas fa-times"></i></button></div><div id="previewContent" class="preview-container"></div></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, getDocs, doc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getDatabase, ref, get, update, onValue, remove, push, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const fsConfig = { apiKey: "AIzaSyAjv9u2Qn3EdVxNKBMcT1ezHp-5NitucT0", projectId: "foundation-ntc", authDomain: "foundation-ntc.firebaseapp.com", appId: "1:940836724866:web:b93b489374f410be02949b" };
+        const app1 = initializeApp(fsConfig); const dbFS = getFirestore(app1); const auth1 = getAuth(app1);
+        const rtdbConfig = { apiKey: "AIzaSyBX5fenTzBsZ5Jxhe-8hsmC4cYE4wIWedk", databaseURL: "https://varify-payment-default-rtdb.asia-southeast1.firebasedatabase.app", projectId: "varify-payment" };
+        const app2 = initializeApp(rtdbConfig, "PaymentApp"); const dbRT = getDatabase(app2); const auth2 = getAuth(app2);
+
+        let allRegistrations = []; let currentSearchedDoc = null; const ageLimits = { '5_para': 13, '10_para': 15, 'husne_saot': 18 };
+
+        signInAnonymously(auth1).catch(console.error);
+
+        window.showLoader = (t = "অপেক্ষা করুন...") => { document.getElementById('loader-text').innerText = t; document.getElementById('loader').style.display = 'flex'; };
+        window.hideLoader = () => { document.getElementById('loader').style.display = 'none'; };
+        
+        window.switchTab = (tab) => {
+            document.getElementById('public-section').style.display = tab === 'public' ? 'block' : 'none';
+            document.getElementById('admin-section').style.display = tab === 'admin' ? 'block' : 'none';
+            const pBtn = document.getElementById('tab-public'), aBtn = document.getElementById('tab-admin');
+            if(tab === 'public') { pBtn.className = "px-4 py-1.5 rounded-md text-sm font-semibold transition bg-white text-primary shadow"; aBtn.className = "px-4 py-1.5 rounded-md text-sm font-semibold transition text-white hover:bg-white/20"; }
+            else { aBtn.className = "px-4 py-1.5 rounded-md text-sm font-semibold transition bg-white text-primary shadow"; pBtn.className = "px-4 py-1.5 rounded-md text-sm font-semibold transition text-white hover:bg-white/20"; }
+        };
+
+        window.switchAdminTab = (tab) => {
+            document.getElementById('admin-registrations').style.display = tab === 'registrations' ? 'block' : 'none';
+            document.getElementById('admin-pending-payments').style.display = tab === 'pending_payments' ? 'block' : 'none';
+            document.getElementById('btn-tab-reg').className = tab === 'registrations' ? 'bg-primary text-white px-5 py-2.5 rounded-lg font-bold shadow transition' : 'bg-white text-gray-700 border border-gray-300 px-5 py-2.5 rounded-lg font-bold hover:bg-gray-50 transition';
+            document.getElementById('btn-tab-pay').className = tab === 'pending_payments' ? 'bg-primary text-white px-5 py-2.5 rounded-lg font-bold shadow transition' : 'bg-white text-gray-700 border border-gray-300 px-5 py-2.5 rounded-lg font-bold hover:bg-gray-50 transition';
+        };
+
+        const getGrpName = (grp) => grp === '5_para' ? '৫ পারা' : (grp === '10_para' ? '১০ পারা' : (grp === 'husne_saot' ? 'হুসনে সওত' : grp));
+        const getStatusBadge = (s) => s === 'approved' ? `<span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-bold border border-green-200"><i class="fas fa-check-circle"></i> Approved</span>` : `<span class="bg-orange-100 text-orange-700 px-2 py-1 rounded text-xs font-bold border border-orange-200"><i class="fas fa-clock"></i> Pending</span>`;
+        const getPayBadge = (s) => {
+            if(s === 'verified') return `<span class="text-green-600 font-bold text-xs"><i class="fas fa-check"></i> পরিশোধিত</span>`;
+            if(s === 'pending') return `<span class="text-orange-500 font-bold text-xs"><i class="fas fa-clock"></i> পেন্ডিং</span>`;
+            return `<span class="text-red-500 font-bold text-xs"><i class="fas fa-times"></i> অপরিশোধিত</span>`;
+        };
+
+        window.checkPublicStatus = async () => {
+            const regId = document.getElementById('searchRegId').value.trim().toUpperCase();
+            if(!regId) return alert("রেজিস্ট্রেশন আইডি দিন!");
+            showLoader("তথ্য খোঁজা হচ্ছে...");
+            document.getElementById('public-result-box').classList.add('hidden'); document.getElementById('pub-payment-action').classList.add('hidden');
+            try {
+                const snap = await getDocs(query(collection(dbFS, "competition_registrations"), where("regId", "==", regId)));
+                if(snap.empty) { hideLoader(); alert("এই আইডির কোনো তথ্য পাওয়া যায়নি।"); return; }
+                let docData = snap.docs[0].data(); currentSearchedDoc = { id: snap.docs[0].id, ...docData };
+                document.getElementById('pub-img').src = docData.photoUrl || "https://via.placeholder.com/150"; document.getElementById('pub-name').innerText = docData.name; document.getElementById('pub-group').innerText = getGrpName(docData.group);
+                document.getElementById('pub-pay-status').innerHTML = getPayBadge(docData.paymentStatus); document.getElementById('pub-app-status').innerHTML = getStatusBadge(docData.status);
+                if(docData.paymentStatus !== 'verified') { document.getElementById('pub-payment-action').classList.remove('hidden'); document.getElementById('pub-pay-msg').classList.add('hidden'); }
+                document.getElementById('public-result-box').classList.remove('hidden');
+            } catch(e) { console.error(e); alert("সার্ভার সমস্যা!"); }
+            hideLoader();
+        };
+
+        window.verifyPublicPayment = async () => {
+            const trxId = document.getElementById('pub-trxid').value.trim().toUpperCase();
+            if(!trxId || trxId.length < 8) return alert("সঠিক TrxID বা নাম্বার দিন।"); if(!currentSearchedDoc) return;
+            const msgBox = document.getElementById('pub-pay-msg'); msgBox.classList.remove('hidden'); msgBox.className = "text-xs mt-2 font-semibold text-blue-600"; msgBox.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ভেরিফাই করা হচ্ছে...';
+            try {
+                const snap = await get(ref(dbRT, 'Payments'));
+                const isPhone = trxId.length === 11 && trxId.startsWith("01");
+                let totalAmount = 0; let totalUsedCount = 0; let matchedKeys = [];
+
+                snap.forEach(c => {
+                    let d = c.val(); let dbTrx = String(d.trxId || "").trim().toUpperCase(); let dbPh = (d.fullMessage || "").match(/01[3-9][0-9]{8}/)?.[0] || "";
+                    if ((isPhone && dbPh === trxId) || (!isPhone && dbTrx === trxId)) {
+                        totalAmount += parseFloat(String(d.amount).replace(/,/g,'')) || 0;
+                        totalUsedCount += parseInt(d.usedCount || "0");
+                        matchedKeys.push({key: c.key, data: d});
+                    }
+                });
+                
+                if(matchedKeys.length === 0) { msgBox.className="text-xs mt-2 font-semibold text-red-600 bg-red-50 p-2 rounded border border-red-200"; msgBox.innerHTML='❌ পেমেন্ট পাওয়া যায়নি।'; return; }
+                if (totalAmount < 150) { msgBox.className="text-xs mt-2 font-semibold text-red-600 bg-red-50 p-2 rounded border border-red-200"; msgBox.innerHTML='❌ অপর্যাপ্ত ব্যালেন্স!'; return; }
+                
+                let maxAllowed = Math.floor(totalAmount / 150);
+                if(totalUsedCount >= maxAllowed) { msgBox.className="text-xs mt-2 font-semibold text-red-600 bg-red-50 p-2 rounded border border-red-200"; msgBox.innerHTML='❌ এই নাম্বার/TrxID এর লিমিট শেষ!'; return; }
+                
+                let isNowExhausted = (totalUsedCount + 1) >= maxAllowed;
+                let firstKeyUsedCount = parseInt(matchedKeys[0].data.usedCount || "0");
+
+                for (let i = 0; i < matchedKeys.length; i++) {
+                    let updates = {};
+                    if (i === 0) updates.usedCount = firstKeyUsedCount + 1;
+                    updates.status = isNowExhausted ? "used" : "partial";
+                    await update(ref(dbRT, 'Payments/' + matchedKeys[i].key), updates);
+                }
+
+                let isAgeValid = parseInt(currentSearchedDoc.age) <= (ageLimits[currentSearchedDoc.group] || 100); let newAppStatus = isAgeValid ? 'approved' : 'pending';
+                await updateDoc(doc(dbFS, "competition_registrations", currentSearchedDoc.id), { paymentStatus: 'verified', status: newAppStatus });
+                
+                msgBox.className = "text-xs mt-2 font-semibold text-green-700 bg-green-50 p-3 rounded border border-green-200";
+                msgBox.innerHTML = `✅ <b>পেমেন্ট সফল!</b> ` + (isAgeValid ? `আবেদনটি <b>Approved</b> করা হয়েছে।` : `বয়স সীমার চেয়ে বেশি হওয়ায় আবেদনটি <b>Pending</b> আছে।`);
+                document.getElementById('pub-pay-status').innerHTML = getPayBadge('verified'); document.getElementById('pub-app-status').innerHTML = getStatusBadge(newAppStatus); document.getElementById('pub-payment-action').classList.add('hidden');
+            } catch(e) { msgBox.className = "text-xs mt-2 font-semibold text-red-600"; msgBox.innerHTML = '⚠️ সার্ভার সমস্যা।'; }
+        };
+
+        // ADMIN SESSION LOGIC
+        onAuthStateChanged(auth2, user => {
+            if (user) {
+                document.getElementById('admin-login-box').style.display = 'none'; 
+                document.getElementById('admin-dashboard').style.display = 'block'; 
+                loadAdminData(); initPendingPayments();
+            } else {
+                document.getElementById('admin-login-box').style.display = 'block'; 
+                document.getElementById('admin-dashboard').style.display = 'none';
+            }
+        });
+
+        window.verifyAdmin = async () => { 
+            const email = document.getElementById('admin-email').value;
+            const pass = document.getElementById('admin-pass').value;
+            const errBox = document.getElementById('admin-err');
+            if(!email || !pass) { errBox.innerText = "ইমেইল ও পাসওয়ার্ড দিন!"; errBox.style.display = 'block'; return; }
+            showLoader("লগইন হচ্ছে...");
+            try { await signInWithEmailAndPassword(auth2, email, pass); } 
+            catch(error) { errBox.innerText = "ভুল ইমেইল বা পাসওয়ার্ড!"; errBox.style.display = 'block'; }
+            hideLoader();
+        };
+
+        window.logoutAdmin = async () => {
+            if(confirm("আপনি কি লগআউট করতে চান?")) {
+                await signOut(auth2);
+                window.location.reload();
+            }
+        };
+
+        async function loadAdminData() {
+            showLoader("ডাটা লোড হচ্ছে...");
+            try {
+                const snap = await getDocs(collection(dbFS, "competition_registrations"));
+                allRegistrations = []; snap.forEach(d => { allRegistrations.push({ id: d.id, ...d.data() }); });
+                allRegistrations.sort((a,b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+                
+                const distSelect = document.getElementById('filter-dist');
+                const uniqueDists = [...new Set(allRegistrations.map(i => i.dist))].filter(Boolean).sort();
+                distSelect.innerHTML = '<option value="">সব জেলা</option>' + uniqueDists.map(d => `<option value="${d}">${d}</option>`).join('');
+                applyFilters();
+            } catch(e) { alert("ডাটা লোড করতে ব্যর্থ!"); }
+            hideLoader();
+        }
+
+        window.applyFilters = () => {
+            const qSearch = document.getElementById('filter-search').value.toLowerCase().trim();
+            const qDiv = document.getElementById('filter-div').value; 
+            const qDist = document.getElementById('filter-dist').value; 
+            const qGrp = document.getElementById('filter-group').value;
+            const qAge = document.getElementById('filter-age').value; 
+            const qStat = document.getElementById('filter-status').value;
+
+            const filtered = allRegistrations.filter(item => {
+                let match = true;
+                if(qSearch && !`${item.name} ${item.phone} ${item.madrasa} ${item.regId}`.toLowerCase().includes(qSearch)) match = false;
+                if(qDiv && item.div !== qDiv) match = false;
+                if(qDist && item.dist !== qDist) match = false;
+                if(qGrp && item.group !== qGrp) match = false;
+                if(qStat && item.status !== qStat) match = false;
+                if(qAge) {
+                    let limit = ageLimits[item.group] || 100; let isValidAge = parseInt(item.age) <= limit;
+                    if(qAge === 'valid' && !isValidAge) match = false;
+                    if(qAge === 'invalid' && isValidAge) match = false;
+                }
+                return match;
+            });
+            renderAdminData(filtered); document.getElementById('stat-total').innerText = allRegistrations.length; document.getElementById('stat-appr').innerText = allRegistrations.filter(d=>d.status==='approved').length; document.getElementById('stat-pend').innerText = allRegistrations.filter(d=>d.status==='pending').length;
+        };
+
+        function renderAdminData(data) {
+            const dBody = document.getElementById('desktop-tbody'); const mGrid = document.getElementById('mobile-grid'); const noData = document.getElementById('no-data');
+            dBody.innerHTML = ''; mGrid.innerHTML = ''; if(data.length === 0) { noData.style.display = 'block'; return; } noData.style.display = 'none';
+
+            data.forEach(item => {
+                let limit = ageLimits[item.group] || 100; let ageColor = item.age > limit ? "text-red-600 font-bold" : "text-green-600";
+                let acts = item.status === 'pending' ? `<button onclick="manualApprove('${item.id}')" class="bg-primary hover:bg-green-700 text-white px-2.5 py-1.5 rounded shadow-sm text-xs font-bold transition mr-2" title="Approve"><i class="fas fa-check"></i></button>` : '';
+                acts += `<button onclick="openPreview('${item.id}')" class="bg-blue-600 hover:bg-blue-700 text-white px-2.5 py-1.5 rounded shadow-sm text-xs font-bold transition mr-2" title="Preview"><i class="fas fa-eye"></i></button>`;
+                acts += `<button onclick="generateHDPDF('${item.id}')" class="bg-gray-800 hover:bg-black text-white px-2.5 py-1.5 rounded shadow-sm text-xs font-bold transition" title="Download PDF"><i class="fas fa-file-pdf"></i></button>`;
+
+                dBody.insertAdjacentHTML('beforeend', `<tr class="hover:bg-gray-50 transition border-b border-gray-100"><td class="p-4 flex items-center gap-3"><img src="${item.photoUrl||'https://via.placeholder.com/50'}" class="w-12 h-12 rounded object-cover border border-gray-200"><div><p class="font-bold text-gray-800">${item.name}</p><p class="text-xs text-gray-500 font-poppins">${item.regId}</p></div></td><td class="p-4"><p class="font-bold text-gray-700 font-poppins">${item.phone}</p><p class="text-xs text-gray-500">${item.dist}, ${item.div}</p></td><td class="p-4"><p class="font-bold text-primary">${getGrpName(item.group)}</p><p class="text-xs ${ageColor}">বয়স: ${item.age}</p></td><td class="p-4"><div class="flex flex-col gap-1 items-start">${getStatusBadge(item.status)}${getPayBadge(item.paymentStatus)}</div></td><td class="p-4 text-right align-middle"><div class="flex justify-end items-center h-full">${acts}</div></td></tr>`);
+                
+                mGrid.insertAdjacentHTML('beforeend', `<div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col gap-3 relative overflow-hidden ${item.status==='approved'?'border-l-4 border-l-green-500':'border-l-4 border-l-orange-500'}"><div class="flex justify-between items-start"><div class="flex items-center gap-3"><img src="${item.photoUrl||'https://via.placeholder.com/50'}" class="w-12 h-12 rounded-lg object-cover border"><div><p class="font-bold text-gray-800 text-sm">${item.name}</p><p class="text-xs text-gray-500 font-poppins">${item.regId}</p></div></div><div class="flex flex-col items-end gap-1">${getStatusBadge(item.status)}</div></div><div class="grid grid-cols-2 gap-2 bg-gray-50 p-2 rounded text-xs"><div><span class="text-gray-400 block">ফোন:</span><span class="font-bold font-poppins">${item.phone}</span></div><div><span class="text-gray-400 block">গ্রুপ:</span><span class="font-bold text-primary">${getGrpName(item.group)}</span></div><div><span class="text-gray-400 block">বয়স:</span><span class="${ageColor} font-bold">${item.age} বছর</span></div><div><span class="text-gray-400 block">পেমেন্ট:</span>${getPayBadge(item.paymentStatus)}</div></div><div class="flex justify-end mt-2 pt-2 border-t border-gray-100">${acts}</div></div>`);
+            });
+        }
+
+        window.manualApprove = async (id) => { if(confirm("নিশ্চিত Approve করবেন?")) { showLoader(); try { await updateDoc(doc(dbFS, "competition_registrations", id), { status: 'approved' }); let i = allRegistrations.findIndex(x => x.id === id); if(i>-1) allRegistrations[i].status = 'approved'; applyFilters(); } catch(e) { alert("ব্যর্থ!"); } hideLoader(); } };
+
+        function initPendingPayments() {
+            onValue(ref(dbRT, 'PendingOrders'), (snapshot) => {
+                const list = document.getElementById('pending-pay-list'); list.innerHTML = '';
+                if (!snapshot.exists()) { list.innerHTML = '<div class="col-span-full text-center text-gray-500 py-10"><i class="fas fa-check-circle text-4xl text-green-200 mb-3 block"></i>কোনো পেন্ডিং ট্রানজেকশন নেই!</div>'; return; }
+                
+                snapshot.forEach(child => {
+                    const data = child.val(); const key = child.key;
+                    const student = allRegistrations.find(r => (r.providedTrxId || "").toUpperCase() === String(data.providedInput).toUpperCase());
+                    
+                    let studentHtml = ''; let actionHtml = '';
+                    if(student) {
+                        studentHtml = `<p class="text-sm text-blue-700 font-bold mb-2 border-t border-gray-200 pt-2"><i class="fas fa-user-graduate"></i> ${student.name} (${student.regId})</p>
+                        <div class="flex gap-2 mb-3">
+                            <button onclick="openPreview('${student.id}')" class="flex-1 bg-blue-100 hover:bg-blue-200 text-blue-700 py-1.5 rounded-lg text-xs font-bold transition"><i class="fas fa-eye"></i> প্রিভিউ</button>
+                            <button onclick="generateHDPDF('${student.id}')" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-1.5 rounded-lg text-xs font-bold transition"><i class="fas fa-file-pdf"></i> পিডিএফ</button>
+                        </div>`;
+                        actionHtml = `<button onclick="approveOrder('${key}', '${data.providedInput}', ${data.providedAmount}, '${student.id}')" class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg text-sm font-bold transition shadow-sm">✅ এপ্রুভ</button>`;
+                    } else {
+                        studentHtml = `<p class="text-xs text-red-500 mb-2 border-t border-gray-200 pt-2"><i class="fas fa-exclamation-triangle"></i> শিক্ষার্থীর তথ্য মেলেনি!</p>`;
+                        actionHtml = `<button onclick="approveOrder('${key}', '${data.providedInput}', ${data.providedAmount}, null)" class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg text-sm font-bold transition shadow-sm">✅ এপ্রুভ</button>`;
+                    }
+
+                    list.insertAdjacentHTML('beforeend', `<div class="bg-white border-l-4 border-orange-500 p-4 rounded-xl shadow-sm border border-gray-200">
+                        <p class="text-sm text-gray-600 mb-1">TrxID/নাম্বার: <span class="font-bold text-gray-900 uppercase">${data.providedInput}</span></p>
+                        <p class="text-sm text-gray-600 mb-2">টাকা: <span class="font-bold text-primary text-base">৳${data.providedAmount}</span></p>
+                        ${studentHtml}
+                        <div class="flex gap-2">
+                            ${actionHtml}
+                            <button onclick="rejectOrder('${key}')" class="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg text-sm font-bold transition shadow-sm">❌ বাতিল</button>
+                        </div>
+                    </div>`);
+                });
+            });
+        }
+
+        window.approveOrder = async (key, input, amount, studentId) => {
+            if(confirm("আপনি কি নিশ্চিত এটি এপ্রুভ করবেন?")) {
+                showLoader("এপ্রুভ করা হচ্ছে...");
+                try {
+                    const newPaymentRef = push(ref(dbRT, 'Payments'));
+                    await set(newPaymentRef, { trxId: input, amount: amount, status: "partial", usedCount: 1, fullMessage: "Manually Approved by Admin", timestamp: Date.now() });
+                    await remove(ref(dbRT, 'PendingOrders/' + key));
+                    
+                    if(studentId && studentId !== 'null') {
+                        let student = allRegistrations.find(r => r.id === studentId);
+                        if(student) {
+                            let isAgeValid = parseInt(student.age) <= (ageLimits[student.group] || 100); 
+                            let newAppStatus = isAgeValid ? 'approved' : 'pending';
+                            await updateDoc(doc(dbFS, "competition_registrations", studentId), { paymentStatus: 'verified', status: newAppStatus });
+                            student.paymentStatus = 'verified'; student.status = newAppStatus;
+                            applyFilters();
+                        }
+                    }
+                    alert("ট্রানজেকশন সফলভাবে ভেরিফাইড ডাটাবেজে যুক্ত হয়েছে! মেইন লিস্ট আপডেট হয়েছে।");
+                } catch(e) { alert("এরর: " + e.message); }
+                hideLoader();
+            }
+        };
+        window.rejectOrder = async (key) => { if(confirm("আপনি কি নিশ্চিত এটি বাতিল করতে চান?")) { showLoader("বাতিল করা হচ্ছে..."); try { await remove(ref(dbRT, 'PendingOrders/' + key)); } catch(e) { alert("এরর: " + e.message); } hideLoader(); } };
+
+        const buildPdfHtml = (d) => {
+            let pPhoto = d.photoUrl ? `<img src="${d.photoUrl}" width="90" height="110" style="width:90px; height:110px; object-fit:cover; border-radius:6px;">` : `<div style="width:90px; height:110px; line-height:110px; text-align:center; color:#94a3b8; font-size:14px;">ছবি নেই</div>`;
+            let pPhotoAdmit = d.photoUrl ? `<img src="${d.photoUrl}" width="80" height="100" style="width:80px; height:100px; object-fit:cover; border-radius:6px;">` : `<div style="width:80px; height:100px; line-height:100px; text-align:center; color:#94a3b8; font-size:14px;">ছবি নেই</div>`;
+            
+            let grpName = getGrpName(d.group) + ((d.group==='5_para'||d.group==='10_para') ? ` (পারা: ${d.paraStart||''} হতে ${d.paraEnd||''})` : '');
+            
+            let payBadge = d.paymentStatus === 'verified' ? '<span style="color:#10b981;">পরিশোধিত</span>' : (d.paymentStatus === 'pending' ? '<span style="color:#f59e0b;">পেন্ডিং</span>' : '<span style="color:#ef4444;">অপরিশোধিত</span>');
+
+            return `
+            <div style="width:794px; background:#fff; padding:40px; color:#000; box-sizing:border-box;">
+                
+                <div style="border:4px solid #0f5132; padding:30px; border-radius:15px; background:#fafafa;">
+                    <table width="100%" cellpadding="0" cellspacing="0" style="border-bottom:3px solid #ffb300; margin-bottom:20px; padding-bottom:15px;">
+                        <tr>
+                            <td width="90" valign="top"><img src="https://res.cloudinary.com/ddvprmv9g/image/upload/v1777644601/gu7xxpbkokyrx9wgifsn.jpg" width="80" style="width:80px;"></td>
+                            <td align="center" valign="middle">
+                                <h1 style="margin:0 0 5px 0; font-size:28px; font-weight:800; color:#0f5132;">জাতীয় হিফজুল কুরআন প্রতিযোগিতা</h1>
+                                <p style="margin:0 0 10px 0; font-size:15px; font-weight:bold; color:#475569;">আয়োজনে: আল হুফফাজ ফাউন্ডেশন বাংলাদেশ</p>
+                                <span style="background:#0f5132; color:#fff; padding:5px 20px; border-radius:50px; font-size:14px; font-weight:bold;">অফিসিয়াল রেজিস্ট্রেশন কপি</span>
+                            </td>
+                            <td width="90" valign="top" align="right"><div style="width:90px; height:110px; border:2px solid #0f5132; border-radius:6px; background:#fff; overflow:hidden;">${pPhoto}</div></td>
+                        </tr>
+                    </table>
+                    
+                    <table width="100%" cellpadding="10" cellspacing="0" style="margin-bottom:15px; font-weight:bold; font-size:14px; background:#f1f5f9; border-radius:8px;">
+                        <tr>
+                            <td align="left">রেজিঃ আইডি: <span style="color:#d32f2f; font-family:'Poppins',sans-serif;">${d.regId}</span></td>
+                            <td align="right">আবেদনের তারিখ: ${new Date(d.timestamp?.seconds ? d.timestamp.seconds * 1000 : Date.now()).toLocaleDateString('bn-BD')}</td>
+                        </tr>
+                    </table>
+
+                    <table width="100%" cellpadding="10" cellspacing="0" border="1" style="border-collapse:collapse; border-color:#cbd5e1; font-size:16px;">
+                        <tr><td width="200" style="font-weight:bold; background:#f8fafc;">প্রতিযোগীর নাম</td><td style="font-weight:bold; color:#003366;">${d.name}</td></tr>
+                        <tr><td width="200" style="font-weight:bold; background:#f8fafc;">পিতার নাম</td><td>${d.fName}</td></tr>
+                        <tr><td width="200" style="font-weight:bold; background:#f8fafc;">মাতার নাম</td><td>${d.mName || 'প্রযোজ্য নয়'}</td></tr>
+                        <tr><td width="200" style="font-weight:bold; background:#f8fafc;">জন্ম তারিখ ও বয়স</td><td>${d.dob} <span style="font-weight:bold; color:#d32f2f;">(${d.age} বছর)</span></td></tr>
+                        <tr><td width="200" style="font-weight:bold; background:#f8fafc;">মাদরাসার নাম</td><td style="font-weight:bold;">${d.madrasa}</td></tr>
+                        <tr><td width="200" style="font-weight:bold; background:#f8fafc;">ঠিকানা (জেলা ও বিভাগ)</td><td>${d.dist}, ${d.div}</td></tr>
+                        <tr><td width="200" style="font-weight:bold; background:#f8fafc;">মোবাইল নম্বর</td><td style="font-weight:bold; color:#d32f2f; font-family:'Poppins',sans-serif;">${d.phone}</td></tr>
+                        <tr><td width="200" style="font-weight:bold; background:#f8fafc; color:#0f5132;">পেমেন্ট স্ট্যাটাস</td><td style="font-weight:bold; font-size:16px;">${payBadge}</td></tr>
+                        <tr><td width="200" style="font-weight:bold; background:#f8fafc; color:#0f5132;">নির্বাচিত গ্রুপ</td><td style="font-weight:bold; font-size:18px; color:#0f5132;">${grpName}</td></tr>
+                    </table>
+                </div>
+
+                <table width="100%" cellpadding="0" cellspacing="0" style="margin:25px 0; text-align:center; color:#64748b; font-size:14px;">
+                    <tr><td width="40%" style="border-bottom:2px dashed #94a3b8;">&nbsp;</td><td width="20%" style="padding:0 15px;">✂ এখান থেকে কাটুন</td><td width="40%" style="border-bottom:2px dashed #94a3b8;">&nbsp;</td></tr>
+                </table>
+
+                <div style="border:3px solid #0f5132; padding:20px; border-radius:15px; background:#f0fdf4;">
+                    <table width="100%" cellpadding="0" cellspacing="0" style="border-bottom:2px dashed #0f5132; margin-bottom:15px; padding-bottom:10px;">
+                        <tr>
+                            <td width="80" valign="top"><img src="https://res.cloudinary.com/ddvprmv9g/image/upload/v1777644601/gu7xxpbkokyrx9wgifsn.jpg" width="70" style="width:70px;"></td>
+                            <td align="center" valign="middle">
+                                <h2 style="margin:0 0 5px 0; color:#0f5132; font-size:22px; font-weight:bold;">জাতীয় হিফজুল কুরআন প্রতিযোগিতা</h2>
+                                <p style="margin:0 0 10px 0; font-size:14px; font-weight:bold; color:#475569;">আয়োজনে: আল হুফফাজ ফাউন্ডেশন বাংলাদেশ</p>
+                                <span style="background:#d32f2f; color:#fff; padding:5px 15px; border-radius:20px; font-size:16px; font-weight:bold;">প্রবেশপত্র (Admit Card)</span><br>
+                                <div style="margin-top:10px; font-size:16px; font-weight:bold; color:#d32f2f;">রেজিস্ট্রেশন নম্বর: <span style="font-family:'Poppins',sans-serif;">${d.regId}</span></div>
+                            </td>
+                            <td width="80" valign="top" align="right"><div style="width:80px; height:100px; border:2px solid #0f5132; background:#fff; border-radius:6px; overflow:hidden;">${pPhotoAdmit}</div></td>
+                        </tr>
+                    </table>
+                    <table width="100%" cellpadding="8" cellspacing="0" style="font-size:15px; font-weight:bold;">
+                        <tr><td width="50%"><span style="color:#475569;">শিক্ষার্থীর নাম:</span> <span style="color:#003366;">${d.name}</span></td><td width="50%"><span style="color:#475569;">পিতার নাম:</span> <span>${d.fName}</span></td></tr>
+                        <tr><td width="50%"><span style="color:#475569;">মাদরাসার নাম:</span> <span>${d.madrasa}</span></td><td width="50%"><span style="color:#475569;">ঠিকানা:</span> <span>${d.dist}, ${d.div}</span></td></tr>
+                        <tr><td width="50%"><span style="color:#475569;">জন্ম তারিখ ও বয়স:</span> <span>${d.dob} <span style="color:#d32f2f;">(${d.age} বছর)</span></span></td><td width="50%"><span style="color:#475569;">গ্রুপ ও পারা:</span> <span style="color:#0f5132;">${grpName}</span></td></tr>
+                    </table>
+                    <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:25px; font-weight:bold; text-align:center;">
+                        <tr>
+                            <td align="left"><div style="width:150px; border-top:1px solid #000; padding-top:5px;">প্রতিযোগীর স্বাক্ষর</div></td>
+                            <td align="right"><div style="width:150px; border-top:1px solid #000; padding-top:5px;">কর্তৃপক্ষের স্বাক্ষর</div></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>`;
+        };
+
+        window.openPreview = (id) => {
+            const d = allRegistrations.find(x => x.id === id); if(!d) return;
+            const content = document.getElementById('previewContent');
+            content.innerHTML = buildPdfHtml(d); 
+            document.getElementById('previewModal').style.display = 'flex';
+            setTimeout(() => { const screenWidth = window.innerWidth; if(screenWidth < 820) { const scaleValue = (screenWidth - 30) / 794; content.style.transform = `scale(${scaleValue})`; content.style.marginBottom = `-${content.scrollHeight * (1 - scaleValue)}px`; } else { content.style.transform = `scale(1)`; content.style.marginBottom = `0px`; } }, 10);
+        };
+        
+        window.closePreview = () => { document.getElementById('previewModal').style.display = 'none'; };
+
+        // Server-Side PDF Generation using Free API + CORS Proxy 
+        window.generateHDPDF = async (id) => {
+            const d = allRegistrations.find(x => x.id === id); 
+            if(!d) return;
+
+            showLoader("সার্ভার থেকে PDF তৈরি হচ্ছে...");
+
+            try {
+                const innerHtml = buildPdfHtml(d);
+                const fullHtml = `<!DOCTYPE html>
+                <html lang="bn">
+                <head>
+                    <meta charset="UTF-8">
+                    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+                </head>
+                <body style="margin:0; padding:0; background:#fff; font-family:'Noto Sans Bengali',sans-serif;">
+                    ${innerHtml}
+                </body>
+                </html>`;
+
+                // CORS Error এড়ানোর জন্য corsproxy.io ব্যবহার করা হয়েছে
+                const apiUrl = 'https://corsproxy.io/?https://quickchart.io/pdf';
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        html: fullHtml,
+                        format: 'A4',
+                        printBackground: true,
+                        margin: { top: 0, right: 0, bottom: 0, left: 0 }
+                    })
+                });
+
+                if (!response.ok) throw new Error("সার্ভার সমস্যা! PDF জেনারেট ব্যর্থ হয়েছে।");
+
+                const blob = await response.blob();
+                const downloadUrl = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = downloadUrl;
+                a.download = `Reg_${d.regId}_${d.name}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(downloadUrl);
+
+                hideLoader();
+            } catch(e) { 
+                hideLoader(); 
+                alert(e.message); 
+            }
+        };
+    </script>
+</body>
+</html>
