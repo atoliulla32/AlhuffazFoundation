@@ -8,10 +8,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
-    <script src="https://cdn.tailwindcss.com"></script>
+    
     <script>
         tailwind.config = { theme: { extend: { colors: { primary: '#0f5132', secondary: '#003366', accent: '#d32f2f', gold: '#ffb300' }, fontFamily: { bengali: ['"Noto Sans Bengali"', 'sans-serif'], poppins: ['Poppins', 'sans-serif'] } } } }
     </script>
@@ -27,6 +27,7 @@
         @media (max-width: 768px) { .desktop-table { display: none; } .mobile-grid { display: grid; gap: 1rem; } }
         @media (min-width: 769px) { .mobile-grid { display: none; } }
         input:focus, select:focus { outline: none; border-color: #0f5132; box-shadow: 0 0 0 3px rgba(15, 81, 50, 0.2); }
+        #pdf-render-container { display: none; }
     </style>
 </head>
 <body class="antialiased min-h-screen flex flex-col">
@@ -48,7 +49,7 @@
         <section id="public-section" class="max-w-xl mx-auto mt-10">
             <div class="glass-card rounded-2xl p-6 sm:p-10 text-center border-t-4 border-t-primary">
                 <h2 class="text-2xl font-bold text-primary mb-2">আবেদনের অবস্থা জানুন</h2>
-                <p class="text-gray-500 text-sm mb-6">আপনার রেজিস্ট্রেশন আইডি দিয়ে সার্চ করুন এবং পেমেন্ট সম্পন্ন করুন।</p>
+                <p class="text-gray-500 text-sm mb-6">আপনার রেজিস্ট্রেশন আইডি দিয়ে সার্চ করুন এবং পেমেন্ট সম্পন্ন করুন.</p>
                 <div class="flex flex-col sm:flex-row gap-3 mb-6"><input type="text" id="searchRegId" placeholder="রেজিঃ আইডি (যেমন: AHFB-12345)" class="flex-grow p-3 border-2 border-gray-200 rounded-xl font-poppins font-bold uppercase text-center sm:text-left transition"><button onclick="checkPublicStatus()" class="bg-primary hover:bg-secondary text-white px-6 py-3 rounded-xl font-bold transition flex justify-center items-center gap-2 whitespace-nowrap"><i class="fas fa-search"></i> খুঁজুন</button></div>
                 <div id="public-result-box" class="hidden text-left border-2 border-gray-100 rounded-xl p-5 bg-gray-50">
                     <div class="flex items-center gap-4 border-b border-gray-200 pb-4 mb-4"><img id="pub-img" src="" class="w-16 h-16 rounded-lg object-cover border border-gray-300"><div><h3 id="pub-name" class="font-bold text-lg text-gray-800"></h3><p id="pub-group" class="text-sm text-gray-500"></p></div></div>
@@ -92,6 +93,8 @@
             </div>
         </section>
     </main>
+
+    <div id="pdf-render-container"></div>
 
     <div id="previewModal" class="preview-modal"><div class="w-full max-w-[794px] flex justify-between items-center mb-4 px-4 sm:px-0"><h3 class="text-white text-xl font-bold"><i class="fas fa-eye text-gold"></i> পিডিএফ প্রিভিউ</h3><button onclick="closePreview()" class="bg-red-500 hover:bg-red-600 text-white w-10 h-10 rounded-full font-bold transition flex items-center justify-center text-lg"><i class="fas fa-times"></i></button></div><div id="previewContent" class="preview-container"></div></div>
 
@@ -276,7 +279,7 @@
                 acts += `<button onclick="openPreview('${item.id}')" class="bg-blue-600 hover:bg-blue-700 text-white px-2.5 py-1.5 rounded shadow-sm text-xs font-bold transition mr-2" title="Preview"><i class="fas fa-eye"></i></button>`;
                 acts += `<button onclick="generateHDPDF('${item.id}')" class="bg-gray-800 hover:bg-black text-white px-2.5 py-1.5 rounded shadow-sm text-xs font-bold transition" title="Download PDF"><i class="fas fa-file-pdf"></i></button>`;
 
-                dBody.insertAdjacentHTML('beforeend', `<tr class="hover:bg-gray-50 transition border-b border-gray-100"><td class="p-4 flex items-center gap-3"><img src="${item.photoUrl||'https://via.placeholder.com/50'}" class="w-12 h-12 rounded object-cover border border-gray-200"><div><p class="font-bold text-gray-800">${item.name}</p><p class="text-xs text-gray-500 font-poppins">${item.regId}</p></div></div></td><td class="p-4"><p class="font-bold text-gray-700 font-poppins">${item.phone}</p><p class="text-xs text-gray-500">${item.dist}, ${item.div}</p></td><td class="p-4"><p class="font-bold text-primary">${getGrpName(item.group)}</p><p class="text-xs ${ageColor}">বয়স: ${item.age}</p></td><td class="p-4"><div class="flex flex-col gap-1 items-start">${getStatusBadge(item.status)}${getPayBadge(item.paymentStatus)}</div></td><td class="p-4 text-right align-middle"><div class="flex justify-end items-center h-full">${acts}</div></td></tr>`);
+                dBody.insertAdjacentHTML('beforeend', `<tr class="hover:bg-gray-50 transition border-b border-gray-100"><td class="p-4 flex items-center gap-3"><img src="${item.photoUrl||'https://via.placeholder.com/50'}" class="w-12 h-12 rounded object-cover border border-gray-200"><div><p class="font-bold text-gray-800">${item.name}</p><p class="text-xs text-gray-500 font-poppins">${item.regId}</p></div></td><td class="p-4"><p class="font-bold text-gray-700 font-poppins">${item.phone}</p><p class="text-xs text-gray-500">${item.dist}, ${item.div}</p></td><td class="p-4"><p class="font-bold text-primary">${getGrpName(item.group)}</p><p class="text-xs ${ageColor}">বয়স: ${item.age}</p></td><td class="p-4"><div class="flex flex-col gap-1 items-start">${getStatusBadge(item.status)}${getPayBadge(item.paymentStatus)}</div></td><td class="p-4 text-right align-middle"><div class="flex justify-end items-center h-full">${acts}</div></td></tr>`);
                 
                 mGrid.insertAdjacentHTML('beforeend', `<div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col gap-3 relative overflow-hidden ${item.status==='approved'?'border-l-4 border-l-green-500':'border-l-4 border-l-orange-500'}"><div class="flex justify-between items-start"><div class="flex items-center gap-3"><img src="${item.photoUrl||'https://via.placeholder.com/50'}" class="w-12 h-12 rounded-lg object-cover border"><div><p class="font-bold text-gray-800 text-sm">${item.name}</p><p class="text-xs text-gray-500 font-poppins">${item.regId}</p></div></div><div class="flex flex-col items-end gap-1">${getStatusBadge(item.status)}</div></div><div class="grid grid-cols-2 gap-2 bg-gray-50 p-2 rounded text-xs"><div><span class="text-gray-400 block">ফোন:</span><span class="font-bold font-poppins">${item.phone}</span></div><div><span class="text-gray-400 block">গ্রুপ:</span><span class="font-bold text-primary">${getGrpName(item.group)}</span></div><div><span class="text-gray-400 block">বয়স:</span><span class="${ageColor} font-bold">${item.age} বছর</span></div><div><span class="text-gray-400 block">পেমেন্ট:</span>${getPayBadge(item.paymentStatus)}</div></div><div class="flex justify-end mt-2 pt-2 border-t border-gray-100">${acts}</div></div>`);
             });
@@ -345,51 +348,76 @@
         window.rejectOrder = async (key) => { if(confirm("আপনি কি নিশ্চিত এটি বাতিল করতে চান?")) { showLoader("বাতিল করা হচ্ছে..."); try { await remove(ref(dbRT, 'PendingOrders/' + key)); } catch(e) { alert("এরর: " + e.message); } hideLoader(); } };
 
         const buildPdfHtml = (d) => {
-            let pPhoto = d.photoUrl ? `<img src="${d.photoUrl}" crossorigin="anonymous" width="90" height="110" style="width:90px; height:110px; object-fit:cover; border-radius:6px;">` : `<div style="width:90px; height:110px; line-height:110px; text-align:center; color:#94a3b8; font-size:14px; border:1px solid #ddd;">ছবি নেই</div>`;
-            let pPhotoAdmit = d.photoUrl ? `<img src="${d.photoUrl}" crossorigin="anonymous" width="80" height="100" style="width:80px; height:100px; object-fit:cover; border-radius:6px;">` : `<div style="width:80px; height:100px; line-height:100px; text-align:center; color:#94a3b8; font-size:14px; border:1px solid #ddd;">ছবি নেই</div>`;
+            let pPhoto = d.photoUrl ? `<img src="${d.photoUrl}" width="90" height="110" style="width:90px; height:110px; object-fit:cover; border-radius:6px;">` : `<div style="width:90px; height:110px; line-height:110px; text-align:center; color:#94a3b8; font-size:14px;">ছবি নেই</div>`;
+            let pPhotoAdmit = d.photoUrl ? `<img src="${d.photoUrl}" width="80" height="100" style="width:80px; height:100px; object-fit:cover; border-radius:6px;">` : `<div style="width:80px; height:100px; line-height:100px; text-align:center; color:#94a3b8; font-size:14px;">ছবি নেই</div>`;
+            
             let grpName = getGrpName(d.group) + ((d.group==='5_para'||d.group==='10_para') ? ` (পারা: ${d.paraStart||''} হতে ${d.paraEnd||''})` : '');
-            let payBadge = d.paymentStatus === 'verified' ? '<span style="color:#10b981;">পরিশোধিত</span>' : '<span style="color:#ef4444;">বকেয়া</span>';
+            
+            let payBadge = d.paymentStatus === 'verified' ? '<span style="color:#10b981;">পরিশোধিত</span>' : (d.paymentStatus === 'pending' ? '<span style="color:#f59e0b;">পেন্ডিং</span>' : '<span style="color:#ef4444;">অপরিশোধিত</span>');
 
             return `
-            <div style="width:794px; background:#fff; padding:40px; color:#000; box-sizing:border-box; font-family:'Noto Sans Bengali', sans-serif;">
+            <div style="width:794px; background:#fff; padding:40px; color:#000; box-sizing:border-box;">
+                
                 <div style="border:4px solid #0f5132; padding:30px; border-radius:15px; background:#fafafa;">
-                    <table width="100%" style="border-bottom:3px solid #ffb300; margin-bottom:20px; padding-bottom:15px;">
+                    <table width="100%" cellpadding="0" cellspacing="0" style="border-bottom:3px solid #ffb300; margin-bottom:20px; padding-bottom:15px;">
                         <tr>
-                            <td width="90"><img src="https://res.cloudinary.com/ddvprmv9g/image/upload/v1777644601/gu7xxpbkokyrx9wgifsn.jpg" crossorigin="anonymous" width="80"></td>
-                            <td align="center">
-                                <h1 style="margin:0; font-size:26px; color:#0f5132;">জাতীয় হিফজুল কুরআন প্রতিযোগিতা</h1>
-                                <p style="margin:5px 0; font-weight:bold; color:#475569;">আয়োজনে: আল হুফফাজ ফাউন্ডেশন বাংলাদেশ</p>
-                                <span style="background:#0f5132; color:#fff; padding:4px 15px; border-radius:50px; font-size:13px;">রেজিস্ট্রেশন কপি</span>
+                            <td width="90" valign="top"><img src="https://res.cloudinary.com/ddvprmv9g/image/upload/v1777644601/gu7xxpbkokyrx9wgifsn.jpg" crossorigin="anonymous" width="80" style="width:80px;"></td>
+                            <td align="center" valign="middle">
+                                <h1 style="margin:0 0 5px 0; font-size:28px; font-weight:800; color:#0f5132;">জাতীয় হিফজুল কুরআন প্রতিযোগিতা</h1>
+                                <p style="margin:0 0 10px 0; font-size:15px; font-weight:bold; color:#475569;">আয়োজনে: আল হুফফাজ ফাউন্ডেশন বাংলাদেশ</p>
+                                <span style="background:#0f5132; color:#fff; padding:5px 20px; border-radius:50px; font-size:14px; font-weight:bold;">অফিসিয়াল রেজিস্ট্রেশন কপি</span>
                             </td>
-                            <td width="90" align="right">${pPhoto}</td>
+                            <td width="90" valign="top" align="right"><div style="width:90px; height:110px; border:2px solid #0f5132; border-radius:6px; background:#fff; overflow:hidden;">${pPhoto}</div></td>
                         </tr>
                     </table>
-                    <table width="100%" cellpadding="8" cellspacing="0" border="1" style="border-collapse:collapse; border-color:#cbd5e1; font-size:15px;">
-                        <tr><td width="180" style="background:#f8fafc;">রেজিঃ আইডি</td><td style="font-weight:bold; color:#d32f2f;">${d.regId}</td></tr>
-                        <tr><td style="background:#f8fafc;">নাম</td><td style="font-weight:bold;">${d.name}</td></tr>
-                        <tr><td style="background:#f8fafc;">পিতা/অভিভাবক</td><td>${d.fName}</td></tr>
-                        <tr><td style="background:#f8fafc;">মাদরাসা</td><td>${d.madrasa}</td></tr>
-                        <tr><td style="background:#f8fafc;">গ্রুপ</td><td style="color:#0f5132; font-weight:bold;">${grpName}</td></tr>
-                        <tr><td style="background:#f8fafc;">ফোন</td><td>${d.phone}</td></tr>
-                        <tr><td style="background:#f8fafc;">পেমেন্ট</td><td style="font-weight:bold;">${payBadge}</td></tr>
+                    
+                    <table width="100%" cellpadding="10" cellspacing="0" style="margin-bottom:15px; font-weight:bold; font-size:14px; background:#f1f5f9; border-radius:8px;">
+                        <tr>
+                            <td align="left">রেজিঃ আইডি: <span style="color:#d32f2f; font-family:'Poppins',sans-serif;">${d.regId}</span></td>
+                            <td align="right">আবেদনের তারিখ: ${new Date(d.timestamp?.seconds ? d.timestamp.seconds * 1000 : Date.now()).toLocaleDateString('bn-BD')}</td>
+                        </tr>
+                    </table>
+
+                    <table width="100%" cellpadding="10" cellspacing="0" border="1" style="border-collapse:collapse; border-color:#cbd5e1; font-size:16px;">
+                        <tr><td width="200" style="font-weight:bold; background:#f8fafc;">প্রতিযোগীর নাম</td><td style="font-weight:bold; color:#003366;">${d.name}</td></tr>
+                        <tr><td width="200" style="font-weight:bold; background:#f8fafc;">পিতার নাম</td><td>${d.fName}</td></tr>
+                        <tr><td width="200" style="font-weight:bold; background:#f8fafc;">মাতার নাম</td><td>${d.mName || 'প্রযোজ্য নয়'}</td></tr>
+                        <tr><td width="200" style="font-weight:bold; background:#f8fafc;">জন্ম তারিখ ও বয়স</td><td>${d.dob} <span style="font-weight:bold; color:#d32f2f;">(${d.age} বছর)</span></td></tr>
+                        <tr><td width="200" style="font-weight:bold; background:#f8fafc;">মাদরাসার নাম</td><td style="font-weight:bold;">${d.madrasa}</td></tr>
+                        <tr><td width="200" style="font-weight:bold; background:#f8fafc;">ঠিকানা (জেলা ও বিভাগ)</td><td>${d.dist}, ${d.div}</td></tr>
+                        <tr><td width="200" style="font-weight:bold; background:#f8fafc;">মোবাইল নম্বর</td><td style="font-weight:bold; color:#d32f2f; font-family:'Poppins',sans-serif;">${d.phone}</td></tr>
+                        <tr><td width="200" style="font-weight:bold; background:#f8fafc; color:#0f5132;">পেমেন্ট স্ট্যাটাস</td><td style="font-weight:bold; font-size:16px;">${payBadge}</td></tr>
+                        <tr><td width="200" style="font-weight:bold; background:#f8fafc; color:#0f5132;">নির্বাচিত গ্রুপ</td><td style="font-weight:bold; font-size:18px; color:#0f5132;">${grpName}</td></tr>
                     </table>
                 </div>
-                <div style="margin:30px 0; border-bottom:2px dashed #94a3b8; text-align:center; color:#94a3b8;">✂ কাটুন</div>
+
+                <table width="100%" cellpadding="0" cellspacing="0" style="margin:25px 0; text-align:center; color:#64748b; font-size:14px;">
+                    <tr><td width="40%" style="border-bottom:2px dashed #94a3b8;">&nbsp;</td><td width="20%" style="padding:0 15px;">✂ এখান থেকে কাটুন</td><td width="40%" style="border-bottom:2px dashed #94a3b8;">&nbsp;</td></tr>
+                </table>
+
                 <div style="border:3px solid #0f5132; padding:20px; border-radius:15px; background:#f0fdf4;">
-                    <table width="100%">
+                    <table width="100%" cellpadding="0" cellspacing="0" style="border-bottom:2px dashed #0f5132; margin-bottom:15px; padding-bottom:10px;">
                         <tr>
-                            <td width="80"><img src="https://res.cloudinary.com/ddvprmv9g/image/upload/v1777644601/gu7xxpbkokyrx9wgifsn.jpg" crossorigin="anonymous" width="70"></td>
-                            <td align="center">
-                                <h2 style="margin:0; color:#0f5132; font-size:20px;">প্রবেশপত্র (Admit Card)</h2>
-                                <p style="margin:3px 0; font-size:12px;">জাতীয় হিফজুল কুরআন প্রতিযোগিতা</p>
-                                <div style="margin-top:5px; font-weight:bold; color:#d32f2f;">আইডি: ${d.regId}</div>
+                            <td width="80" valign="top"><img src="https://res.cloudinary.com/ddvprmv9g/image/upload/v1777644601/gu7xxpbkokyrx9wgifsn.jpg" crossorigin="anonymous" width="70" style="width:70px;"></td>
+                            <td align="center" valign="middle">
+                                <h2 style="margin:0 0 5px 0; color:#0f5132; font-size:22px; font-weight:bold;">জাতীয় হিফজুল কুরআন প্রতিযোগিতা</h2>
+                                <p style="margin:0 0 10px 0; font-size:14px; font-weight:bold; color:#475569;">আয়োজনে: আল হুফফাজ ফাউন্ডেশন বাংলাদেশ</p>
+                                <span style="background:#d32f2f; color:#fff; padding:5px 15px; border-radius:20px; font-size:16px; font-weight:bold;">প্রবেশপত্র (Admit Card)</span><br>
+                                <div style="margin-top:10px; font-size:16px; font-weight:bold; color:#d32f2f;">রেজিস্ট্রেশন নম্বর: <span style="font-family:'Poppins',sans-serif;">${d.regId}</span></div>
                             </td>
-                            <td width="80" align="right">${pPhotoAdmit}</td>
+                            <td width="80" valign="top" align="right"><div style="width:80px; height:100px; border:2px solid #0f5132; background:#fff; border-radius:6px; overflow:hidden;">${pPhotoAdmit}</div></td>
                         </tr>
                     </table>
-                    <table width="100%" style="margin-top:15px; font-size:14px;">
-                        <tr><td><b>নাম:</b> ${d.name}</td><td><b>গ্রুপ:</b> ${getGrpName(d.group)}</td></tr>
-                        <tr><td><b>মাদরাসা:</b> ${d.madrasa}</td><td><b>জেলা:</b> ${d.dist}</td></tr>
+                    <table width="100%" cellpadding="8" cellspacing="0" style="font-size:15px; font-weight:bold;">
+                        <tr><td width="50%"><span style="color:#475569;">শিক্ষার্থীর নাম:</span> <span style="color:#003366;">${d.name}</span></td><td width="50%"><span style="color:#475569;">পিতার নাম:</span> <span>${d.fName}</span></td></tr>
+                        <tr><td width="50%"><span style="color:#475569;">মাদরাসার নাম:</span> <span>${d.madrasa}</span></td><td width="50%"><span style="color:#475569;">ঠিকানা:</span> <span>${d.dist}, ${d.div}</span></td></tr>
+                        <tr><td width="50%"><span style="color:#475569;">জন্ম তারিখ ও বয়স:</span> <span>${d.dob} <span style="color:#d32f2f;">(${d.age} বছর)</span></span></td><td width="50%"><span style="color:#475569;">গ্রুপ ও পারা:</span> <span style="color:#0f5132;">${grpName}</span></td></tr>
+                    </table>
+                    <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:25px; font-weight:bold; text-align:center;">
+                        <tr>
+                            <td align="left"><div style="width:150px; border-top:1px solid #000; padding-top:5px;">প্রতিযোগীর স্বাক্ষর</div></td>
+                            <td align="right"><div style="width:150px; border-top:1px solid #000; padding-top:5px;">কর্তৃপক্ষের স্বাক্ষর</div></td>
+                        </tr>
                     </table>
                 </div>
             </div>`;
@@ -400,66 +428,60 @@
             const content = document.getElementById('previewContent');
             content.innerHTML = buildPdfHtml(d); 
             document.getElementById('previewModal').style.display = 'flex';
-            setTimeout(() => { 
-                const screenWidth = window.innerWidth; 
-                if(screenWidth < 820) { 
-                    const scaleValue = (screenWidth - 30) / 794; 
-                    content.style.transform = `scale(${scaleValue})`; 
-                    content.style.marginBottom = `-${content.scrollHeight * (1 - scaleValue)}px`; 
-                } else { 
-                    content.style.transform = `scale(1)`; 
-                    content.style.marginBottom = `0px`; 
-                } 
-            }, 10);
+            setTimeout(() => { const screenWidth = window.innerWidth; if(screenWidth < 820) { const scaleValue = (screenWidth - 30) / 794; content.style.transform = `scale(${scaleValue})`; content.style.marginBottom = `-${content.scrollHeight * (1 - scaleValue)}px`; } else { content.style.transform = `scale(1)`; content.style.marginBottom = `0px`; } }, 10);
         };
         
         window.closePreview = () => { document.getElementById('previewModal').style.display = 'none'; };
 
-        // 🚀 Perfectly Aligned HD PDF Generation
+        // Client-Side PDF Generation (Updated)
         window.generateHDPDF = async (id) => {
             const d = allRegistrations.find(x => x.id === id); 
             if(!d) return;
 
             showLoader("PDF তৈরি হচ্ছে...");
 
-            const container = document.createElement('div');
-            container.style.position = 'fixed';
-            container.style.left = '0';
+            const container = document.getElementById('pdf-render-container');
+            
+            // অফস্ক্রিন ট্রিক - স্ক্রল করলেও পিডিএফ ফাটবে না
+            container.style.display = 'block';
+            container.style.position = 'absolute';
+            container.style.left = '-9999px';
             container.style.top = '0';
             container.style.width = '794px'; 
-            container.style.backgroundColor = '#ffffff';
-            container.style.zIndex = '-9999'; 
             
             container.innerHTML = buildPdfHtml(d);
-            document.body.appendChild(container);
 
             try {
-                await new Promise(resolve => setTimeout(resolve, 1000));
+                // ছবিগুলো লোড হওয়ার জন্য একটু সময় দেওয়া হলো
+                await new Promise(resolve => setTimeout(resolve, 800));
 
-                const canvas = await html2canvas(container, { 
-                    scale: 3, 
+                const canvas = await html2canvas(container.firstElementChild, { 
+                    scale: 5,  /* আল্ট্রা এইচডি কোয়ালিটি */
                     useCORS: true, 
-                    scrollY: 0, 
-                    scrollX: 0,
-                    windowWidth: 794,
+                    allowTaint: true,
+                    windowWidth: 794, 
                     logging: false
                 });
                 
-                const imgData = canvas.toDataURL('image/png', 1.0); 
+                const imgData = canvas.toDataURL('image/png'); 
+                
                 const { jsPDF } = window.jspdf;
                 const pdf = new jsPDF('p', 'pt', 'a4');
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
                 
-                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                const pageW = pdf.internal.pageSize.getWidth();
+                const pageH = pdf.internal.pageSize.getHeight();
+                
+                pdf.addImage(imgData, 'PNG', 0, 0, pageW, pageH);
                 pdf.save(`Reg_${d.regId}_${d.name}.pdf`);
                 
             } catch(e) { 
-                alert("PDF জেনারেট ব্যর্থ: " + e.message); 
-            } finally {
-                hideLoader(); 
-                if (document.body.contains(container)) document.body.removeChild(container);
+                alert("PDF জেনারেট করতে সমস্যা হয়েছে!"); 
+                console.error(e);
             }
+            
+            hideLoader();
+            container.style.display = 'none';
+            container.innerHTML = '';
         };
     </script>
 </body>
