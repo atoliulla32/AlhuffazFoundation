@@ -427,7 +427,7 @@
         
         window.closePreview = () => { document.getElementById('previewModal').style.display = 'none'; };
 
-        // Server-Side PDF Generation using Free API + CORS Proxy 
+        // Server-Side PDF Generation Request
         window.generateHDPDF = async (id) => {
             const d = allRegistrations.find(x => x.id === id); 
             if(!d) return;
@@ -435,33 +435,16 @@
             showLoader("সার্ভার থেকে PDF তৈরি হচ্ছে...");
 
             try {
-                const innerHtml = buildPdfHtml(d);
-                const fullHtml = `<!DOCTYPE html>
-                <html lang="bn">
-                <head>
-                    <meta charset="UTF-8">
-                    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-                </head>
-                <body style="margin:0; padding:0; background:#fff; font-family:'Noto Sans Bengali',sans-serif;">
-                    ${innerHtml}
-                </body>
-                </html>`;
+                // Vercel লিংক যুক্ত করা হলো (POST Method এর জন্য)
+                const vercelApiUrl = "https://pdf-server-tau.vercel.app/api/pdf"; 
 
-                // CORS Error এড়ানোর জন্য corsproxy.io ব্যবহার করা হয়েছে
-                const apiUrl = 'https://corsproxy.io/?https://quickchart.io/pdf';
-
-                const response = await fetch(apiUrl, {
+                const response = await fetch(vercelApiUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        html: fullHtml,
-                        format: 'A4',
-                        printBackground: true,
-                        margin: { top: 0, right: 0, bottom: 0, left: 0 }
-                    })
+                    body: JSON.stringify(d) 
                 });
 
-                if (!response.ok) throw new Error("সার্ভার সমস্যা! PDF জেনারেট ব্যর্থ হয়েছে।");
+                if (!response.ok) throw new Error("সার্ভার থেকে PDF জেনারেট ব্যর্থ হয়েছে।");
 
                 const blob = await response.blob();
                 const downloadUrl = window.URL.createObjectURL(blob);
