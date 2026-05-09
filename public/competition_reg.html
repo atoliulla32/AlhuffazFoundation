@@ -7,7 +7,6 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -24,10 +23,21 @@
         .reg-box { background: #fff; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.08); overflow: hidden; border: 3px solid var(--primary); }
         
         /* সিম্পল ফর্ম হেডার */
-        .form-header { padding: 30px 20px 15px; text-align: center; border-bottom: 2px dashed #cbd5e1; margin-bottom: 25px; background: #fff; }
-        .form-header h1 { margin: 0; font-size: 28px; font-weight: 800; color: var(--primary); }
+        .form-header { padding: 25px 20px 15px; text-align: center; border-bottom: 2px dashed #cbd5e1; margin-bottom: 25px; background: #fff; }
+        .form-header h1 { margin: 0; font-size: 24px; font-weight: 800; color: var(--primary); }
 
         .main-form { padding: 10px 30px 35px; }
+
+        /* কপি বাটন এনিমেশন */
+        .copy-btn { 
+            background: #ffb300; color: #000; border: none; padding: 5px 12px; border-radius: 50px; 
+            margin-left: 12px; font-size: 12px; font-weight: bold; cursor: pointer; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: inline-flex; align-items: center; gap: 5px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+        }
+        .copy-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); background: #ffc107; }
+        .copy-btn:active { transform: translateY(1px) scale(0.95); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .copy-btn.copied { background: #10b981; color: #fff; transform: scale(1.05); }
 
         .photo-widget { background: #f0fdf4; border: 2px dashed var(--primary); border-radius: 15px; padding: 25px; text-align: center; cursor: pointer; transition: 0.3s; width: 220px; margin: 0 auto 35px; position: relative; outline: none; }
         .photo-widget:hover, .photo-widget:focus { background: #dcfce7; }
@@ -121,13 +131,17 @@
     <div class="form-wrapper">
         <div class="reg-box">
             
-            <div class="pay-banner" style="background: linear-gradient(135deg, #0284c7, #0369a1); color: #fff; padding: 25px; text-align: center; border-bottom: 4px solid #ffb300;">
-                <h3 id="dbPayTitle" style="margin: 0 0 10px; font-size: 20px; font-weight: 700;">ফি প্রদান করুন (বিকাশ/ন নগদ/রকেট পার্সোনাল)</h3>
-                <div class="pay-number-box" style="display: inline-flex; align-items: center; background: rgba(255,255,255,0.15); padding: 8px 25px; border-radius: 50px; font-size: 24px; font-weight: 800; font-family: 'Poppins', sans-serif; border: 2px dashed rgba(255,255,255,0.4); margin-bottom: 12px;">
-                    <span id="dbPayNumber">লোড হচ্ছে...</span>
-                    <button class="copy-btn" onclick="copyNumber()" style="background: #ffb300; color: #000; border: none; padding: 6px 18px; border-radius: 50px; margin-left: 20px; font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.3s;"><i class="fas fa-copy"></i> কপি করুন</button>
+            <div class="pay-banner" style="background: linear-gradient(135deg, #0284c7, #0369a1); color: #fff; padding: 15px 20px; text-align: center; border-bottom: 3px solid #ffb300;">
+                <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px; margin-bottom: 8px;">
+                    <h3 id="dbPayTitle" style="margin: 0; font-size: 15px; font-weight: 700;">ফি প্রদান করুন:</h3>
+                    <div class="pay-number-box" style="display: inline-flex; align-items: center; background: rgba(255,255,255,0.15); padding: 4px 15px; border-radius: 50px; font-size: 18px; font-weight: 800; font-family: 'Poppins', sans-serif; border: 1px dashed rgba(255,255,255,0.4);">
+                        <span id="dbPayNumber">লোড হচ্ছে...</span>
+                        <button class="copy-btn" onclick="copyNumber()"><i class="fas fa-copy"></i> কপি</button>
+                    </div>
                 </div>
-                <p class="pay-desc" id="dbPayDesc" style="font-size: 15px; opacity: 0.95; margin: 0; line-height: 1.5;">উপরোক্ত নাম্বারে সেন্ড মানি করে ফর্মের নিচে আপনার TrxID টি সাবমিট করুন।</p>
+                <p style="font-size: 13px; opacity: 0.95; margin: 0; line-height: 1.5; color: #e0f2fe;">
+                    প্রতিটি ফরম মূল্য ১৫০ টাকা। একাধিক শিক্ষার্থীর ফরম পূরণ করার জন্য একবারেই সব টাকা পেমেন্ট করে ফেলুন, তারপর নিচে পেমেন্ট বক্সে শুধু নাম্বার বা TrxID টি দিলেই হবে।
+                </p>
             </div>
 
             <div class="form-header">
@@ -180,9 +194,9 @@
                         <div id="paraRangeGroup" style="display:none; margin-top: 15px; background: #e0f2fe; padding: 15px; border-radius: 10px; border: 1px dashed #0284c7;">
                             <label style="color: #0369a1; margin-bottom: 5px; display: block;">ধারাবাহিক পারা নির্বাচন করুন <span style="color:red">*</span></label>
                             <div style="display: flex; gap: 10px; align-items: center;">
-                                <select id="paraStart" onchange="calculateEndPara()" style="flex:1;"><option value="">শুরু পারা</option></select>
+                                <select id="paraStart" onchange="calculateEndPara()" style="flex:1;"><option value="">কততম হতে</option></select>
                                 <span style="font-weight: bold; color: #0284c7;">থেকে</span>
-                                <input type="text" id="paraEnd" placeholder="অটোমেটিক" style="flex:1; background-color: #cbd5e1; font-weight:bold; color:#0f172a; pointer-events: none;" readonly>
+                                <input type="text" id="paraEnd" placeholder="অটোমেটিক আসবে" style="flex:1; background-color: #cbd5e1; font-weight:bold; color:#0f172a; pointer-events: none;" readonly>
                             </div>
                         </div>
                     </div>
@@ -268,7 +282,6 @@
 
     <div id="pdf-box" style="position:absolute; left:-9999px; top:0; width:794px; background:#fff; display:none;"></div>
     <div id="footer-placeholder"></div>
-    <script src="script.js"></script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -291,20 +304,23 @@
                     const data = snap.val();
                     if(data.number) document.getElementById('dbPayNumber').innerText = data.number;
                     if(data.title) document.getElementById('dbPayTitle').innerText = data.title;
-                    if(data.desc) document.getElementById('dbPayDesc').innerText = data.desc;
+                    // বর্ণনা এখন ফিক্সড করা হয়েছে, ডাটাবেজ থেকে নেবে না।
                 } else { document.getElementById('dbPayNumber').innerText = "017XXXXXXXX"; }
             } catch(e) { document.getElementById('dbPayNumber').innerText = "017XXXXXXXX"; }
         }
         loadPaymentSettings();
 
-        // Copy Number Function
+        // Copy Number Function with Smooth Animation
         window.copyNumber = function() {
             const num = document.getElementById('dbPayNumber').innerText;
             navigator.clipboard.writeText(num);
             const btn = document.querySelector('.copy-btn');
             btn.innerHTML = '<i class="fas fa-check"></i> কপি হয়েছে';
-            btn.style.background = '#10b981'; btn.style.color = '#fff';
-            setTimeout(() => { btn.innerHTML = '<i class="fas fa-copy"></i> কপি করুন'; btn.style.background = '#ffb300'; btn.style.color = '#000'; }, 2000);
+            btn.classList.add('copied');
+            setTimeout(() => { 
+                btn.innerHTML = '<i class="fas fa-copy"></i> কপি'; 
+                btn.classList.remove('copied'); 
+            }, 2000);
         }
 
         // --- Live TrxID Tracking Logic ---
@@ -336,11 +352,14 @@
 
                 if(found) {
                     let dbAmt = parseFloat(String(found.amount).replace(/,/g,''));
-                    let maxAllowed = Math.floor(dbAmt / 150); if(maxAllowed < 1) maxAllowed = 1;
+                    let maxAllowed = Math.floor(dbAmt / 150); 
                     let used = parseInt(found.usedCount || "0");
                     let rem = maxAllowed - used;
 
-                    if(rem > 0) {
+                    if (dbAmt < 150) {
+                        statusDiv.style.background = '#fef2f2'; statusDiv.style.color = '#b91c1c'; statusDiv.style.border = '1px solid #fca5a5';
+                        statusDiv.innerHTML = `❌ <b>অপর্যাপ্ত ব্যালেন্স!</b> ফর্মের ফি ১৫০ টাকা, কিন্তু এই TrxID তে জমা হয়েছে মাত্র ৳${dbAmt}।`;
+                    } else if(rem > 0) {
                         statusDiv.style.background = '#dcfce7'; statusDiv.style.color = '#166534'; statusDiv.style.border = '1px solid #86efac';
                         statusDiv.innerHTML = `✅ <b>পেমেন্ট পাওয়া গেছে!</b> মোট জমা: ৳${dbAmt}। (লিমিট: ${maxAllowed} জন, ব্যবহৃত: ${used} জন, <b>বাকি সুযোগ: ${rem} জন</b>)`;
                     } else {
@@ -469,7 +488,7 @@
                 paraGroup.style.animation = 'none';
                 setTimeout(() => paraGroup.style.animation = 'pulseGlow 1s ease', 50);
                 
-                pStart.innerHTML = '<option value="">শুরু পারা</option>';
+                pStart.innerHTML = '<option value="">কততম হতে</option>';
                 for(let i=1; i<=30; i++) { pStart.innerHTML += `<option value="${i}">${i}</option>`; }
                 document.getElementById('paraEnd').value = '';
             } else {
@@ -645,11 +664,15 @@
 
                     if (matchedKey) {
                         let dbAmt = parseFloat(String(paymentData.amount).replace(/,/g,''));
-                        let maxAllowed = Math.floor(dbAmt / 150); if(maxAllowed < 1) maxAllowed = 1;
+                        let maxAllowed = Math.floor(dbAmt / 150); 
                         let usedCount = parseInt(paymentData.usedCount || "0");
 
-                        if (paymentData.status === "used" || usedCount >= maxAllowed) {
+                        if (dbAmt < 150) {
+                            payMsg = `❌ <b>অপর্যাপ্ত ব্যালেন্স:</b> ফর্মের ফি ১৫০ টাকা, কিন্তু এই TrxID তে জমা হয়েছে মাত্র ৳${dbAmt}। ফর্মটি 'Unpaid' হিসেবে জমা হয়েছে।`;
+                            paymentStatus = 'unpaid';
+                        } else if (paymentData.status === "used" || usedCount >= maxAllowed) {
                             payMsg = `❌ <b>লিমিট শেষ:</b> এই TrxID দিয়ে সর্বোচ্চ যতোজনের ফর্ম পূরণ করার কথা, তা আগেই পূরণ করা হয়েছে।`;
+                            paymentStatus = 'unpaid';
                         } else {
                             usedCount++;
                             let newStatus = (usedCount >= maxAllowed) ? "used" : "partial";
@@ -689,12 +712,7 @@
             let p = 0; const t = setInterval(() => { if(p<90) { p+=Math.floor(Math.random()*8)+1; pText.innerText=p; } }, 200);
 
             try {
-                // ================== এখানেই পরিবর্তন করা হয়েছে ==================
-                let grpLimit = data.group === '5_para' ? 12 : (data.group === '10_para' ? 15 : 18);
-                let finalStatus = (paymentStatus === 'verified' && calcAge <= grpLimit) ? 'approved' : 'pending';
-                
-                await addDoc(collection(db, "competition_registrations"), { ...data, status: finalStatus, timestamp: serverTimestamp() });
-                // ===============================================================
+                await addDoc(collection(db, "competition_registrations"), { ...data, status: 'pending', timestamp: serverTimestamp() });
                 
                 const renderBox = document.getElementById('pdf-box'); renderBox.style.display = 'block'; renderBox.innerHTML = getPdfHtml(data);
                 
@@ -706,10 +724,10 @@
                 const canvas = await html2canvas(exportArea, {scale: 4, useCORS: true, allowTaint: true, windowWidth: 794});
                 const { jsPDF } = window.jspdf; const pdf = new jsPDF('p','pt','a4');
                 const imgData = canvas.toDataURL('image/jpeg', 1.0);
-                
-                const pageW = pdf.internal.pageSize.getWidth(); 
-                const pageH = pdf.internal.pageSize.getHeight();
-                pdf.addImage(imgData, 'JPEG', 0, 0, pageW, pageH);
+                const pageW = pdf.internal.pageSize.getWidth(); const pageH = pdf.internal.pageSize.getHeight();
+                let imgW = pageW, imgH = (canvas.height * pageW) / canvas.width;
+                if (imgH > pageH) { const r = pageH/imgH; imgH = pageH; imgW *= r; pdf.addImage(imgData, 'JPEG', (pageW-imgW)/2, 0, imgW, imgH); } 
+                else { pdf.addImage(imgData, 'JPEG', 0, 0, imgW, imgH); }
                 
                 pdf.save(`Registration_${data.name}_${regId}.pdf`); renderBox.style.display = 'none';
                 clearInterval(t); pText.innerText = "100";
