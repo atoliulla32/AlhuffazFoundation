@@ -223,7 +223,7 @@
                     <div class="grid-2">
                         <div class="form-group">
                             <label>TrxID অথবা যে নাম্বার থেকে টাকা পাঠিয়েছেন</label>
-                            <input type="text" id="pTrxId" placeholder="বিকাশ/নগদ TrxID লিখুন">
+                            <input type="text" id="pTrxId" placeholder="বিকাশ/ন নগদ TrxID লিখুন">
                         </div>
                         <div class="form-group">
                             <label>প্রতি জনের ফি (টাকা)</label>
@@ -276,7 +276,6 @@
         }
         loadPaymentSettings();
 
-        // Copy Number
         window.copyNumber = function() {
             const num = document.getElementById('dbPayNumber').innerText;
             navigator.clipboard.writeText(num);
@@ -313,8 +312,9 @@
                         statusDiv.innerHTML = `❌ <b>লিমিট শেষ!</b> এই TrxID দিয়ে মোট ${maxAllowed} জনের সবার ফর্ম পূরণ হয়ে গেছে।`;
                     }
                 } else {
+                    // NEW TEXT FOR UNVERIFIED TRXID
                     statusDiv.style.background = '#fffbeb'; statusDiv.style.color = '#b45309'; statusDiv.style.border = '1px solid #fcd34d';
-                    statusDiv.innerHTML = `⚠️ <b>TrxID ডাটাবেজে নেই!</b> এটি এডমিন পেন্ডিং এ জমা হবে।`;
+                    statusDiv.innerHTML = `⚠️ <b>অটোমেটিক যাচাই সম্ভব হচ্ছে না!</b> এটি কর্তৃপক্ষের কাছে জমা থাকবে এবং ম্যানুয়ালি চেক করে আপনার পেমেন্ট নিশ্চিত করা হবে।`;
                 }
             } catch(e) { statusDiv.innerHTML = `⚠️ সার্ভার সমস্যা!`; }
         }
@@ -349,7 +349,18 @@
             window.calculateAge();
         };
         window.calculateEndPara = () => { const val = document.getElementById('cGroup').value; const startStr = document.getElementById('paraStart').value; const pEnd = document.getElementById('paraEnd'); if(startStr && val) { pEnd.value = Math.min(parseInt(startStr) + (val === '5_para' ? 4 : 9), 30); } else { pEnd.value = ""; } };
-        const dists = { "ঢাকা": ["ঢাকা", "ফরিদপুর", "গাজীপুর", "টাঙ্গাইল"], "চট্টগ্রাম": ["চট্টগ্রাম", "কুমিল্লা", "কক্সবাজার", "নোয়াখালী"] };
+        
+        // FULL 64 DISTRICTS ADDED BACK
+        const dists = { 
+            "ঢাকা": ["ঢাকা", "ফরিদপুর", "গাজীপুর", "গোপালগঞ্জ", "কিশোরগঞ্জ", "মাদারীপুর", "মানিকগঞ্জ", "মুন্সীগঞ্জ", "নারায়ণগঞ্জ", "নরসিংদী", "রাজবাড়ী", "শরীয়তপুর", "টাঙ্গাইল"], 
+            "চট্টগ্রাম": ["চট্টগ্রাম", "বান্দরবান", "ব্রাহ্মণবাড়িয়া", "চাঁদপুর", "কুমিল্লা", "কক্সবাজার", "ফেনী", "খাগড়াছড়ি", "লক্ষ্মীপুর", "নোয়াখালী", "রাঙ্গামাটি"], 
+            "সিলেট": ["সিলেট", "মৌলভীবাজার", "হবিগঞ্জ", "সুনামগঞ্জ"], 
+            "ময়মনসিংহ": ["ময়মনসিংহ", "জামালপুর", "শেরপুর", "নেত্রকোনা"], 
+            "রাজশাহী": ["রাজশাহী", "বগুড়া", "জয়পুরহাট", "নওগাঁ", "নাটোর", "নবাবগঞ্জ", "পাবনা", "সিরাজগঞ্জ"], 
+            "খুলনা": ["খুলনা", "বাগেরহাট", "চুয়াডাঙ্গা", "যশোর", "ঝিনাইদহ", "কুষ্টিয়া", "মাগুরা", "মেহেরপুর", "নড়াইল", "সাতক্ষীরা"], 
+            "বরিশাল": ["বরিশাল", "বরগুনা", "ভোলা", "ঝালকাঠি", "পটুয়াখালী", "পিরোজপুর"], 
+            "রংপুর": ["রংপুর", "দিনাজপুর", "গাইবান্ধা", "কুড়িগ্রাম", "লালমনিরহাট", "নীলফামারী", "পঞ্চগড়", "ঠাকুরগাঁও"] 
+        };
         window.updateDistricts = () => { const div = document.getElementById('cDiv').value; const distSelect = document.getElementById('cDist'); distSelect.innerHTML = '<option value="">জেলা বেছে নিন</option>'; if(dists[div]) dists[div].forEach(d => distSelect.innerHTML += `<option value="${d}">${d}</option>`); };
 
         let imgUrl = "";
@@ -388,6 +399,7 @@
                         <tr><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; background:#f8fafc;">পিতার নাম</td><td style="padding:10px; border:1px solid #cbd5e1;">${d.fName}</td></tr>
                         <tr><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; background:#f8fafc;">জন্ম তারিখ ও বয়স</td><td style="padding:10px; border:1px solid #cbd5e1;">${d.dob} <span style="font-weight:bold; color:#d32f2f;">(${d.age} বছর)</span></td></tr>
                         <tr><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; background:#f8fafc;">মাদরাসার নাম</td><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold;">${d.madrasa}</td></tr>
+                        <tr><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; background:#f8fafc;">ঠিকানা (জেলা ও বিভাগ)</td><td style="padding:10px; border:1px solid #cbd5e1;">${d.dist}, ${d.div}</td></tr>
                         <tr><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; background:#f8fafc;">মোবাইল নম্বর</td><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; color:#d32f2f;">${d.phone}</td></tr>
                         <tr><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; background:#f8fafc; color:#0f5132;">পেমেন্ট স্ট্যাটাস</td><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold;">${payBadge}</td></tr>
                         <tr><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; background:#f8fafc; color:#0f5132;">নির্বাচিত গ্রুপ</td><td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold; color:#0f5132;">${grpName}</td></tr>
@@ -406,7 +418,7 @@
                             <h2 style="margin:0 0 5px 0; color:#d32f2f; font-size:24px;">প্রবেশপত্র (Admit Card)</h2>
                             <h3 style="margin:0 0 5px 0; font-size:20px; color:#0f5132;">জাতীয় হিফজুল কুরআন প্রতিযোগিতা</h3>
                         </div>
-                        <div style="width:80px; height:100px; border:2px solid #0f5132; background:#fff; border-radius:6px; overflow:hidden;">${pPhoto}</div>
+                        <div style="width:80px; height:100px; border:2px solid #0f5132; border-radius:6px; overflow:hidden;">${pPhoto}</div>
                     </div>
                     <table style="width:100%; font-size:16px; font-weight:bold;">
                         <tr><td style="padding:5px; color:#475569; width:110px;">নাম:</td><td style="padding:5px;">${d.name}</td></tr>
@@ -460,8 +472,8 @@
                             payMsg = rem > 0 ? `✅ <b>পেমেন্ট সফল!</b> এই TrxID দিয়ে আপনি আর <b>${rem}</b> জনের ফর্ম পূরণ করতে পারবেন।` : `✅ <b>পেমেন্ট সফল!</b> তবে এই TrxID এর লিমিট শেষ।`;
                         }
                     } else {
-                        // NEW LOGIC: Push to Admin Pending if not found
-                        payMsg = `⚠️ <b>আপনার ট্রানজেকশন আইডি যাচাই করা যায়নি, এটি এডমিন পেন্ডিং আছে।</b> এডমিন ম্যানুয়ালি যাচাই করবেন।`;
+                        // NEW TEXT FOR UNVERIFIED TRXID ON SUBMIT
+                        payMsg = `⚠️ <b>অটোমেটিক যাচাই সম্ভব হচ্ছে না!</b> আপনার ট্রানজেকশন তথ্যটি কর্তৃপক্ষের কাছে জমা হয়েছে। ম্যানুয়ালি চেক করে খুব শীঘ্রই আপনার পেমেন্ট নিশ্চিত করা হবে।`;
                         msgBg = "#fffbeb"; msgCol = "#b45309"; msgBdr = "#fcd34d";
                         
                         const newPendingRef = push(ref(rtdb, 'PendingOrders'));
