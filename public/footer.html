@@ -1,43 +1,146 @@
-<footer style="background: #0f172a; color: #94a3b8; padding: 40px 20px 20px; margin-top: 40px; font-family: 'Noto Sans Bengali', sans-serif;">
-    <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;">
-        
-        <div>
-            <h4 style="color: white; margin: 0 0 15px 0; font-size: 18px; border-bottom: 2px solid #15803d; display: inline-block; padding-bottom: 5px;">যোগাযোগ</h4>
-            <p style="margin: 0 0 10px 0; font-size: 15px; display: flex; align-items: flex-start; gap: 8px; line-height: 1.5;"><i class="fas fa-map-marker-alt" style="color: #f59e0b; width: 14px; margin-top: 4px;"></i> নুরেরচালা, ভাটারা নতুন বাজার, বারিধারা ঢাকা</p>
-            <p style="margin: 0 0 10px 0; font-size: 15px; display: flex; align-items: center; gap: 8px;"><i class="fas fa-phone" style="color: #f59e0b; width: 14px;"></i> 01729-749810</p>
-            <p style="margin: 0 0 10px 0; font-size: 15px; display: flex; align-items: center; gap: 8px;"><i class="fas fa-envelope" style="color: #f59e0b; width: 14px;"></i> alhuffazfoundation2025@gmail.com</p>
+<style>
+    .custom-footer {
+        background: #0f172a; 
+        color: #94a3b8; 
+        padding: 40px 20px 20px; 
+        margin-top: 40px; 
+        font-family: 'Noto Sans Bengali', sans-serif;
+    }
+    .footer-container {
+        max-width: 1200px; 
+        margin: 0 auto; 
+        display: flex; 
+        flex-wrap: wrap; 
+        gap: 30px;
+    }
+    .footer-col {
+        flex: 1 1 250px;
+    }
+    .footer-heading {
+        color: white; 
+        margin: 0 0 15px 0; 
+        font-size: 18px; 
+        border-bottom: 2px solid #15803d; 
+        display: inline-block; 
+        padding-bottom: 5px;
+    }
+    .footer-text {
+        margin: 0 0 12px 0; 
+        font-size: 15px; 
+        display: flex; 
+        align-items: flex-start; 
+        gap: 8px; 
+        line-height: 1.5;
+    }
+    
+    /* 🔴 আকর্ষণীয় লিংকের জন্য অ্যানিমেশন (লাফালাফি করবে) */
+    @keyframes jumpEffect {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-5px); color: #10b981; } /* লাফ দিয়ে একটু উপরে উঠবে এবং হালকা সবুজ হবে */
+    }
+    .animated-link {
+        color: #f59e0b; /* উজ্জ্বল কমলা রঙ */
+        text-decoration: none; 
+        font-size: 15px; 
+        font-weight: bold; /* লেখা একটু মোটা হবে */
+        display: inline-flex; 
+        align-items: flex-start; 
+        gap: 8px; 
+        transition: 0.3s;
+        animation: jumpEffect 2s infinite ease-in-out;
+    }
+    .animated-link:hover {
+        color: #10b981;
+        animation: none; /* হোভার করলে লাফানো থামবে */
+        transform: scale(1.02);
+    }
+    /* ৩টি লিংক একসাথে না লাফিয়ে একটার পর একটা লাফাবে */
+    .link-1 { animation-delay: 0s; }
+    .link-2 { animation-delay: 0.2s; }
+    .link-3 { animation-delay: 0.4s; }
+
+    /* সোশ্যাল মিডিয়া বাটন */
+    .social-container {
+        display: flex; 
+        gap: 10px; 
+        margin-top: 10px;
+        flex-wrap: nowrap; /* বাটনগুলো সবসময় এক লাইনে থাকবে */
+    }
+    .social-btn {
+        color: white; 
+        padding: 10px; 
+        border-radius: 6px; 
+        text-decoration: none; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center;
+        gap: 6px; 
+        font-size: 14px; 
+        font-weight: bold; 
+        transition: 0.3s;
+        flex: 1; /* বাটনগুলো সমানভাবে জায়গা ভাগ করে নেবে */
+    }
+    
+    /* 📱 শুধুমাত্র মোবাইলের জন্য রেসপন্সিভ ডিজাইন */
+    @media (max-width: 600px) {
+        .footer-container {
+            flex-direction: column;
+            gap: 25px;
+        }
+        .social-container {
+            gap: 5px; /* মোবাইলে গ্যাপ একটু কম হবে */
+        }
+        .social-btn {
+            padding: 10px 5px; /* মোবাইলে প্যাডিং কমবে */
+            font-size: 12px; /* লেখা একটু ছোট হবে যাতে এক লাইনে ধরে */
+        }
+        .social-btn i {
+            font-size: 14px; /* আইকনের সাইজ ঠিক থাকবে */
+        }
+        .custom-footer {
+            padding: 30px 15px 15px;
+        }
+    }
+</style>
+
+<footer class="custom-footer">
+    <div class="footer-container">
+        <div class="footer-col">
+            <h4 class="footer-heading">যোগাযোগ</h4>
+            <p class="footer-text"><i class="fas fa-map-marker-alt" style="color: #f59e0b; width: 14px; margin-top: 4px;"></i> নুরেরচালা, ভাটারা নতুন বাজার, বারিধারা ঢাকা</p>
+            <p class="footer-text"><i class="fas fa-phone" style="color: #f59e0b; width: 14px;"></i> 01729-749810</p>
+            <p class="footer-text"><i class="fas fa-envelope" style="color: #f59e0b; width: 14px;"></i> alhuffazfoundation2025@gmail.com</p>
         </div>
         
-        <div>
-            <h4 style="color: white; margin: 0 0 15px 0; font-size: 18px; border-bottom: 2px solid #15803d; display: inline-block; padding-bottom: 5px;">গুরুত্বপূর্ণ লিংক</h4>
+        <div class="footer-col">
+            <h4 class="footer-heading">গুরুত্বপূর্ণ লিংক</h4>
             <ul style="list-style: none; padding: 0; margin: 0;">
-                <li style="margin-bottom: 12px; line-height: 1.4;">
-                    <a href="https://alhuffazfoundation.web.app/competition.html" style="color: #94a3b8; text-decoration: none; font-size: 15px; display: flex; align-items: flex-start; gap: 8px; transition: color 0.3s;" onmouseover="this.style.color='#f59e0b'" onmouseout="this.style.color='#94a3b8'">
-                        <i class="fas fa-angle-right" style="color: #f59e0b; margin-top: 4px;"></i> জাতীয় হিফজুল কুরআন প্রতিযোগিতা আবেদন
+                <li style="margin-bottom: 15px; line-height: 1.4;">
+                    <a href="https://alhuffazfoundation.web.app/competition.html" class="animated-link link-1">
+                        <i class="fas fa-hand-point-right" style="margin-top: 3px;"></i> জাতীয় হিফজুল কুরআন প্রতিযোগিতায় আবেদন করুন
                     </a>
                 </li>
-                <li style="margin-bottom: 12px; line-height: 1.4;">
-                    <a href="https://alhuffazfoundation.web.app/training.html" style="color: #94a3b8; text-decoration: none; font-size: 15px; display: flex; align-items: flex-start; gap: 8px; transition: color 0.3s;" onmouseover="this.style.color='#f59e0b'" onmouseout="this.style.color='#94a3b8'">
-                        <i class="fas fa-angle-right" style="color: #f59e0b; margin-top: 4px;"></i> হিফজ শিক্ষক প্রশিক্ষণ কোর্স আবেদন
+                <li style="margin-bottom: 15px; line-height: 1.4;">
+                    <a href="https://alhuffazfoundation.web.app/training.html" class="animated-link link-2">
+                        <i class="fas fa-hand-point-right" style="margin-top: 3px;"></i> হিফজ শিক্ষক প্রশিক্ষণ কোর্সে আবেদন করুন
                     </a>
                 </li>
-                <li style="margin-bottom: 12px; line-height: 1.4;">
-                    <a href="https://alhuffazfoundation.web.app/board.html" style="color: #94a3b8; text-decoration: none; font-size: 15px; display: flex; align-items: flex-start; gap: 8px; transition: color 0.3s;" onmouseover="this.style.color='#f59e0b'" onmouseout="this.style.color='#94a3b8'">
-                        <i class="fas fa-angle-right" style="color: #f59e0b; margin-top: 4px;"></i> হিফজ শিক্ষা বোর্ডে আপনার মাদরাসাকে নিবন্ধিত করুন
+                <li style="margin-bottom: 15px; line-height: 1.4;">
+                    <a href="https://alhuffazfoundation.web.app/board.html" class="animated-link link-3">
+                        <i class="fas fa-hand-point-right" style="margin-top: 3px;"></i> হিফজ শিক্ষা বোর্ডে আপনার মাদরাসাকে নিবন্ধিত করুন
                     </a>
                 </li>
             </ul>
         </div>
         
-        <div>
-            <h4 style="color: white; margin: 0 0 15px 0; font-size: 18px; border-bottom: 2px solid #15803d; display: inline-block; padding-bottom: 5px;">সোশ্যাল মিডিয়া</h4>
-            <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 5px;">
-                <a href="https://www.facebook.com/profile.php?id=61579231990412" target="_blank" style="background: #3b5998; color: white; padding: 8px 15px; border-radius: 6px; text-decoration: none; display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: bold; transition: 0.3s;"><i class="fab fa-facebook-f"></i> Facebook</a>
-                <a href="https://youtube.com/@huffazulquran-ju8dk?si=KxaoWaFMnEXE7IXQ" target="_blank" style="background: #ff0000; color: white; padding: 8px 15px; border-radius: 6px; text-decoration: none; display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: bold; transition: 0.3s;"><i class="fab fa-youtube"></i> YouTube</a>
-                <a href="https://wa.me/8801729749810" target="_blank" style="background: #25D366; color: white; padding: 8px 15px; border-radius: 6px; text-decoration: none; display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: bold; transition: 0.3s;"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+        <div class="footer-col">
+            <h4 class="footer-heading">সোশ্যাল মিডিয়া</h4>
+            <div class="social-container">
+                <a href="https://www.facebook.com/profile.php?id=61579231990412" target="_blank" class="social-btn" style="background: #3b5998;"><i class="fab fa-facebook-f"></i> Facebook</a>
+                <a href="https://youtube.com/@huffazulquran-ju8dk?si=KxaoWaFMnEXE7IXQ" target="_blank" class="social-btn" style="background: #ff0000;"><i class="fab fa-youtube"></i> YouTube</a>
+                <a href="https://wa.me/8801729749810" target="_blank" class="social-btn" style="background: #25D366;"><i class="fab fa-whatsapp"></i> WhatsApp</a>
             </div>
         </div>
-
     </div>
     
     <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #1e293b; color: #cbd5e1; font-size: 14px;">
