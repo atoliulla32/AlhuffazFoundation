@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
@@ -16,14 +16,7 @@
         .spinner { border: 4px solid rgba(21, 128, 61, 0.2); border-left-color: #15803d; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 15px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
-        .digital-board { background: linear-gradient(to right, #0f172a, #1e293b); border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); border: 1px solid #334155; margin-top: 20px; display: flex; align-items: center; width: 100%; box-sizing: border-box; }
-        .board-badge { background: #b91c1c; color: white; padding: 15px 20px; font-weight: 700; font-size: 15px; white-space: nowrap; z-index: 2; box-shadow: 5px 0 15px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 8px; flex-shrink: 0;}
-        .marquee-wrapper { flex-grow: 1; padding: 0 15px; overflow: hidden; width: 100%; min-width: 0; }
-        .marquee-text { color: #f8fafc; font-size: 16px; font-weight: 500; display: inline-block; padding-top: 5px;}
-        .marquee-text span.date { color: #facc15; font-weight: 600; margin-right: 10px; }
-        .marquee-text span.divider { color: #64748b; margin: 0 15px; }
-
-        .archive-section { margin-top: 50px; }
+        .archive-section { margin-top: 20px; }
         .archive-title { font-size: 22px; color: #166534; border-bottom: 2px solid #166534; padding-bottom: 10px; margin-bottom: 20px; }
         
         .filter-container { margin-bottom: 25px; position: relative; }
@@ -73,15 +66,6 @@
     <div class="page-header"><h2>বিজ্ঞপ্তি ও সংবাদ</h2></div>
 
     <div class="container" style="margin-bottom: 80px; max-width: 900px;">
-        
-        <div class="digital-board" id="liveBoard" style="display: none;">
-            <div class="board-badge"><i class="fas fa-bell" style="animation: ring 2s infinite;"></i> সর্বশেষ</div>
-            <div class="marquee-wrapper">
-                <marquee width="100%" behavior="scroll" direction="left" scrollamount="5" onmouseover="this.stop();" onmouseout="this.start();">
-                    <span class="marquee-text" id="marquee-content"></span>
-                </marquee>
-            </div>
-        </div>
 
         <div id="loader" class="loader-container">
             <div class="spinner"></div><p style="font-weight: bold;">বিজ্ঞপ্তি লোড হচ্ছে...</p>
@@ -137,22 +121,27 @@
         if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         const db = firebase.firestore();
 
-        const marqueeContent = document.getElementById('marquee-content');
+        // হেডারে থাকা লাইভ নিউজ বোর্ডে ডাটা পাঠানোর জন্য আপডেট করা হয়েছে
+        let marqueeContent; 
+
         const archiveList = document.getElementById('archive-list');
         const loader = document.getElementById('loader');
         let allNotices = []; 
 
         db.collection("notices").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
             loader.style.display = 'none';
-            document.getElementById('liveBoard').style.display = 'flex';
             document.getElementById('archiveSection').style.display = 'block';
             
-            marqueeContent.innerHTML = '';
+            marqueeContent = document.getElementById('header-marquee-content');
+            if(marqueeContent) {
+                 marqueeContent.innerHTML = '';
+            }
+           
             allNotices = [];
             let liveNoticesCount = 0;
             
             if (snapshot.empty) {
-                marqueeContent.innerHTML = 'বর্তমানে কোনো নতুন বিজ্ঞপ্তি নেই।';
+                if(marqueeContent) marqueeContent.innerHTML = 'বর্তমানে কোনো নতুন বিজ্ঞপ্তি নেই।';
                 archiveList.innerHTML = '<p style="color:red; text-align:center; padding:20px;">কোনো বিজ্ঞপ্তি পাওয়া যায়নি।</p>';
                 return;
             }
@@ -160,19 +149,19 @@
             snapshot.forEach((doc) => {
                 const notice = doc.data();
                 notice.id = doc.id;
-                // এখন আর এখানে রেন্ডম জেনারেট হচ্ছে না। ডাটাবেজ থেকে `notice.smk` টানছে।
-                // যদি পুরনো নোটিশে না থাকে, তাহলে ডিফল্ট হিসেবে N/A দেখাবে।
                 notice.smk = notice.smk || "AHFB/00/000"; 
                 allNotices.push(notice);
 
-                if(notice.isLive) {
+                if(notice.isLive && marqueeContent) {
+                    document.getElementById('headerLiveBoard').style.display = 'flex';
                     marqueeContent.innerHTML += `<span class="date">[${notice.date}]</span> ${notice.title} <span class="divider">•</span> `;
                     liveNoticesCount++;
                 }
             });
 
-            if(liveNoticesCount === 0) {
+            if(liveNoticesCount === 0 && marqueeContent) {
                 marqueeContent.innerHTML = 'বর্তমানে কোনো ব্রেকিং বিজ্ঞপ্তি নেই। নিচের আর্কাইভ থেকে সকল বিজ্ঞপ্তি পড়ুন।';
+                document.getElementById('headerLiveBoard').style.display = 'flex';
             }
 
             renderArchiveList(allNotices); 
@@ -301,10 +290,7 @@
             document.getElementById('pdfProcessing').style.display = 'none';
             container.innerHTML = ''; 
         }
-
-        const style = document.createElement('style');
-        style.innerHTML = `@keyframes ring { 0% { transform: rotate(0); } 10% { transform: rotate(15deg); } 20% { transform: rotate(-15deg); } 30% { transform: rotate(10deg); } 40% { transform: rotate(-10deg); } 50% { transform: rotate(0); } 100% { transform: rotate(0); } }`;
-        document.head.appendChild(style);
     </script>
 </body>
 </html>
+           
